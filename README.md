@@ -64,6 +64,10 @@ A difference counts as real only if its paired-bootstrap 95 % CI over images exc
 Evidence per verdict: [`results/final_run/hypothesis_verdicts.csv`](results/final_run/hypothesis_verdicts.csv).
 Inconclusive means the data neither support nor refute the hypothesis at this sample size, not that the effect is absent.
 
+## Poster and abstract
+
+WAIMLAp 2026: [poster (PDF)](docs/Poster_FrozenDINOv3MartianTerrain.pdf) and [abstract (PDF)](docs/Abstract_FrozenDINOv3MartianTerrain.pdf).
+
 ## Repository layout
 
 ```
