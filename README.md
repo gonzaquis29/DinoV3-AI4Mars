@@ -66,7 +66,7 @@ Inconclusive means the data neither support nor refute the hypothesis at this sa
 
 ## Poster and abstract
 
-WAIMLAp 2026: [poster (PDF)](docs/Poster_FrozenDINOv3MartianTerrain.pdf) and [abstract (PDF)](docs/Abstract_FrozenDINOv3MartianTerrain.pdf).
+WAIMLAp 2026: [poster (PDF)](docs/Poster_FrozenDINOv3MartianTerrain.pdf) and [abstract (PDF)](docs/Abstract_FrozenDINOv3MartianTerrain.pdf). Editable versions: [poster (PPTX)](docs/Poster_FrozenDINOv3MartianTerrain.pptx), [abstract (DOCX)](docs/Abstract_FrozenDINOv3MartianTerrain.docx).
 
 ## Repository layout
 
