@@ -62,6 +62,13 @@ ax[1].set_xticks(range(4)); ax[1].set_xticklabels(CL, rotation=25); ax[1].set_yt
 for i in range(7):
     for j in range(4): ax[1].text(j, i, f"{IOU_VAL[i, j]:.2f}", ha="center", va="center", color="w", fontsize=10)
 plt.colorbar(im, ax=ax[1]); plt.tight_layout(); save(fig, "fig1_layers")
+# single-panel version for the 2-page abstract
+fig, a = plt.subplots(figsize=(8.2, 4.0))
+a.errorbar(x, V, yerr=VSD, c=GREEN, marker="o", capsize=3, label="validation (± sd over seeds)")
+a.errorbar(x, M1m, yerr=[M1m - cis["M1"][:, 0], cis["M1"][:, 1] - M1m], c=PURPLE, marker="^", capsize=3, label="test M1 (95 % bootstrap CI)")
+a.errorbar(x, M2m, yerr=[M2m - cis["M2"][:, 0], cis["M2"][:, 1] - M2m], c=BLUE, marker="s", capsize=3, alpha=0.8, label="test M2 (95 % bootstrap CI)")
+a.set_xticks(x); a.set_xticklabels(LABEL); a.set_xlabel("layer (block k or final)"); a.set_ylabel("mIoU (4 classes)"); a.set_ylim(0.3, 0.85)
+a.legend(loc="upper center", bbox_to_anchor=(0.5, -0.2), ncol=3, fontsize=9, frameon=False); plt.tight_layout(); save(fig, "fig1a_layers_single")
 NUM["layers"] = {l: dict(val=ms(val[l]), M1=ms(M["M1"][l]), M2=ms(M["M2"][l]), M3=ms(M["M3"][l])) for l in LAYERS}
 NUM["val_per_class_last_norm"] = dict(zip(CL, map(float, IOU_VAL[-1])))
 # H1 as defined in the proposal (block 12 is NOT an intermediate layer): best intermediate by validation vs final norm, paired bootstrap on M1/M2
@@ -109,6 +116,12 @@ OURS = {"Frozen DINOv3 + linear probe": (tuple(float(score("A_layers_s{s}", f"{s
         "Frozen DINOv3 + decoder": (tuple(float(score("B_decoder512_s{s}", f"{s}__decoder").mean()) for s in ("M1", "M2", "M3")), tr("B_decoder512_s0"), PURPLE),
         "DINOv3, last 4 blocks fine-tuned": (tuple(float(score("C_FT4_n4000_s{s}", [k for k in load("C_FT4_n4000_s0").files if k.startswith(m + "__")][0]).mean()) for m in ("M1", "M2", "M3")), tr("C_FT4_n4000_s0"), RED)}
 NUM["ours"] = {k: dict(M1M2M3=list(v[0]), trainable_M=v[1]) for k, v in OURS.items()}
+_k = lambda n0, m: [k for k in load(n0).files if k.startswith(m + "__")][0]
+NUM["ours_sd"] = {"Frozen DINOv3 + linear probe": [float(score("A_layers_s{s}", f"{m}__last_norm").std()) for m in ("M1", "M2", "M3")],
+                  "Frozen DINOv3 + decoder": [float(score("B_decoder512_s{s}", f"{m}__decoder").std()) for m in ("M1", "M2", "M3")],
+                  "DINOv3, last 4 blocks fine-tuned": [float(score("C_FT4_n4000_s{s}", _k("C_FT4_n4000_s0", m)).std()) for m in ("M1", "M2", "M3")]}
+def _maj(m): g = load("A_layers_s0")[f"{m}__last_norm"][:, 0].sum(0).sum(1).astype(float); return float(g.max() / g.sum() / 4)
+NUM["majority"] = {m: _maj(m) for m in ("val", "M1", "M2", "M3")}
 fig, ax = plt.subplots(1, 2, figsize=(15, 4.8), gridspec_kw=dict(width_ratios=[1.5, 1]))
 names = list(PUB) + list(OURS); vals = [v[0] for v in PUB.values()] + [v[0] for v in OURS.values()]
 cm = plt.cm.Blues(np.linspace(0.35, 0.85, len(PUB))); cols = list(cm) + [v[2] for v in OURS.values()]
