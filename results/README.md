@@ -10,7 +10,8 @@ Everything here was produced by `notebooks/ai4mars_dinov3_final.ipynb` (final ru
 | `table_main.csv` | Main table: mIoU (mean ± sd over seeds, 95 % bootstrap CI over images) and `big_rock` IoU for every configuration on M1, M2, M3 |
 | `table_published.csv` | Published baselines (Mohammad, Li & Gao, iSpaRo 2025, Table I), as published |
 | `hypotheses_preregistered.json` | Hypotheses H1–H6, expected outcomes and decision rules, written before the final run (internal record with a timestamp) |
-| `hypothesis_verdicts.csv` | Verdict for each hypothesis and the numbers behind it |
+| `hypotheses_extra.json` | Hypothesis H3b (token-grid control), registered after the final run and before the extra run |
+| `hypothesis_verdicts.csv` | Verdict for each hypothesis (H1–H6 and H3b) and the numbers behind it |
 | `figures/` | The four figures written by the notebook's stage E |
 | `results/` | One `.json` + `.npz` pair per unit of work (see below). This is the input of the analysis stage |
 
@@ -23,6 +24,7 @@ Everything here was produced by `notebooks/ai4mars_dinov3_final.ipynb` (final ru
 | `C_{LP,FT2,FT4}_n{N}_s{seed}` | C | Linear probe / last 2 blocks / last 4 blocks fine-tuned with N labelled images |
 | `C_sweep` | C | Learning-rate sweep for the fine-tuned runs |
 | `D_{dinov3_b16_lvd,dinov2_b14,dinov3_b16_rand}_s{seed}` | D | Backbone comparison (N = 2,000) |
+| `D_dinov2_b14_448_s{seed}` | D (extra run) | DINOv2 at 448 px, 32×32 token grid, launched after the final run (H3b) |
 
 Each `.json` stores the seed, settings, validation history and trainable parameter count. Each `.npz` stores **per-image confusion
 matrices** (4 × 4) for validation and the three test sets, for each boundary-band radius (0, 4, 8, 16 px at native resolution), with

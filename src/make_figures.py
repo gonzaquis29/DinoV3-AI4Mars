@@ -83,7 +83,8 @@ for s in ("M1", "M2"):
 g = load("A_layers_s0")["val__last_norm"][:, 0].sum(0).sum(1).astype(float); NUM["majority_val_mIoU"] = float(g.max() / g.sum() / 4)
 
 # ------------------------------------------------------------------ Fig 2: backbone control (stage D, N = 2000)
-DK = [("dinov3_b16_lvd", "DINOv3 ViT-B/16", GREEN), ("dinov2_b14", "DINOv2 ViT-B/14", BLUE), ("dinov3_b16_rand", "DINOv3 arch., random init", GRAY)]
+DK = [("dinov3_b16_lvd", "DINOv3 ViT-B/16 @512 (grid 32)", GREEN), ("dinov2_b14", "DINOv2 ViT-B/14 @504 (grid 36)", BLUE),
+      ("dinov2_b14_448", "DINOv2 ViT-B/14 @448 (grid 32)", "#85c1e9"), ("dinov3_b16_rand", "DINOv3 arch., random init", GRAY)]
 fig, axes = plt.subplots(1, 2, figsize=(11, 4.5), sharey=True); NUM["D"] = {}
 for a, s in zip(axes, ("M1", "M2")):
     for j, (k, lab, col) in enumerate(DK):

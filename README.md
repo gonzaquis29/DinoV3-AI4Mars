@@ -20,6 +20,7 @@ M1 / M2 / M3 (labels agreed by at least 1 / 2 / 3 experts), 322 images each, rep
 | Decoder (blocks 3, 6, 9, 12) | 3.5 M | 0.684 | 0.735 | 0.931 |
 | Last 4 blocks fine-tuned (N = 4,000) | 28 M | 0.687 | 0.737 | 0.927 |
 | DINOv2 ViT-B/14, linear probe (N = 2,000) | 4.6 k | 0.664 | 0.714 | 0.798 |
+| DINOv2 ViT-B/14 at 448 px (same 32×32 token grid as DINOv3), probe (N = 2,000) | 4.6 k | 0.664 | 0.715 | 0.806 |
 | DINOv3 architecture, random init, probe (N = 2,000) | 4.6 k | 0.264 | 0.272 | 0.272 |
 | *Published: DeepLabV3+ R101 @512 px* | 58.8 M | 0.67 | 0.72 | 0.82 |
 | *Published: SegFormer-B3 @1,024 px* | 47 M | 0.69 | 0.74 | 0.93 |
@@ -34,7 +35,8 @@ What the results say:
 - **Saturation on M1/M2.** Probe, decoder and fine-tuning end up within 0.012 mIoU of each other; 250 labelled images give 99 % of the
   probe's M1 mIoU (0.671 vs 0.675 at 4,000).
 - **Pretraining is what matters.** Random init reaches 0.264 on M1. DINOv3 beats DINOv2 by +0.013 on M1 (95 % CI [+0.002, +0.025]) but
-  not clearly on M2, and the two differ in patch size (16 vs 14), which is a confound.
+  not clearly on M2. The two differ in patch size, so we reran DINOv2 at 448 px to match the 32×32 token grid (extra run, H3b): the gap does
+  not shrink (+0.014 on M1 [+0.003, +0.026]; +0.010 on M2 [−0.004, +0.025]), so the grid does not explain it. Input pixels still differ (448 vs 512).
 - **No intermediate layer beats the last one.** The best intermediate by validation (block 10) is −0.010 on M1 (95 % CI [−0.021, +0.001]).
 - **M3 cannot rank models on `big_rock`.** Only 5 of its 322 images contain that class (77,698 px). Every model finds 96–99 % of those
   pixels; they differ in false positives (probe ~109 k px, decoder ~16 k px), which alone drives the M3 mIoU gap (0.83 vs 0.93).
@@ -45,7 +47,8 @@ What the results say:
 ### Pre-specified hypotheses
 
 Hypotheses and decision rules were written down before the final run ([`hypotheses_preregistered.json`](results/final_run/hypotheses_preregistered.json),
-with a timestamp; this is an internal record, not an external registry, and H4–H6 were formulated after a pilot).
+with a timestamp; this is an internal record, not an external registry, and H4–H6 were formulated after a pilot). H3b was added after the
+final run and registered before its own run ([`hypotheses_extra.json`](results/final_run/hypotheses_extra.json)).
 A difference counts as real only if its paired-bootstrap 95 % CI over images excludes 0 **and** |Δ| ≥ 0.01 mIoU.
 
 | | Hypothesis | Verdict |
@@ -53,6 +56,7 @@ A difference counts as real only if its paired-bootstrap 95 % CI over images exc
 | H1 | Intermediate layers beat the last layer | inconclusive |
 | H2 | The fine-tuning gain over linear probing grows with the number of labels | inconclusive |
 | H3 | DINOv3 beats DINOv2, and both beat random init by a lot | inconclusive |
+| H3b | Extra run: DINOv3's edge over DINOv2 survives matching the token grid (DINOv2 at 448 px) | inconclusive (real on M1, not on M2) |
 | H4 | A 3.5 M decoder does not beat the linear probe on M1/M2 | supported (the CI includes 0; it does not rule out gains up to ~0.02) |
 | H5 | Part of the M1/M2 ceiling is label noise at region borders | inconclusive |
 | H6 | `big_rock` failures are size-driven | inconclusive |
@@ -66,7 +70,7 @@ Inconclusive means the data neither support nor refute the hypothesis at this sa
 notebooks/
   ai4mars_dinov3_final.ipynb   the experiment: stages A-E, resumable, 2 GPUs
   ai4mars_dinov3_final.py      same code as a plain script (source of the notebook)
-  py_to_ipynb.py               regenerates the .ipynb from the .py
+  py_to_ipynb.py               regenerates the .ipynb: python notebooks/py_to_ipynb.py notebooks/ai4mars_dinov3_final.py
 src/
   make_figures.py              figures and key numbers from the saved results
 results/
@@ -80,7 +84,7 @@ Every metric is stored as a per-image confusion matrix, so any number can be re-
 
 ## Reproduce
 
-**1. Analysis and figures from the released results (CPU only, no dataset or weights needed; about 1 minute for the analysis stage on a laptop CPU, 68 s measured).**
+**1. Analysis and figures from the released results (CPU only, no dataset or weights needed; the analysis stage took about 12 s on a laptop CPU).**
 It regenerates `table_main.csv` and `hypothesis_verdicts.csv` byte for byte.
 
 ```bash
@@ -98,7 +102,8 @@ Create a Kaggle notebook from `notebooks/ai4mars_dinov3_final.ipynb`, set the ac
   `config.json` and `model.safetensors` or through a Hugging Face token stored as the `HF_TOKEN` secret.
 
 Results are cached per unit of work, so an interrupted run resumes where it stopped (attach the earlier output as an input).
-`A4M_SMOKE=1` runs a tiny offline self-test. Seeds are fixed (0, 1, 2) and each stage records its configuration next to its results.
+`A4M_SMOKE=1` runs a tiny offline self-test. To run only one stage on selected backbones, set e.g. `A4M_STAGES=D A4M_BACKBONES=dinov2_b14_448`
+(this is how the H3b extra run was launched: about 25 min on one T4). Seeds are fixed (0, 1, 2) and each stage records its configuration next to its results.
 
 ## Protocol notes
 
@@ -113,7 +118,7 @@ Results are cached per unit of work, so an interrupted run resumes where it stop
 ## Limitations
 
 One backbone size, one rover and camera, three seeds, 322 test images per variant, and a comparison with published numbers that was not
-re-run under the same protocol. The AI4Mars labels are crowd-sourced. These results say nothing about other planets, sensors or
+re-run under the same protocol. The extra H3b run was launched in a separate session, with the same code and recipe as stage D. The AI4Mars labels are crowd-sourced. These results say nothing about other planets, sensors or
 safety-critical use.
 
 ## Data, weights and licences

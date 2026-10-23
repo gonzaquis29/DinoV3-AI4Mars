@@ -66,6 +66,7 @@ CFG = dict(
         ("dinov3_b16_lvd", "facebook/dinov3-vitb16-pretrain-lvd1689m", 512, False),
         ("dinov2_b14",     "facebook/dinov2-base",                    504, False),   # patch 14: grid 36 vs 32 (confound, state it)
         ("dinov3_b16_rand", "facebook/dinov3-vitb16-pretrain-lvd1689m", 512, True),
+        ("dinov2_b14_448", "facebook/dinov2-base",                    448, False),   # extra run (H3b): patch 14 at 448 px -> grid 32, as DINOv3 at 512
     ],
     # ---- two-GPU split: with >=2 GPUs the notebook spawns one worker per job, then runs E itself ----
     parallel=True,
@@ -87,6 +88,11 @@ if SMOKE:                                              # shrink everything for t
                           ("dinov3_b16_rand", "facebook/dinov3-vitb16-pretrain-lvd1689m", 64, True)])
 if os.environ.get("A4M_ONLY_E"):                        # analysis only: run on downloaded results, no dataset needed
     CFG["stages"], CFG["parallel"] = ["E"], False
+if os.environ.get("A4M_STAGES"):                        # e.g. A4M_STAGES=D A4M_BACKBONES=dinov2_b14_448: run just that, single process
+    CFG["stages"], CFG["parallel"] = os.environ["A4M_STAGES"].split(","), False
+if os.environ.get("A4M_BACKBONES"):
+    _bk = set(os.environ["A4M_BACKBONES"].split(","))
+    CFG["backbones"] = [b for b in CFG["backbones"] if b[0] in _bk]
 if JOB:                                                 # worker process: take this job's stages/seeds/GPU
     CFG.update(JOBS[JOB]); CFG["parallel"] = False
 
@@ -1078,6 +1084,9 @@ for st, fn in (("A", stage_A), ("B", stage_B), ("C", stage_C), ("D", stage_D)):
 
 # %% 12. load results, summary table
 import pandas as pd
+import matplotlib
+if "get_ipython" not in globals():                      # plain script: never open a GUI window (plt.show() would block the run)
+    matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 FIG = OUT / "figures"; FIG.mkdir(exist_ok=True)
 SEEDS = CFG["seeds"]
@@ -1175,7 +1184,7 @@ if "E" in CFG["stages"]:
     if ev:
         VERD.append(("H2", verdict_str(all(ok_all)), "; ".join(ev)))
     # --- H3: backbones
-    keys = [b[0] for b in CFG["backbones"]]
+    keys = [b[0] for b in CFG["backbones"]][:3]            # DINOv3, DINOv2, random init; later entries are extra runs
     dc = {k: {s: group_confs(D_names(k), "probe", sets=[s])[0][s] for s in ("M1", "M2")} for k in keys}
     if all(dc[k]["M1"] for k in keys):
         v3, v2, rd = keys[0], keys[1], keys[2]; ev, oks = [], []
@@ -1184,6 +1193,16 @@ if "E" in CFG["stages"]:
             oks.append(d32["real"] and d32["delta"] >= TOL and d2r["delta"] > 0.1 and d3r["delta"] > 0.1)
             ev.append(f"{s}: v3-v2 {d32['delta']:+.3f} [{d32['lo']:+.3f},{d32['hi']:+.3f}], v3-rand {d3r['delta']:+.3f}, v2-rand {d2r['delta']:+.3f}")
         VERD.append(("H3", verdict_str(all(oks)), "; ".join(ev) + " (patch 14 vs 16 is a confound)"))
+        # --- H3b (extra run, registered in hypotheses_extra.json): same comparison with DINOv2 at 448 px (grid 32x32)
+        k448 = "dinov2_b14_448"
+        if k448 in [b[0] for b in CFG["backbones"]]:
+            d448 = {s: group_confs(D_names(k448), "probe", sets=[s])[0][s] for s in ("M1", "M2")}
+            if d448["M1"]:
+                ev, oks, inside = [], [], []
+                for s in ("M1", "M2"):
+                    d = paired(dc[v3][s], d448[s]); oks.append(d["real"]); inside.append(d["lo"] > -TOL and d["hi"] < TOL)
+                    ev.append(f"{s}: v3-v2@448 {d['delta']:+.3f} [{d['lo']:+.3f},{d['hi']:+.3f}]")
+                VERD.append(("H3b", verdict_str(all(oks), all(inside)), "; ".join(ev) + " (grid matched at 32x32; input pixels 448 vs 512 still differ)"))
     # --- H4: decoder vs linear probe at full data
     dec = {s: group_confs(B_names(CFG["decoder_sizes"][0]), "decoder", sets=[s])[0][s] for s in SETS3}
     lpf = {s: [load_result(n)[1][f"{s}__last_norm"][:, 0] for n in A_names() if load_result(n)] for s in SETS3}
