@@ -1,0 +1,36 @@
+{
+  "registered_at": "2026-10-22 22:33:57",
+  "tol": 0.01,
+  "hypotheses": {
+    "H1": {
+      "claim": "Intermediate layers beat the last layer (E1 proposal).",
+      "expect": "NOT supported: last_norm is best or within tol of the best intermediate layer (pilot: block 8 was -0.032).",
+      "rule": "supported if best-by-val intermediate beats last_norm (real); refuted if last_norm beats it (real); else inconclusive. Judged on M1 and M2."
+    },
+    "H2": {
+      "claim": "The gap fine-tuning minus linear probing grows with the number of labelled images.",
+      "expect": "With <=500 images FT-2 is within tol of LP; with 4000 images FT-2/FT-4 beat LP by >= tol.",
+      "rule": "supported if delta(N_min) < tol, delta(N_max) real and >= tol, and delta(N_max)-delta(N_min) >= tol (FT-2 vs LP, M1 and M2)."
+    },
+    "H3": {
+      "claim": "DINOv3 beats DINOv2 as a frozen backbone, but by little because Mars is far from both pretraining sets; both beat random init by a lot.",
+      "expect": "DINOv3 - DINOv2 < 0.03 mIoU; pretrained - random > 0.2.",
+      "rule": "supported if DINOv3-DINOv2 is real (>= tol) and both beat random by > 0.1."
+    },
+    "H4": {
+      "claim": "A 3.5M-param decoder head does not beat a 4.6k-param linear probe at full data on M1/M2 (capacity saturation).",
+      "expect": "|delta| < tol on M1 and M2; any gain appears only in M3.",
+      "rule": "supported if the decoder-minus-LP difference on M1 and M2 is not real in favour of the decoder."
+    },
+    "H5": {
+      "claim": "Part of the M1/M2 ceiling is label noise at region borders: excluding a band around label edges raises every model and shrinks the spread between models.",
+      "expect": "mIoU(r=8) - mIoU(r=0) >= 0.03 on M1 for every config, spread across configs smaller at r=8.",
+      "rule": "supported if both hold."
+    },
+    "H6": {
+      "claim": "big_rock failure is size-driven: small or fragmented boulders are missed, large contiguous ones are found.",
+      "expect": "Recall of the largest third of big_rock components exceeds the smallest third by >= 0.2.",
+      "rule": "supported if that gap is >= 0.2 (LP last_norm, pooled M1+M2)."
+    }
+  }
+}

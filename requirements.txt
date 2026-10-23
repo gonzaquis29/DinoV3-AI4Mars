@@ -1,0 +1,14 @@
+# Analysis stage (stage E) and figures: runs on CPU from the released results.
+# Tested with Python 3.12.3 and the versions in the comments; older versions may work but were not tried.
+numpy>=2.5        # tested 2.5.1
+pandas>=3.0       # tested 3.0.5
+scipy>=1.18       # tested 1.18.1
+matplotlib>=3.11  # tested 3.11.2
+pillow>=10.2      # tested 10.2.0
+tqdm>=4.70        # tested 4.70.1
+torch>=2.14       # tested 2.14.1 (CPU build: pip install torch --index-url https://download.pytorch.org/whl/cpu)
+
+# Only needed to train (stages A-D). Kaggle images already include them.
+# transformers
+# huggingface_hub
+# The Kaggle run that produced the released results used torch 2.11.0+cu128 on 2 x Tesla T4.

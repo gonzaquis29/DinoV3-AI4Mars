@@ -1,0 +1,7 @@
+hypothesis,verdict,evidence
+H1,inconclusive,"M1: block 12 - last_norm = +0.000 [-0.002, +0.004]; M2: block 12 - last_norm = +0.001 [-0.004, +0.008]"
+H2,inconclusive,"M1: FT2-LP N=250: +0.005, N=500: -0.003, N=1000: -0.002, N=2000: +0.004, N=4000: +0.006; M2: FT2-LP N=250: +0.000, N=500: -0.010, N=1000: -0.008, N=2000: +0.001, N=4000: +0.005"
+H3,inconclusive,"M1: v3-v2 +0.013 [+0.002,+0.025], v3-rand +0.414, v2-rand +0.401; M2: v3-v2 +0.011 [-0.003,+0.027], v3-rand +0.453, v2-rand +0.442 (patch 14 vs 16 is a confound)"
+H4,supported,"M1: decoder-LP +0.007 [-0.001,+0.019]; M2: decoder-LP +0.010 [-0.002,+0.030]; M3: decoder-LP +0.104 [+0.003,+0.138]"
+H5,inconclusive,"M1 mIoU r=0 -> r=8: A last_norm 0.677->0.702, B decoder 0.684->0.708; spread across configs 0.007 -> 0.006"
+H6,inconclusive,"recall smallest third 0.28 vs largest third 0.34 (area cut-offs 333/1181 px, 624 components)"
