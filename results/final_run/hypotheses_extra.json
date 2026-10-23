@@ -1,0 +1,12 @@
+{
+  "registered_at": "2026-10-23 12:55:54",
+  "note": "Extra run, registered after the final run and BEFORE the extra run was launched. It follows up H3, whose DINOv3-vs-DINOv2 comparison is confounded with the token grid (32x32 vs 36x36).",
+  "tol": 0.01,
+  "hypotheses": {
+    "H3b": {
+      "claim": "DINOv3's advantage over DINOv2 as a frozen backbone survives matching the token grid: DINOv2 ViT-B/14 at 448 px gives a 32x32 grid, the same as DINOv3 ViT-B/16 at 512 px.",
+      "expect": "Unknown. In the final run DINOv3 - DINOv2 (grid 36x36) was +0.013 on M1 [+0.002, +0.025] and +0.011 on M2 [-0.003, +0.027]. If the grid explains the gap, it shrinks below tol; if pretraining explains it, it stays near +0.01. Input pixels still differ (448 vs 512), so a residual confound remains either way.",
+      "rule": "Same recipe as H3 (probe on cached last-layer tokens, N=2000, 20 epochs, seeds 0,1,2). Supported if DINOv3 - DINOv2@448 is real (paired-bootstrap 95% CI excludes 0 and delta >= tol) on both M1 and M2. Refuted if on both M1 and M2 the whole CI lies inside (-tol, +tol). Otherwise inconclusive."
+    }
+  }
+}
