@@ -7,7 +7,7 @@ controls (random-init ViT, DINOv2, fewer labels, label borders) and published en
 > **Resumen (ES).** Un backbone DINOv3 congelado con una sonda lineal de 4,6 k parámetros queda a 0,02 mIoU de los mejores modelos
 > publicados entrenados de punta a punta en AI4Mars (M1/M2); un decoder o el ajuste fino de los últimos bloques añaden como mucho 0,012.
 > El conjunto M3 no sirve para comparar modelos en `big_rock` (solo 5 imágenes). De las seis hipótesis registradas antes de la corrida
-> final, una se apoya y cinco quedan inconclusas con este tamaño de muestra. Todo es reproducible desde los resultados incluidos.
+> final, una (H4: el decoder no supera a la sonda) se apoya y cinco quedan inconclusas con este tamaño de muestra. Todo es reproducible desde los resultados incluidos.
 
 ## Main results
 
@@ -34,7 +34,7 @@ What the results say:
 
 - **Saturation on M1/M2.** Probe, decoder and fine-tuning end up within 0.012 mIoU of each other; 250 labelled images give 99 % of the
   probe's M1 mIoU (0.671 vs 0.675 at 4,000).
-- **Pretraining is what matters.** Random init reaches 0.264 on M1. DINOv3 beats DINOv2 by +0.013 on M1 (95 % CI [+0.002, +0.025]) but
+- **Pretrained features matter.** A frozen random-init ViT reaches 0.264 on M1; this is a lower bound, not a from-scratch end-to-end control (not run), so it does not separate pretraining from architecture. All stage-D backbones use N = 2,000 images, so the gaps are between equal-N probes (DINOv3 at N = 2,000 matches the full-data probe: 0.677). DINOv3 beats DINOv2 by +0.013 on M1 (95 % CI [+0.002, +0.025]) but
   not clearly on M2. The two differ in patch size, so we reran DINOv2 at 448 px to match the 32×32 token grid (extra run, H3b): the gap does
   not shrink (+0.014 on M1 [+0.003, +0.026]; +0.010 on M2 [−0.004, +0.025]), so the grid does not explain it. Input pixels still differ (448 vs 512).
 - **No intermediate layer beats the last one.** The best intermediate by validation (block 10) is −0.010 on M1 (95 % CI [−0.021, +0.001]).
@@ -121,7 +121,7 @@ Results are cached per unit of work, so an interrupted run resumes where it stop
 
 ## Limitations
 
-One backbone size, one rover and camera, three seeds, 322 test images per variant, and a comparison with published numbers that was not
+One backbone size, one rover and camera, no end-to-end from-scratch control, three seeds, 322 test images per variant, and a comparison with published numbers that was not
 re-run under the same protocol. The extra H3b run was launched in a separate session, with the same code and recipe as stage D. The AI4Mars labels are crowd-sourced. These results say nothing about other planets, sensors or
 safety-critical use.
 
@@ -136,4 +136,5 @@ repository was written with the help of an AI model (Claude).
 - O. Siméoni et al., "DINOv3," arXiv:2508.10104, 2025.
 - R. M. Swan et al., "AI4MARS: A dataset for terrain-aware autonomous driving on Mars," CVPR Workshops, 2021.
 - F. Mohammad, Y. Li, Y. Gao, "Transformers vs CNNs: Enhancing semantic segmentation for Martian terrain classification," iSpaRo, 2025.
+- E. Goh, J. Chen, B. Wilson, "Mars terrain segmentation with less labels," arXiv:2202.00791, 2022. Closest prior work: contrastive pretraining of their own backbone without labels, then few labels; reports pixel accuracy, not mIoU.
 - P. Durai, G. Doran, "MANTLE: a framework for adaptive in-situ planetary perception using a modular uplink principle," arXiv:2608.28724, 2026.
