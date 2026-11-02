@@ -35,7 +35,7 @@ adapting early, middle or late blocks moves the score by more than about 0.01 mI
 | Reproducibility | [Reproduce](#reproduce), `requirements.txt`, fixed seeds, per-run raw results |
 | Article, poster, abstract | [`paper/`](paper/), [`docs/`](docs/) |
 
-**Not done yet.** The teardown has no receptive-field map or intermediate-feature visualisations. The paper is written in a two-column article layout and still has to be moved to the WAIMLAp (IEEE/LNCS) template. The poster and abstract describe the earlier layer-wise study and have not been updated to the v2 questions.
+**Not done yet.** The teardown has no receptive-field map or intermediate-feature visualisations. There is no hyperparameter sweep beyond choosing the LoRA learning rate on one seed in the pilot. The author and affiliation block of the paper is still a placeholder, and the design log's verification column has to be filled in by each team member.
 
 ## Main findings (v2 study)
 
@@ -107,9 +107,9 @@ This run had its own hypotheses, written before it and kept in [`results/final_r
 
 ## Paper, poster and abstract
 
-- Article (WAIMLAp format, LaTeX source and PDF): [`paper/main.pdf`](paper/main.pdf), [`paper/main.tex`](paper/main.tex).
-- Poster: [PDF](docs/Poster_FrozenDINOv3MartianTerrain.pdf), [PPTX](docs/Poster_FrozenDINOv3MartianTerrain.pptx). Abstract: [PDF](docs/Abstract_FrozenDINOv3MartianTerrain.pdf), [DOCX](docs/Abstract_FrozenDINOv3MartianTerrain.docx).
-  They describe the earlier layer-wise study.
+- Article (IEEE conference format, 4 pages; LaTeX source and PDF): [`paper/main.pdf`](paper/main.pdf), [`paper/main.tex`](paper/main.tex).
+- Poster: [PDF](docs/Poster_FrozenDINOv3MartianTerrain.pdf), [PPTX](docs/Poster_FrozenDINOv3MartianTerrain.pptx). Abstract (2 pages, WAIMLAp template): [PDF](docs/Abstract_FrozenDINOv3MartianTerrain.pdf), [DOCX](docs/Abstract_FrozenDINOv3MartianTerrain.docx).
+  Both present the v2 study. The versions that describe the earlier layer-wise study are in [`docs/earlier_study/`](docs/earlier_study/).
 - Design log (each decision, why, and where AI assistance was used): [`DESIGN_LOG.md`](DESIGN_LOG.md).
 
 ## Repository layout
@@ -133,7 +133,7 @@ results/
   final_run/                   output of the earlier study (see results/README.md)
   figures/                     figures built by src/make_figures.py
 paper/                         article (LaTeX source and PDF)
-docs/                          WAIMLAp poster and abstract
+docs/                          WAIMLAp poster and abstract (v2); docs/earlier_study/ has the first version
 DESIGN_LOG.md                  design log
 ```
 

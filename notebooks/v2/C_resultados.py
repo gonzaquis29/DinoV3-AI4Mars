@@ -151,8 +151,8 @@ if cmp1:
         d = [cmp1[(t, k)] for t in ts]
         ax.errorbar([r["delta"] for r in d], y, xerr=[[r["delta"] - r["lo"] for r in d], [r["hi"] - r["delta"] for r in d]],
                     fmt="o", ms=5, lw=1.5, color=["#2a6fdb", "#e07b39"][j], label=k, capsize=0)
-    ax.axvspan(-TOL, TOL, color="0.92", zorder=0, label="±0.01 (equivalencia)"); ax.axvline(0, color="0.5", lw=0.8)
-    ax.set_yticks(range(len(ts)), ts); ax.set_xlabel("Δ mIoU frente a las imágenes originales (IC 95 %)")
+    ax.axvspan(-TOL, TOL, color="0.92", zorder=0, label="±0.01 (equivalence)"); ax.axvline(0, color="0.5", lw=0.8)
+    ax.set_yticks(range(len(ts)), ts); ax.set_xlabel("Δ mIoU vs. original images (95 % CI)")
     ax.legend(frameon=False, fontsize=8, loc="lower left"); ax.spines[["top", "right"]].set_visible(False)
     fig.tight_layout(); fig.savefig(OUT / "figures/P1_apariencia.png", dpi=200)
 
@@ -230,10 +230,10 @@ if cal["M1"]:
                      f"ECE {ece_all:.3f}; brecha roca grande {g_pt:+.3f} [{lo:+.3f}, {hi:+.3f}]"))
     # diagrama de confiabilidad
     fig, ax = plt.subplots(figsize=(3.6, 3.4))
-    for gi, (lab, col) in enumerate((("todos los píxeles", "#2a6fdb"), ("predice roca grande", "#e07b39"))):
+    for gi, (lab, col) in enumerate((("all labelled pixels", "#2a6fdb"), ("predicted big_rock", "#e07b39"))):
         s = sum(p.sum(0)[gi] for p in pooled); m = s[:, 0] > 50
         ax.plot((s[m, 1] / s[m, 0]), (s[m, 2] / s[m, 0]), "o-", ms=4, lw=1.5, color=col, label=lab)
-    ax.plot([0, 1], [0, 1], color="0.6", lw=0.8, ls="--"); ax.set_xlabel("confianza media"); ax.set_ylabel("acierto")
+    ax.plot([0, 1], [0, 1], color="0.6", lw=0.8, ls="--"); ax.set_xlabel("mean confidence"); ax.set_ylabel("accuracy")
     ax.legend(frameon=False, fontsize=8); ax.spines[["top", "right"]].set_visible(False)
     fig.tight_layout(); fig.savefig(OUT / "figures/P3_calibracion.png", dpi=200)
 

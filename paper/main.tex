@@ -1,20 +1,18 @@
-\documentclass[10pt,twocolumn]{article}
-\usepackage[a4paper,margin=1.8cm,columnsep=0.7cm]{geometry}
+\documentclass[conference]{IEEEtran}
 \usepackage[T1]{fontenc}
-\usepackage{lmodern,graphicx,booktabs,amsmath,xcolor,url,hyperref,microtype,enumitem}
-\hypersetup{colorlinks=true,linkcolor=black,citecolor=blue!50!black,urlcolor=blue!50!black}
+\usepackage{graphicx,booktabs,amsmath,xcolor,url,microtype,enumitem}
+\usepackage[colorlinks=true,linkcolor=black,citecolor=black,urlcolor=black]{hyperref}
 \setlist{nosep,leftmargin=1.2em}
-\newcommand{\todo}[1]{\par\noindent\fcolorbox{orange}{orange!8}{\parbox{0.93\linewidth}{\small\textbf{TODO:} #1}}\par\smallskip}
 \newcommand{\bigrock}{\texttt{big\_rock}}
-\title{\vspace{-1em}How Do Web-Pretrained DINOv3 Features Extend to Martian Terrain?\\ Appearance, Adaptation and Errors on AI4Mars\vspace{-0.5em}}
-\author{Authors to be added\\\small Affiliation to be added}
-\date{\small DRAFT --- \today}
+\title{How Do Web-Pretrained DINOv3 Features Extend to Martian Terrain? Appearance, Adaptation and Errors on AI4Mars}
+\author{\IEEEauthorblockN{Authors to be added}\IEEEauthorblockA{Affiliation to be added}}
 \begin{document}
 \maketitle
 \begin{abstract}
 Foundation vision models are trained on web images, yet they are increasingly used on scenes that look nothing like the web, such as the surface of Mars. We study how the features of a frozen DINOv3 ViT-B/16 extend to terrain segmentation on AI4Mars (soil, bedrock, sand and \bigrock) from three angles: whether the gap is one of image appearance, where in the network it pays to adapt, and where the model fails and whether it knows. A 4.6\,k-parameter linear probe reaches 0.674 / 0.723 mIoU on the expert test sets M1 / M2, statistically indistinguishable from a DeepLabV3-R50 trained end to end under the same compute budget, with about 8{,}600 times fewer trainable parameters. Changing how the images look (histogram equalisation, CLAHE, standardisation, blur) does not move the probe, and rank-8 LoRA on early, middle or late blocks adds only 0.005--0.007 mIoU with no difference between zones. What does limit the score is label ambiguity (0.862 mIoU where three experts agree against 0.546 where only one labelled) and the rare \bigrock\ class, where confidence exceeds accuracy by 0.67 even though overall calibration is good (ECE 0.029). Together, the evidence places the performance ceiling in the labels and in one rare class, not in the visual representation; the hypotheses registered beforehand were only partly decided by the data, and we say which ones.
 \end{abstract}
 
+\begin{IEEEkeywords}frozen foundation models, DINOv3, Mars, semantic segmentation, LoRA, calibration\end{IEEEkeywords}
 \section{Introduction}
 Modern computer vision increasingly relies on \emph{foundation models}: large networks pretrained once, without labels, on hundreds of millions of images and then reused for many tasks. Models such as DINOv2 and DINOv3 \cite{oquab2023dinov2,simeoni2025dinov3} are especially attractive because their dense features can be used \emph{frozen}, with a very small head on top, which removes the need for large labelled sets and long training. This matters most in fields where labels are expensive, and planetary science is a clear example: every image comes from a rover on another planet, and every label is a human judgement about a scene few people have seen.
 
