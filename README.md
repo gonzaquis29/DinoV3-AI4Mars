@@ -114,6 +114,7 @@ This run had its own hypotheses, written before it and kept in [`results/final_r
 - Article (IEEE conference format, 4 pages; LaTeX source and PDF): [`paper/main.pdf`](paper/main.pdf), [`paper/main.tex`](paper/main.tex).
 - Poster: [PDF](docs/Poster_FrozenDINOv3MartianTerrain.pdf), [PPTX](docs/Poster_FrozenDINOv3MartianTerrain.pptx). Abstract (2 pages, WAIMLAp template): [PDF](docs/Abstract_FrozenDINOv3MartianTerrain.pdf), [DOCX](docs/Abstract_FrozenDINOv3MartianTerrain.docx).
   Both present the v2 study. The versions that describe the earlier layer-wise study are in [`docs/earlier_study/`](docs/earlier_study/).
+- Code guide (how to read and explain the v2 code, in Spanish): [`docs/GUIA_DEL_CODIGO.md`](docs/GUIA_DEL_CODIGO.md).
 - Design log (each decision, why, and where AI assistance was used): [`DESIGN_LOG.md`](DESIGN_LOG.md).
 
 ## How the results were produced
