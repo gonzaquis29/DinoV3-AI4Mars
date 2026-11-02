@@ -72,6 +72,10 @@ The study tests three hypotheses, one per question. H1 (the gap is not photometr
 |Δ| ≥ 0.01, **equivalent** when the interval lies inside ±0.01, and inconclusive otherwise; Holm's correction is applied within each hypothesis.
 Tables: [`P1_table.csv`](results/v2_full/P1_table.csv), [`P2_table.csv`](results/v2_full/P2_table.csv), [`baseline_table.csv`](results/v2_full/baseline_table.csv); figures in [`results/v2_full/figures/`](results/v2_full/figures/).
 
+**Training curves.** Only validation mIoU per epoch was logged (no training loss): [`training_curves.png`](results/v2_full/figures/training_curves.png), made by [`src/make_training_curves.py`](src/make_training_curves.py). The probes peak around epoch 3 and early stopping ended most of them at epoch 5; the ImageNet baseline plateaus near 0.66 while the one without pretraining was still rising. On validation the LoRA zones separate (middle and late 0.69–0.72, early 0.62–0.64, below the probe), whereas on test the three zones are within 0.002 of one another. HP2 is decided on test, so its verdict does not change, but validation and test disagree on this point and we do not explain it.
+
+![Validation mIoU per epoch](results/v2_full/figures/training_curves.png)
+
 The same study first ran with 2,000 training images ([`results/v2_pilot/`](results/v2_pilot/)) and led to the same conclusions. It is kept as an independent replicate.
 
 ## Earlier study: layer-wise probes, decoder and fine-tuning
@@ -186,7 +190,7 @@ Seeds are fixed (0, 1, 2) and each stage records its configuration next to its r
 ## Limitations
 
 - **Scope.** One backbone size, one rover and camera, 322 test images per variant. The results say nothing about other planets, sensors or safety-critical use.
-- **v2 experiments.** Early stopping cut most P1 probes at epoch 5, before the learning rate had decayed (0.674 against 0.677 in the earlier run), and the three seeds share batch order, so
+- **v2 experiments.** Validation and test disagree on the LoRA zones (see training curves). Early stopping cut most P1 probes at epoch 5, before the learning rate had decayed (0.674 against 0.677 in the earlier run), and the three seeds share batch order, so
   seed variance is understated. P2 uses 2 seeds, 2 epochs per run and a learning rate fixed from the pilot. The baseline has 1 seed and 3 epochs. Intervals are limited by the test-set size, so they are no narrower than in the pilot.
 - **Comparisons.** Published numbers were not re-run under our protocol, and there is no end-to-end from-scratch control for the ViT. The H3b extra run was launched in a separate session with the same code and recipe as stage D.
 - **Labels.** AI4Mars training labels are crowd-sourced and noisy. M3 holds `big_rock` in only 5 of 322 images, so it cannot rank models on that class.
