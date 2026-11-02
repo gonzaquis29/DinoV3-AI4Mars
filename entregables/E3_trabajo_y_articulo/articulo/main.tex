@@ -84,6 +84,11 @@ DeepLabV3-R50, ImageNet & 39.6\,M & 0.667 & 0.713\\
 DeepLabV3-R50, no pretrain. & 39.6\,M & 0.628 & 0.681\\\bottomrule
 \end{tabular}\end{table}
 
+Before asking why the probe stops where it does, the earlier layer-wise run on the same data and protocol (three seeds, the last-layer probe at 0.677 / 0.725 on M1 / M2) shows how far the frozen features go (Fig.~\ref{fig:layers}). No intermediate layer beats the last one: the best on validation, block 10, is $-0.010$ on M1 ($[-0.021,+0.001]$), and block 6 already gives 98\,\% of the final value. A 3.5\,M-parameter decoder and fine-tuning the last four blocks (28\,M) add at most 0.012. A frozen ViT with random weights reaches only 0.264, and DINOv3 is $+0.013$ ($[+0.002,+0.025]$) over DINOv2 on M1, so pretraining matters and the heavier heads add little. Only 250 labelled images give 99\,\% of the probe's mIoU obtained with 4{,}000.
+\begin{figure}[t]\centering
+\includegraphics[width=\linewidth]{../../../results/figures/fig1a_layers_single.png}
+\caption{mIoU of the linear probe at each layer of frozen DINOv3 (validation $\pm$ sd over 3 seeds; test sets with 95\,\% bootstrap intervals).}\label{fig:layers}\end{figure}
+
 The gap is not a matter of how the images look. CLAHE and standardisation are equivalent to the original images on M1 ($+0.001$, intervals inside $\pm0.01$), histogram equalisation is slightly lower ($-0.006$), and blurring away fine texture does not sink the probe ($-0.002$; Fig.~\ref{fig:p1}). On M2 the intervals are wider than $\pm0.01$, so those comparisons cannot be decided, and the data therefore do not formally confirm that every transform is neutral; still, none of them produces a gain. The texture prediction also failed: the class that loses most under blur is soil, not sand. The features appear to depend more on shape and context than on photometric statistics or on fine texture.
 \begin{figure}[t]\centering
 \includegraphics[width=\linewidth]{../../../results/estudio_principal/figures/P1_apariencia.png}

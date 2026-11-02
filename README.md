@@ -111,7 +111,7 @@ This run had its own hypotheses, written before it and kept in [`results/final_r
 
 - All versions of the course deliverables E1, E2 and E3 are in [`entregables/`](entregables/) (index with dates and contents).
 - Article (IEEE conference format, 5 pages; LaTeX source and PDF): [`main.pdf`](entregables/E3_trabajo_y_articulo/articulo/main.pdf), [`main.tex`](entregables/E3_trabajo_y_articulo/articulo/main.tex).
-- Poster and 2-page abstract, final version (main study): [`entregables/E2_poster_waimlap/version_final/`](entregables/E2_poster_waimlap/version_final/); first version (layer-wise study): [`version_octubre/`](entregables/E2_poster_waimlap/version_octubre/).
+- Poster and 2-page abstract, final version (combining the layer-wise and the main study): [`entregables/E2_poster_waimlap/version_final/`](entregables/E2_poster_waimlap/version_final/); first version (layer-wise study): [`version_octubre/`](entregables/E2_poster_waimlap/version_octubre/).
 - Executed analysis notebook as a web page: [`docs/Resultados_ejecutado.html`](docs/Resultados_ejecutado.html) (download and open in a browser).
 - Design log (each decision, why, and where AI assistance was used): [`DESIGN_LOG.md`](DESIGN_LOG.md).
 
