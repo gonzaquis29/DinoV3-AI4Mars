@@ -30,7 +30,7 @@ full result was seen ([`hypotheses_v2_full.json`](notebooks/v2/hypotheses_v2_ful
 | Model (test mIoU, mean of seeds) | Trainable params | M1 | M2 | vs. probe (M1) |
 |---|---|---|---|---|
 | Linear probe on frozen DINOv3 (3 seeds) | 4.6 k | 0.674 | 0.723 | n/a |
-| DeepLabV3 ResNet-50, ImageNet-pretrained, end to end (1 seed) | 39.6 M | 0.667 | 0.713 | −0.007 [−0.025, +0.008], undecided |
+| DeepLabV3 ResNet-50, ImageNet-pretrained, end to end (1 seed) | 39.6 M | 0.667 | 0.713 | −0.007 [−0.025, +0.008], inconclusive |
 | DeepLabV3 ResNet-50, no pretraining (1 seed) | 39.6 M | 0.628 | 0.681 | −0.046 [−0.081, −0.016], real |
 
 The comparison is budget-matched: both baselines train for 3 epochs (about 2,900 steps, 70 minutes each). The ImageNet run had stopped improving by then;
@@ -50,9 +50,9 @@ the `big_rock` pixels are missed.
 
 **Teardown.** Parameters, FLOPs, latency, memory and feature statistics per block: [`teardown_table.csv`](results/v2_full/teardown_table.csv). All 12 blocks cost the same.
 
-Three of the five claims (HP1, HP1b, HP2) could not be decided at this sample size, and two (HP3a, HP3b) hold; per-claim evidence is in
+Three of the five claims (HP1, HP1b, HP2) are inconclusive at this sample size, and two (HP3a, HP3b) are supported; per-claim evidence is in
 [`verdicts_v2.csv`](results/v2_full/verdicts_v2.csv). A difference is **real** when its paired block-bootstrap 95 % interval (blocks of 10 consecutive images) excludes 0 and
-|Δ| ≥ 0.01, **equivalent** when the interval lies inside ±0.01, and undecided otherwise; Holm's correction is applied within each claim.
+|Δ| ≥ 0.01, **equivalent** when the interval lies inside ±0.01, and inconclusive otherwise; Holm's correction is applied within each claim.
 Tables: [`P1_table.csv`](results/v2_full/P1_table.csv), [`P2_table.csv`](results/v2_full/P2_table.csv), [`baseline_table.csv`](results/v2_full/baseline_table.csv); figures in [`results/v2_full/figures/`](results/v2_full/figures/).
 
 The same study first ran with 2,000 training images ([`results/v2_pilot/`](results/v2_pilot/)) and led to the same conclusions. It is kept as an independent replicate.
@@ -92,13 +92,13 @@ interval over images excludes 0 and |Δ| ≥ 0.01.
 
 | | Hypothesis | Outcome |
 |---|---|---|
-| H1 | Intermediate layers beat the last layer | undecided |
-| H2 | The fine-tuning gain over the probe grows with the number of labels | undecided |
-| H3 | DINOv3 beats DINOv2, and both beat random init by a lot | undecided |
-| H3b | DINOv3's edge over DINOv2 survives matching the token grid | undecided (real on M1, not on M2) |
-| H4 | A 3.5 M decoder does not beat the probe on M1/M2 | holds (the interval includes 0; gains up to ~0.02 are not ruled out) |
-| H5 | Part of the M1/M2 ceiling is label noise at region borders | undecided |
-| H6 | `big_rock` failures are size-driven | undecided |
+| H1 | Intermediate layers beat the last layer | inconclusive |
+| H2 | The fine-tuning gain over the probe grows with the number of labels | inconclusive |
+| H3 | DINOv3 beats DINOv2, and both beat random init by a lot | inconclusive |
+| H3b | DINOv3's edge over DINOv2 survives matching the token grid | inconclusive (real on M1, not on M2) |
+| H4 | A 3.5 M decoder does not beat the probe on M1/M2 | supported (the interval includes 0; gains up to ~0.02 are not ruled out) |
+| H5 | Part of the M1/M2 ceiling is label noise at region borders | inconclusive |
+| H6 | `big_rock` failures are size-driven | inconclusive |
 
 Evidence per outcome: [`hypothesis_verdicts.csv`](results/final_run/hypothesis_verdicts.csv). Undecided means the data neither support nor refute the hypothesis at this sample size, not that the effect is absent.
 

@@ -58,17 +58,17 @@ To characterise the errors (P3), we split the labelled pixels of the M1 images i
 
 To place the probe against a trained network, we also trained DeepLabV3-R50 end to end on the same images, split and test sets, with and without ImageNet pretraining. The comparison is budget-matched: one seed and three epochs (about 2{,}900 steps) within 70 minutes per model, a budget representative of a quick deployment. Published figures use other splits, so we cite them only as context.
 
-All differences are paired, computed on the same test images. We resampled blocks of 10 consecutive test images 2{,}000 times, because neighbouring frames are alike, using the same resample for every seed, and built 95\,\% intervals from them. We call a difference \emph{real} when its interval excludes 0 and $|\Delta|\ge 0.01$ mIoU, \emph{equivalent} when the interval lies inside $(-0.01,+0.01)$, and \emph{undecided} otherwise; Holm's correction is applied within each claim. Table~\ref{tab:hyp} states each rule and the outcome.
+All differences are paired, computed on the same test images. We resampled blocks of 10 consecutive test images 2{,}000 times, because neighbouring frames are alike, using the same resample for every seed, and built 95\,\% intervals from them. We call a difference \emph{real} when its interval excludes 0 and $|\Delta|\ge 0.01$ mIoU, \emph{equivalent} when the interval lies inside $(-0.01,+0.01)$, and \emph{inconclusive} otherwise; Holm's correction is applied within each claim. Table~\ref{tab:hyp} states each rule and the outcome.
 
 \begin{table}[t]\centering\footnotesize
-\caption{Claims, decision rules and outcomes (full data).}\label{tab:hyp}
+\caption{Claims, decision rules and verdicts (full data).}\label{tab:hyp}
 \begin{tabular}{@{}p{0.34\linewidth}p{0.36\linewidth}p{0.18\linewidth}@{}}\toprule
 Claim & Holds if\ldots & Outcome\\\midrule
-HP1 appearance transforms do not change the probe & every transform equivalent or lower on M1 and M2 & undecided\\
-HP1b blur hurts, sand most & real drop on M1 and M2, largest on sand & undecided\\
-HP2 late blocks help more than middle or early & late$-$early real on M1 and M2 & undecided\\
-HP3a high agreement $\ge$ low by 0.05 mIoU & difference $\ge0.05$, CI excludes 0 & \textbf{holds}\\
-HP3b calibrated overall, overconfident on \bigrock & ECE $\le0.05$ and gap $\ge0.10$, CI above 0 & \textbf{holds}\\\bottomrule
+HP1 appearance transforms do not change the probe & every transform equivalent or lower on M1 and M2 & inconclusive\\
+HP1b blur hurts, sand most & real drop on M1 and M2, largest on sand & inconclusive\\
+HP2 late blocks help more than middle or early & late$-$early real on M1 and M2 & inconclusive\\
+HP3a high agreement $\ge$ low by 0.05 mIoU & difference $\ge0.05$, CI excludes 0 & \textbf{supported}\\
+HP3b calibrated overall, overconfident on \bigrock & ECE $\le0.05$ and gap $\ge0.10$, CI above 0 & \textbf{supported}\\\bottomrule
 \end{tabular}\end{table}
 
 \section{Results and Discussion}\label{sec:results}
