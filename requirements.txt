@@ -8,7 +8,7 @@ pillow>=10.2      # tested 10.2.0
 tqdm>=4.70        # tested 4.70.1
 torch>=2.14       # tested 2.14.1 (CPU build: pip install torch --index-url https://download.pytorch.org/whl/cpu)
 
-# Only needed to train (final run stages A-D, notebooks/v2 A, B, D). Kaggle images already include them.
+# Only needed to train (final run stages A-D, notebooks/estudio_principal A, B, D). Kaggle images already include them.
 # transformers
 # huggingface_hub
 # torchvision                 (notebooks/v2/D_baseline: DeepLabV3 ResNet-50)

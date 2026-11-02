@@ -16,7 +16,7 @@ adapting early, middle or late blocks moves the score by more than about 0.01 mI
 > ponen la ambigüedad de las etiquetas y la clase `big_rock`, donde el modelo está muy seguro y se equivoca. Todo es reproducible desde los
 > resultados incluidos.
 
-**Contents:** [Deliverables](#where-to-find-each-deliverable) · [Main findings](#main-findings-v2-study) · [Earlier layer-wise study](#earlier-study-layer-wise-probes-decoder-and-fine-tuning) ·
+**Contents:** [Deliverables](#where-to-find-each-deliverable) · [Main findings](#main-findings-main-study) · [Earlier layer-wise study](#earlier-study-layer-wise-probes-decoder-and-fine-tuning) ·
 [Paper, poster and abstract](#paper-poster-and-abstract) · [How results were produced](#how-the-results-were-produced) · [Repository layout](#repository-layout) · [Reproduce](#reproduce) ·
 [Protocol](#protocol) · [Limitations](#limitations) · [Data, weights and licences](#data-weights-and-licences) · [References](#references)
 
@@ -25,11 +25,11 @@ adapting early, middle or late blocks moves the score by more than about 0.01 mI
 | What the course asks for | Where it is |
 |---|---|
 | Research question and contribution | [Paper](entregables/E3_trabajo_y_articulo/articulo/main.pdf), Introduction; summary at the top of this README |
-| Phase A, architecture teardown | [`teardown_table.csv`](results/v2_full/teardown_table.csv), [`raw/a/teardown.json`](results/v2_full/raw/a/teardown.json); code in `notebooks/v2/A_datos_y_errores` |
-| Phase B, controlled interventions with prior hypotheses | P1 (appearance) and P2 (LoRA by depth): [`P1_table.csv`](results/v2_full/P1_table.csv), [`P2_table.csv`](results/v2_full/P2_table.csv); rules in [`hypotheses_v2_full.json`](notebooks/v2/hypotheses_v2_full.json), registered before the runs |
-| Phase C, stress and honesty | P3 (labels and calibration), the baseline comparison and the limitations: [Main findings](#main-findings-v2-study), [Limitations](#limitations), [paper](entregables/E3_trabajo_y_articulo/articulo/main.pdf) |
-| Baseline and state of the art | [`baseline_table.csv`](results/v2_full/baseline_table.csv); Related work in the [paper](entregables/E3_trabajo_y_articulo/articulo/main.pdf); earlier layer-wise study with published numbers [below](#earlier-study-layer-wise-probes-decoder-and-fine-tuning) |
-| Several seeds and uncertainty | 3 seeds for probes, 2 for LoRA, paired block-bootstrap intervals in every table; raw per-run files in `results/v2_full/raw/` |
+| Phase A, architecture teardown | [`teardown_table.csv`](results/estudio_principal/teardown_table.csv), [`raw/a/teardown.json`](results/estudio_principal/raw/a/teardown.json); code in `notebooks/estudio_principal/A_datos_y_errores` |
+| Phase B, controlled interventions with prior hypotheses | P1 (appearance) and P2 (LoRA by depth): [`P1_table.csv`](results/estudio_principal/P1_table.csv), [`P2_table.csv`](results/estudio_principal/P2_table.csv); rules in [`hipotesis_datos_completos.json`](notebooks/estudio_principal/hipotesis_datos_completos.json), registered before the runs |
+| Phase C, stress and honesty | P3 (labels and calibration), the baseline comparison and the limitations: [Main findings](#main-findings-main-study), [Limitations](#limitations), [paper](entregables/E3_trabajo_y_articulo/articulo/main.pdf) |
+| Baseline and state of the art | [`baseline_table.csv`](results/estudio_principal/baseline_table.csv); Related work in the [paper](entregables/E3_trabajo_y_articulo/articulo/main.pdf); earlier layer-wise study with published numbers [below](#earlier-study-layer-wise-probes-decoder-and-fine-tuning) |
+| Several seeds and uncertainty | 3 seeds for probes, 2 for LoRA, paired block-bootstrap intervals in every table; raw per-run files in `results/estudio_principal/raw/` |
 | Design log, with where AI was used | [`DESIGN_LOG.md`](DESIGN_LOG.md) |
 | Limitations, bias and ethics | [Limitations](#limitations) here and the corresponding section of the [paper](entregables/E3_trabajo_y_articulo/articulo/main.pdf) |
 | Reproducibility | [Reproduce](#reproduce), `requirements.txt`, fixed seeds, per-run raw results |
@@ -37,12 +37,12 @@ adapting early, middle or late blocks moves the score by more than about 0.01 mI
 
 **Not done yet.** The teardown has no receptive-field map or intermediate-feature visualisations. There is no hyperparameter sweep beyond choosing the LoRA learning rate on one seed in the pilot. The author and affiliation block of the paper is still a placeholder, and the design log's verification column has to be filled in by each team member.
 
-## Main findings (v2 study)
+## Main findings (main study)
 
 The study uses all 15,564 training images, the same split and the same expert test sets (M1, M2, M3; 322 images each) throughout. Notebooks are in
-[`notebooks/v2/`](notebooks/v2/) and results in [`results/v2_full/`](results/v2_full/). Decision rules for each hypothesis were written down before running
-([`hypotheses_v2.json`](notebooks/v2/hypotheses_v2.json), 02/11/2026 01:54) and saved again for the full data, after a 2,000-image pilot was known and before any
-full result was seen ([`hypotheses_v2_full.json`](notebooks/v2/hypotheses_v2_full.json)).
+[`notebooks/estudio_principal/`](notebooks/estudio_principal/) and results in [`results/estudio_principal/`](results/estudio_principal/). Decision rules for each hypothesis were written down before running
+([`hipotesis_registradas.json`](notebooks/estudio_principal/hipotesis_registradas.json), 02/11/2026 01:54) and saved again for the full data, after a 2,000-image pilot was known and before any
+full result was seen ([`hipotesis_datos_completos.json`](notebooks/estudio_principal/hipotesis_datos_completos.json)). The two files were renamed after the runs (they were first called `hypotheses_v2*.json`); their content is unchanged and the git history shows the original names and timestamps.
 
 | Model (test mIoU, mean of seeds) | Trainable params | M1 | M2 | vs. probe (M1) |
 |---|---|---|---|---|
@@ -65,18 +65,18 @@ that loses most is soil, not sand as we predicted. The gap does not look photome
 label ambiguity. Calibration is good overall (ECE 0.029), but on pixels predicted `big_rock` confidence exceeds accuracy by +0.674 [+0.435, +0.762], and 45 % of
 the `big_rock` pixels are missed.
 
-**Teardown.** Parameters and FLOPs per block in [`teardown_table.csv`](results/v2_full/teardown_table.csv); latency, peak memory and feature statistics in [`raw/a/teardown.json`](results/v2_full/raw/a/teardown.json). All 12 blocks cost the same.
+**Teardown.** Parameters and FLOPs per block in [`teardown_table.csv`](results/estudio_principal/teardown_table.csv); latency, peak memory and feature statistics in [`raw/a/teardown.json`](results/estudio_principal/raw/a/teardown.json). All 12 blocks cost the same.
 
 The study tests three hypotheses, one per question. H1 (the gap is not photometric; registered parts HP1, HP1b) and H2 (late blocks help most; HP2) are inconclusive at this sample size, and H3 (the ceiling is set by the labels and the model is overconfident on `big_rock`; HP3a, HP3b) is supported. Per-part evidence is in
-[`verdicts_v2.csv`](results/v2_full/verdicts_v2.csv). A difference is **real** when its paired block-bootstrap 95 % interval (blocks of 10 consecutive images) excludes 0 and
+[`veredictos.csv`](results/estudio_principal/veredictos.csv). A difference is **real** when its paired block-bootstrap 95 % interval (blocks of 10 consecutive images) excludes 0 and
 |Δ| ≥ 0.01, **equivalent** when the interval lies inside ±0.01, and inconclusive otherwise; Holm's correction is applied within each hypothesis.
-Tables: [`P1_table.csv`](results/v2_full/P1_table.csv), [`P2_table.csv`](results/v2_full/P2_table.csv), [`baseline_table.csv`](results/v2_full/baseline_table.csv); figures in [`results/v2_full/figures/`](results/v2_full/figures/).
+Tables: [`P1_table.csv`](results/estudio_principal/P1_table.csv), [`P2_table.csv`](results/estudio_principal/P2_table.csv), [`baseline_table.csv`](results/estudio_principal/baseline_table.csv); figures in [`results/estudio_principal/figures/`](results/estudio_principal/figures/).
 
-**Training curves.** Only validation mIoU per epoch was logged (no training loss): [`training_curves.png`](results/v2_full/figures/training_curves.png), made by [`src/make_training_curves.py`](src/make_training_curves.py). The probes peak around epoch 3 and early stopping ended most of them at epoch 5; the ImageNet baseline plateaus near 0.66 while the one without pretraining was still rising. On validation the LoRA zones separate (middle and late 0.69–0.72, early 0.62–0.64, below the probe), whereas on test the three zones are within 0.002 of one another. HP2 is decided on test, so its verdict does not change, but validation and test disagree on this point and we do not explain it.
+**Training curves.** Only validation mIoU per epoch was logged (no training loss): [`training_curves.png`](results/estudio_principal/figures/training_curves.png), made by [`src/make_training_curves.py`](src/make_training_curves.py). The probes peak around epoch 3 and early stopping ended most of them at epoch 5; the ImageNet baseline plateaus near 0.66 while the one without pretraining was still rising. On validation the LoRA zones separate (middle and late 0.69–0.72, early 0.62–0.64, below the probe), whereas on test the three zones are within 0.002 of one another. HP2 is decided on test, so its verdict does not change, but validation and test disagree on this point and we do not explain it.
 
-![Validation mIoU per epoch](results/v2_full/figures/training_curves.png)
+![Validation mIoU per epoch](results/estudio_principal/figures/training_curves.png)
 
-The same study first ran with 2,000 training images ([`results/v2_pilot/`](results/v2_pilot/)) and led to the same conclusions. It is kept as an independent replicate.
+The same study first ran with 2,000 training images ([`results/estudio_principal_piloto/`](results/estudio_principal_piloto/)) and led to the same conclusions. It is kept as an independent replicate.
 
 ## Earlier study: layer-wise probes, decoder and fine-tuning
 
@@ -107,15 +107,15 @@ like-for-like. Full table with 95 % intervals per class: [`results/final_run/tab
   (probe ~109 k px, decoder ~16 k px), which alone drives the M3 gap (0.83 against 0.93). Without `big_rock`, all models score 0.96–0.97 on M3.
 - **Label borders.** Excluding a band of 8 px around label edges raises every head by about 0.025 mIoU on M1 (probe 0.677 → 0.702), consistent with, but not proof of, label noise at borders.
 
-This run had its own hypotheses, written before it and kept in [`results/final_run/`](results/final_run/) ([`hypotheses_preregistered.json`](results/final_run/hypotheses_preregistered.json), [`hypothesis_verdicts.csv`](results/final_run/hypothesis_verdicts.csv)); they are superseded by the three of the v2 study above, which is the one the paper reports.
+This run had its own hypotheses, written before it and kept in [`results/final_run/`](results/final_run/) ([`hypotheses_preregistered.json`](results/final_run/hypotheses_preregistered.json), [`hypothesis_verdicts.csv`](results/final_run/hypothesis_verdicts.csv)); they are superseded by the three of the main study above, which is the one the paper reports.
 
 ## Paper, poster and abstract
 
 - All versions of the course deliverables E1, E2 and E3 are in [`entregables/`](entregables/) (index with dates and contents).
 - Article (IEEE conference format, 5 pages; LaTeX source and PDF): [`main.pdf`](entregables/E3_trabajo_y_articulo/articulo/main.pdf), [`main.tex`](entregables/E3_trabajo_y_articulo/articulo/main.tex).
-- Poster and 2-page abstract, final version (v2 study): [`entregables/E2_poster_waimlap/v2_estudio_final/`](entregables/E2_poster_waimlap/v2_estudio_final/); first version (layer-wise study): [`v1_registro_octubre/`](entregables/E2_poster_waimlap/v1_registro_octubre/).
+- Poster and 2-page abstract, final version (main study): [`entregables/E2_poster_waimlap/version_final/`](entregables/E2_poster_waimlap/version_final/); first version (layer-wise study): [`version_octubre/`](entregables/E2_poster_waimlap/version_octubre/).
 - Executed analysis notebook as a web page: [`docs/Resultados_ejecutado.html`](docs/Resultados_ejecutado.html) (download and open in a browser).
-- Code guide (how to read and explain the v2 code, in Spanish): [`docs/GUIA_DEL_CODIGO.md`](docs/GUIA_DEL_CODIGO.md).
+- Code guide (how to read and explain the main-study code, in Spanish): [`docs/GUIA_DEL_CODIGO.md`](docs/GUIA_DEL_CODIGO.md).
 - Design log (each decision, why, and where AI assistance was used): [`DESIGN_LOG.md`](DESIGN_LOG.md).
 
 ## How the results were produced
@@ -123,9 +123,9 @@ This run had its own hypotheses, written before it and kept in [`results/final_r
 The long runs (A, B and D) were launched as asynchronous Kaggle kernels on 2 × T4 GPUs and executed from start to finish there, so the `.ipynb` files in this repository are the
 **sources, saved without outputs**. What was produced is kept as evidence:
 
-- the console log of each full-data run, in [`results/v2_full/logs/`](results/v2_full/logs/): teardown and P1 (A), LoRA middle and late (B), LoRA early (B), baseline (D);
-- one JSON per run with its configuration, seed, best epoch and per-epoch validation mIoU, and one `.npz` with per-image confusion matrices, in [`results/v2_full/raw/`](results/v2_full/raw/);
-- [`notebooks/v2/C_resultados.ipynb`](notebooks/v2/C_resultados.ipynb), which **was executed** and is stored with its outputs: it needs no GPU and rebuilds every table, figure and verdict from the raw files in a few seconds.
+- the console log of each full-data run, in [`results/estudio_principal/logs/`](results/estudio_principal/logs/): teardown and P1 (A), LoRA middle and late (B), LoRA early (B), baseline (D);
+- one JSON per run with its configuration, seed, best epoch and per-epoch validation mIoU, and one `.npz` with per-image confusion matrices, in [`results/estudio_principal/raw/`](results/estudio_principal/raw/);
+- [`notebooks/estudio_principal/C_resultados.ipynb`](notebooks/estudio_principal/C_resultados.ipynb), which **was executed** and is stored with its outputs: it needs no GPU and rebuilds every table, figure and verdict from the raw files in a few seconds.
 
 So any number in the paper can be traced to a raw file and re-derived without re-training. Re-training itself takes about 2 h 25 min (A), 1 h 45 min (B) and 80 min (D) on 2 × T4.
 
@@ -135,21 +135,21 @@ So any number in the paper can be traced to a raw file and re-derived without re
 notebooks/
   ai4mars_dinov3_final.ipynb   earlier study: stages A-E, resumable, 2 GPUs (source: .py)
   py_to_ipynb.py               regenerates any .ipynb from its .py: python notebooks/py_to_ipynb.py <file.py>
-  v2/                          v2 study (each notebook has a .py source and its .ipynb)
+  estudio_principal/           main study (each notebook has a .py source and its .ipynb)
     A_datos_y_errores          teardown, P1 (image appearance), data for P3
     B_modelo                   P2 (LoRA by depth)
     C_resultados               analysis on CPU: tables, figures, verdicts (A4M_RUN=full | pilot)
     D_baseline                 DeepLabV3 ResNet-50 baseline trained end to end
     a4m_lib.py                 shared plumbing (data, token caches, training loop, metrics, result store)
-    hypotheses_v2*.json        decision rules, written before running
+    hipotesis_*.json        decision rules, written before running
 src/
   make_figures.py              figures for the earlier study
 results/
-  v2_full/                     v2 study with 15,564 images: tables, figures, raw/{a,b,d}
-  v2_pilot/                    same study with 2,000 images (independent replicate)
+  estudio_principal/           main study with 15,564 images: tables, figures, raw/{a,b,d}
+  estudio_principal_piloto/    same study with 2,000 images (independent replicate)
   final_run/                   output of the earlier study (see results/README.md)
   figures/                     figures built by src/make_figures.py
-entregables/                   course deliverables: E1 proposal and teardown, E2 poster and abstract (v1, v2), E3 article
+entregables/                   course deliverables: E1 proposal and teardown, E2 poster and abstract (October and final versions), E3 article
 docs/                          code guide and the executed analysis notebook as HTML
 DESIGN_LOG.md                  design log
 ```
@@ -160,14 +160,14 @@ Every metric is stored as a per-image confusion matrix, so any number can be re-
 
 ## Reproduce
 
-**1. v2 analysis (CPU).** Regenerates `results/v2_full/` (or `results/v2_pilot/`) from the raw per-run files in `raw/`:
+**1. Analysis of the main study (CPU).** Regenerates `results/estudio_principal/` (or `results/estudio_principal_piloto/`) from the raw per-run files in `raw/`:
 
 ```bash
 pip install -r requirements.txt
-A4M_RUN=full  python notebooks/v2/C_resultados.py      # or A4M_RUN=pilot
+A4M_RUN=full  python notebooks/estudio_principal/C_resultados.py      # or A4M_RUN=pilot
 ```
 
-**2. v2 re-run on Kaggle.** Notebooks A, B and D (sources without outputs; see above) import `a4m_lib.py` (attach `notebooks/v2/` as a dataset). Environment variables select the mode:
+**2. Re-run of the main study on Kaggle.** Notebooks A, B and D (sources without outputs; see above) import `a4m_lib.py` (attach `notebooks/estudio_principal/` as a dataset). Environment variables select the mode:
 `A4M_FULL=1` (all 15,564 images; token caches go to disk), `A4M_ZONES=early,mid,late` (B), `A4M_SMOKE=1` (tiny offline self-test). Without `A4M_FULL`
 they run the 2,000-image pilot. Measured on 2 × T4 including data loading: A ≈ 2 h 25 min, B ≈ 1 h 45 min, D ≈ 80 min (training budget set by `BUDGET_MIN`).
 
@@ -203,11 +203,11 @@ Seeds are fixed (0, 1, 2) and each stage records its configuration next to its r
 ## Limitations
 
 - **Scope.** One backbone size, one rover and camera, 322 test images per variant. The results say nothing about other planets, sensors or safety-critical use.
-- **v2 experiments.** Validation and test disagree on the LoRA zones (see training curves). Early stopping cut most P1 probes at epoch 5, before the learning rate had decayed (0.674 against 0.677 in the earlier run), and the three seeds share batch order, so
+- **main-study experiments.** Validation and test disagree on the LoRA zones (see training curves). Early stopping cut most P1 probes at epoch 5, before the learning rate had decayed (0.674 against 0.677 in the earlier run), and the three seeds share batch order, so
   seed variance is understated. P2 uses 2 seeds, 2 epochs per run and a learning rate fixed from the pilot. The baseline has 1 seed and 3 epochs. Intervals are limited by the test-set size, so they are no narrower than in the pilot.
 - **Comparisons.** Published numbers were not re-run under our protocol, and there is no end-to-end from-scratch control for the ViT. The H3b extra run was launched in a separate session with the same code and recipe as stage D.
 - **Labels.** AI4Mars training labels are crowd-sourced and noisy. M3 holds `big_rock` in only 5 of 322 images, so it cannot rank models on that class.
-- **Process.** The first v2 pilot used 2,000 training images and was not flagged at once as different from the full training; this was corrected and the full-data runs are the ones reported (see the design log).
+- **Process.** The first pilot used 2,000 training images and was not flagged at once as different from the full training; this was corrected and the full-data runs are the ones reported (see the design log).
 
 ## Data, weights and licences
 

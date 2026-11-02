@@ -1,5 +1,5 @@
 # %% [markdown]
-# # AI4Mars × DINOv3 — v2 · Cuaderno D: baseline supervisado entrenado por nosotros
+# # AI4Mars × DINOv3 — Cuaderno D: baseline supervisado entrenado por nosotros
 #
 # Para poder decir «frente a un modelo clásico entrenado igual», entrenamos **DeepLabV3 con ResNet-50** de punta a punta,
 # con el mismo split, las mismas imágenes de test (M1, M2, M3), el mismo tamaño de entrada (512 px) y las mismas métricas

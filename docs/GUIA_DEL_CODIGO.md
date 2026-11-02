@@ -1,6 +1,6 @@
 # Guía del código: cómo leerlo y cómo explicarlo
 
-Esta guía sirve para entender el estudio v2 en 30 minutos y para defenderlo. Todo el estudio vive en `notebooks/v2/`: **una librería de apoyo y cuatro cuadernos**. Lo demás del repositorio es el estudio anterior (capa por capa) y material de entrega.
+Esta guía sirve para entender el estudio principal en 30 minutos y para defenderlo. Todo el estudio vive en `notebooks/estudio_principal/`: **una librería de apoyo y cuatro cuadernos**. Lo demás del repositorio es el estudio anterior (capa por capa) y material de entrega.
 
 ## 1. El mapa en una imagen
 
@@ -18,21 +18,21 @@ Esta guía sirve para entender el estudio v2 en 30 minutos y para defenderlo. To
       │               │              │
       └───────────────┴──────┬───────┘
                              ▼
-                 results/v2_full/raw/   ← un JSON y un .npz por corrida
+                 results/estudio_principal/raw/   ← un JSON y un .npz por corrida
                              │
                              ▼
                     C_resultados  (CPU, segundos)
           estadística → tablas, figuras y veredictos
                              │
                              ▼
-     results/v2_full/*.csv, figures/ → entregables/ (artículo, póster), README
+     results/estudio_principal/*.csv, figures/ → entregables/ (artículo, póster), README
 ```
 
 **La idea de fondo:** los cuadernos de GPU (A, B, D) solo **producen archivos crudos**; el cuaderno C **no entrena nada**, solo lee esos archivos y calcula las tablas. Por eso cualquier número del artículo se puede rastrear hasta un archivo crudo.
 
 ## 2. Orden de lectura sugerido
 
-1. `notebooks/v2/hypotheses_v2_full.json`: las preguntas, las afirmaciones y las reglas de decisión (5 min).
+1. `notebooks/estudio_principal/hipotesis_datos_completos.json`: las preguntas, las afirmaciones y las reglas de decisión (5 min).
 2. `C_resultados.py`, secciones 1 y 7: cómo se decide «real / equivalente / inconcluso» y cómo salen los veredictos (10 min).
 3. `A_datos_y_errores.py`, secciones 2a–2c: las transformaciones de P1 y la sonda (5 min).
 4. `B_modelo.py`, secciones 1 y 4: LoRA y una corrida (5 min).
@@ -95,9 +95,9 @@ Arma las carpetas de lanzamiento a Kaggle. No es parte del estudio; se puede ign
 Tomemos «la sonda saca 0.674 en M1»:
 
 1. `A_datos_y_errores`, sección 2c, entrena la sonda sobre las imágenes originales con las semillas 0, 1 y 2.
-2. Cada corrida escribe `results/v2_full/raw/a/P1_original_s0.json` y `.npz` (el `.npz` guarda una matriz de confusión por cada imagen de test).
+2. Cada corrida escribe `results/estudio_principal/raw/a/P1_original_s0.json` y `.npz` (el `.npz` guarda una matriz de confusión por cada imagen de test).
 3. `C_resultados`, sección 2a, suma las matrices por semilla, calcula el mIoU y lo promedia: 0.674.
-4. Lo escribe en `results/v2_full/P1_table.csv`.
+4. Lo escribe en `results/estudio_principal/P1_table.csv`.
 5. El artículo y el póster citan esa fila.
 
 Y los intervalos: se remuestrean los bloques de imágenes (paso 3) 2,000 veces.
@@ -124,8 +124,8 @@ Y los intervalos: se remuestrean los bloques de imágenes (paso 3) 2,000 veces.
 
 Hay dos generaciones de código y varias capas de andamiaje:
 
-- **Estudio anterior (capa por capa):** `notebooks/ai4mars_dinov3_final.py` es un cuaderno único y largo (etapas A–E); sus resultados están en `results/final_run/`. El estudio v2 **no depende de él**; solo lo cita como contexto.
-- **Estudio v2:** `notebooks/v2/` con la librería y los cuatro cuadernos. Es lo que hay que leer.
+- **Estudio anterior (capa por capa):** `notebooks/ai4mars_dinov3_final.py` es un cuaderno único y largo (etapas A–E); sus resultados están en `results/final_run/`. El estudio principal **no depende de él**; solo lo cita como contexto.
+- **Estudio principal:** `notebooks/estudio_principal/` con la librería y los cuatro cuadernos. Es lo que hay que leer.
 - **Modos de ejecución:** variables de entorno como `A4M_FULL`, `A4M_QUICK`, `A4M_SMOKE` seleccionan entre corrida completa (15,564 imágenes), prueba rápida en Kaggle y autoprueba con datos falsos. El piloto de 2,000 imágenes corre cuando no se define `A4M_FULL`. Si solo se quiere entender, se pueden ignorar.
 - **`kaggle_run/`:** carpetas de lanzamiento a Kaggle generadas por `build_kaggle.py`.
 

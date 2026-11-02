@@ -17,14 +17,14 @@ Delegar la ejecución es válido; la comprensión no. Cada integrante debe poder
 | 5 | «Diferencia real» = IC 95 % bootstrap pareado excluye 0 **y** \|Δ\| ≥ 0.01 mIoU | Evitar celebrar diferencias triviales | Diseño y código | |
 | 6 | Hipótesis H1–H6 escritas antes de correr | Se evalúa el modelo mental, no la ejecución | Redacción | |
 
-## Reformulación v2 (02/11/2026)
+## Reformulación del proyecto (02/11/2026)
 
 | # | Decisión | Por qué | IA | Verificó |
 |---|---|---|---|---|
-| 7 | Tres preguntas: P1 datos (¿la brecha es de apariencia?), P2 modelo (¿dónde adaptar con LoRA?), P3 errores (acuerdo entre expertos y calibración). El teardown es preliminar, no una pregunta | La tarea pide una pregunta de investigación clara; una sola dirección con tres ángulos | Propuesta y redacción | |
+| 7 | Tres preguntas: P1 datos (¿la brecha es de apariencia?), P2 modelo (¿dónde adaptar con LoRA?), P3 errores (acuerdo entre expertos y calibración). El teardown es una fase de apoyo, no una pregunta | La tarea pide una pregunta de investigación clara; una sola dirección con tres ángulos | Propuesta y redacción | |
 | 8 | Solo AI4Mars; se descarta tamaño del modelo y otros dominios | Profundidad antes que amplitud | — | |
 | 9 | Estadística: bootstrap por bloques de 10 imágenes consecutivas, regla de equivalencia (±0.01), corrección de Holm | Las imágenes vecinas (reloj de la nave) se parecen; el bootstrap por imagen sería optimista | Código | |
-| 10 | Hipótesis HP1, HP1b, HP2, HP3a, HP3b registradas el 02/11 a las 01:54, antes de correr (`notebooks/v2/hypotheses_v2.json`) | Igual que #6 | Redacción | |
+| 10 | Hipótesis HP1, HP1b, HP2, HP3a, HP3b registradas el 02/11 a las 01:54, antes de correr (`notebooks/estudio_principal/hipotesis_registradas.json`) | Igual que #6 | Redacción | |
 | 11 | LoRA rango 8 sobre todas las capas lineales de 2 bloques consecutivos (1–2, 6–7, 11–12), mismo presupuesto en las tres zonas | Aislar *dónde* adaptar, no *cuánto* | Código | |
 
 ## Piloto con N = 2,000 (02/11/2026, mañana)
@@ -42,7 +42,7 @@ No se avisó al equipo de que eso no coincidía con el entrenamiento completo de
 | # | Decisión | Por qué | IA | Verificó |
 |---|---|---|---|---|
 | 14 | Rehacer P1, P2 y P3 con todas las imágenes de entrenamiento | El entregable final y el póster usan el conjunto completo | Código | |
-| 15 | Las hipótesis se registraron de nuevo (`hypotheses_v2_full.json`) con las mismas reglas, **después** de conocer el piloto y antes de ver resultados completos; esto se declara en el archivo | Honestidad: el piloto ya se conocía | Redacción | |
+| 15 | Las hipótesis se registraron de nuevo (`hipotesis_datos_completos.json`) con las mismas reglas, **después** de conocer el piloto y antes de ver resultados completos; esto se declara en el archivo | Honestidad: el piloto ya se conocía | Redacción | |
 | 16 | Caché de tokens en disco (memmap) y elección automática de la carpeta con más espacio; si no cabe, se reduce N y queda registrado | `/kaggle/working` solo tiene 20 GB; una primera versión murió con `No space left on device` | Código | |
 | 17 | P1: sonda hasta 10 épocas con parada temprana (paciencia 2), las 3 semillas comparten el orden de los lotes | Leer el disco una vez; los IC de las semillas son algo más estrechos que con órdenes independientes | Código | |
 | 18 | P2: LoRA con 2 épocas (~1,900 pasos) por corrida, LR fijado con la validación del piloto, 2 semillas, control = sonda de P1 | Lo que cabía en el tiempo; **limitación declarada**, no un diseño ideal | Código | |

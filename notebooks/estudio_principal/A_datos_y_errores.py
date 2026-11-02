@@ -1,5 +1,5 @@
 # %% [markdown]
-# # AI4Mars × DINOv3 — v2 · Cuaderno A: datos y errores
+# # AI4Mars × DINOv3 — Cuaderno A: datos y errores
 #
 # **Pregunta central:** ¿cómo se extienden las features de DINOv3 (preentrenado con imágenes web) al dominio de Marte?
 #
@@ -7,17 +7,17 @@
 #
 # | Sección | Qué responde |
 # |---|---|
-# | 1. Teardown (preliminar) | Cuánto pesa y cuánto cuesta cada bloque del ViT-B/16 (parámetros, FLOPs, latencia, memoria) y cómo cambian las features de Marte bloque a bloque |
+# | 1. Teardown | Cuánto pesa y cuánto cuesta cada bloque del ViT-B/16 (parámetros, FLOPs, latencia, memoria) y cómo cambian las features de Marte bloque a bloque |
 # | 2. **P1 — datos** | ¿La brecha Web→Marte es de *apariencia*? Misma sonda, imágenes con la apariencia modificada |
 # | 3. **P3 — errores** (datos) | Guarda, para cada imagen de test, la confianza por píxel y el acuerdo entre expertos. El análisis está en el cuaderno C |
 #
-# Las hipótesis se escribieron **antes** de correr (`hypotheses_v2.json`; la versión final se volvió a registrar en `hypotheses_v2_full.json`, con fecha).
+# Las hipótesis se escribieron **antes** de correr (`hipotesis_registradas.json`; la versión final se volvió a registrar en `hipotesis_datos_completos.json`, con fecha).
 #
 # ## Cómo se corre (dos modos)
 # | modo | cómo se activa | entrenamiento | para qué |
 # |---|---|---|---|
-# | **final** | `A4M_FULL=1` | las **15,564** imágenes de entrenamiento, sonda hasta 10 épocas con parada temprana (paciencia 2; cortó casi todas en la época 5, antes de que el LR bajara: limitación declarada), las 3 semillas comparten lotes, caché de tokens en disco | resultados del artículo (`results/v2_full/`) |
-# | piloto | (sin variable) | **2,000** imágenes (el mismo subconjunto de la etapa D de la corrida final), 20 épocas | réplica independiente (`results/v2_pilot/`) |
+# | **final** | `A4M_FULL=1` | las **15,564** imágenes de entrenamiento, sonda hasta 10 épocas con parada temprana (paciencia 2; cortó casi todas en la época 5, antes de que el LR bajara: limitación declarada), las 3 semillas comparten lotes, caché de tokens en disco | resultados del artículo (`results/estudio_principal/`) |
+# | piloto | (sin variable) | **2,000** imágenes (el mismo subconjunto de la etapa D de la corrida final), 20 épocas | réplica independiente (`results/estudio_principal_piloto/`) |
 #
 # Se corre en Kaggle (T4); `A4M_SMOKE=1` hace una prueba mínima sin datos reales ni GPU.
 # Todo lo que no ayuda a explicar el experimento (lectura de archivos, bucle de entrenamiento, métricas) está en `a4m_lib.py`.
@@ -40,8 +40,8 @@ if QUICK:
     CFG.update(n_pool=64, seeds=(0,), epochs=1)
 setup_dirs()
 DEV = devices()[0]
-hyp = Path(a4m_lib.__file__).with_name("hypotheses_v2.json")
-shutil.copy(hyp, OUT / "hypotheses_v2.json")
+hyp = Path(a4m_lib.__file__).with_name("hipotesis_registradas.json")
+shutil.copy(hyp, OUT / "hipotesis_registradas.json")
 print("device:", DEV, "| hipótesis registradas el", json.load(open(hyp))["registered_at"])
 
 # %% [markdown]
@@ -64,7 +64,7 @@ M3_FOR_M1 = load_m3_labels(SPLITS["M1_m3label"], DATA["M1"][1])
 print({k: len(v[0]) for k, v in DATA.items()})
 
 # %% [markdown]
-# ## 1. Teardown (preliminar)
+# ## 1. Teardown
 # No es una pregunta de investigación: describe el modelo para entender sus costos y justificar dónde intervenir (cuaderno B).
 
 # %% 1a. parámetros por bloque

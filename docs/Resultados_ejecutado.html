@@ -7796,14 +7796,14 @@ a.anchor-link {
 <!-- End of mermaid configuration --></head>
 <body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
 <main>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=5f597fa0">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=143b2486">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="AI4Mars-%C3%97-DINOv3-%E2%80%94-v2-%C2%B7-Cuaderno-C:-resultados-y-veredictos">AI4Mars × DINOv3 — v2 · Cuaderno C: resultados y veredictos<a class="anchor-link" href="#AI4Mars-%C3%97-DINOv3-%E2%80%94-v2-%C2%B7-Cuaderno-C:-resultados-y-veredictos">¶</a></h1><p>Solo lee resultados (corre en CPU, sin dataset ni GPU). <code>A4M_RUN=full</code> (por defecto) o <code>A4M_RUN=pilot</code>. Junta las salidas de los cuadernos A y B, calcula
-intervalos de confianza y aplica las reglas escritas <strong>antes</strong> de correr (<code>hypotheses_v2.json</code>).</p>
+<h1 id="AI4Mars-%C3%97-DINOv3-%E2%80%94-Cuaderno-C:-resultados-y-veredictos">AI4Mars × DINOv3 — Cuaderno C: resultados y veredictos<a class="anchor-link" href="#AI4Mars-%C3%97-DINOv3-%E2%80%94-Cuaderno-C:-resultados-y-veredictos">¶</a></h1><p>Solo lee resultados (corre en CPU, sin dataset ni GPU). <code>A4M_RUN=full</code> (por defecto) o <code>A4M_RUN=pilot</code>. Junta las salidas de los cuadernos A y B, calcula
+intervalos de confianza y aplica las reglas escritas <strong>antes</strong> de correr (<code>hipotesis_registradas.json</code>).</p>
 <table>
 <thead>
 <tr>
@@ -7830,7 +7830,7 @@ intervalos de confianza y aplica las reglas escritas <strong>antes</strong> de c
 </tr>
 <tr>
 <td>5</td>
-<td>Teardown (preliminar)</td>
+<td>Teardown</td>
 </tr>
 <tr>
 <td>6</td>
@@ -7845,7 +7845,7 @@ intervalos de confianza y aplica las reglas escritas <strong>antes</strong> de c
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=e8ca520c">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=968b7c2b">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7861,23 +7861,23 @@ intervalos de confianza y aplica las reglas escritas <strong>antes</strong> de c
 <span class="n">matplotlib</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">"Agg"</span><span class="p">)</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
-<span class="n">HERE</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="nb">globals</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"__file__"</span><span class="p">,</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span> <span class="o">/</span> <span class="s2">"x"</span> <span class="k">if</span> <span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span> <span class="o">/</span> <span class="s2">"hypotheses_v2.json"</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="k">else</span> <span class="s2">"notebooks/v2/C_resultados.py"</span><span class="p">))</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span>
+<span class="n">HERE</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="nb">globals</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"__file__"</span><span class="p">,</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span> <span class="o">/</span> <span class="s2">"x"</span> <span class="k">if</span> <span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span> <span class="o">/</span> <span class="s2">"hipotesis_registradas.json"</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="k">else</span> <span class="s2">"notebooks/estudio_principal/C_resultados.py"</span><span class="p">))</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">HERE</span><span class="p">))</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">a4m_lib</span><span class="w"> </span><span class="kn">import</span> <span class="n">miou_np</span><span class="p">,</span> <span class="n">iou_np</span><span class="p">,</span> <span class="n">ece</span><span class="p">,</span> <span class="n">CLASS_NAMES</span>
 
 <span class="c1"># Qué corrida se analiza: A4M_RUN=full (por defecto, las 15,564 imágenes) o A4M_RUN=pilot (2,000 imágenes).</span>
-<span class="c1"># Lee los resultados crudos de results/v2_&lt;run&gt;/raw/{a,b,d} y escribe tablas y figuras en results/v2_&lt;run&gt;/.</span>
+<span class="c1"># Lee los resultados crudos de results/&lt;estudio&gt;/raw/{a,b,d} y escribe tablas y figuras en results/&lt;estudio&gt;/.</span>
 <span class="n">RUN</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"A4M_RUN"</span><span class="p">,</span> <span class="s2">"full"</span><span class="p">)</span>
-<span class="n">BASE</span> <span class="o">=</span> <span class="n">HERE</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"results/v2_</span><span class="si">{</span><span class="n">RUN</span><span class="si">}</span><span class="s2">"</span>
-<span class="n">V2</span> <span class="o">=</span> <span class="p">[</span><span class="n">Path</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"A4M_V2"</span><span class="p">,</span> <span class="s2">":"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">BASE</span> <span class="o">/</span> <span class="s2">"raw"</span> <span class="o">/</span> <span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"a"</span><span class="p">,</span> <span class="s2">"b"</span><span class="p">,</span> <span class="s2">"d"</span><span class="p">)))</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">":"</span><span class="p">)]</span>
-<span class="n">V1</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"A4M_V1"</span><span class="p">,</span> <span class="n">HERE</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="s2">"results/final_run/results"</span><span class="p">))</span>
+<span class="n">BASE</span> <span class="o">=</span> <span class="n">HERE</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="s2">"results"</span> <span class="o">/</span> <span class="p">(</span><span class="s2">"estudio_principal"</span> <span class="k">if</span> <span class="n">RUN</span> <span class="o">==</span> <span class="s2">"full"</span> <span class="k">else</span> <span class="s2">"estudio_principal_piloto"</span><span class="p">)</span>
+<span class="n">RAW</span> <span class="o">=</span> <span class="p">[</span><span class="n">Path</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"A4M_RAW"</span><span class="p">,</span> <span class="s2">":"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">BASE</span> <span class="o">/</span> <span class="s2">"raw"</span> <span class="o">/</span> <span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"a"</span><span class="p">,</span> <span class="s2">"b"</span><span class="p">,</span> <span class="s2">"d"</span><span class="p">)))</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">":"</span><span class="p">)]</span>
+<span class="n">PRIOR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"A4M_PRIOR"</span><span class="p">,</span> <span class="n">HERE</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="s2">"results/final_run/results"</span><span class="p">))</span>
 <span class="n">OUT</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"A4M_OUT_C"</span><span class="p">,</span> <span class="n">BASE</span><span class="p">));</span> <span class="p">(</span><span class="n">OUT</span> <span class="o">/</span> <span class="s2">"figures"</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">H</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">HERE</span> <span class="o">/</span> <span class="s2">"hypotheses_v2.json"</span><span class="p">))</span>
+<span class="n">H</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">HERE</span> <span class="o">/</span> <span class="s2">"hipotesis_registradas.json"</span><span class="p">))</span>
 <span class="n">TOL</span><span class="p">,</span> <span class="n">NB</span><span class="p">,</span> <span class="n">BLOCK</span><span class="p">,</span> <span class="n">SEEDS</span> <span class="o">=</span> <span class="n">H</span><span class="p">[</span><span class="s2">"common"</span><span class="p">][</span><span class="s2">"tol"</span><span class="p">],</span> <span class="n">H</span><span class="p">[</span><span class="s2">"common"</span><span class="p">][</span><span class="s2">"n_boot"</span><span class="p">],</span> <span class="mi">10</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"hipótesis registradas:"</span><span class="p">,</span> <span class="n">H</span><span class="p">[</span><span class="s2">"registered_at"</span><span class="p">],</span> <span class="s2">"| resultados v2 en"</span><span class="p">,</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">V2</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"hipótesis registradas:"</span><span class="p">,</span> <span class="n">H</span><span class="p">[</span><span class="s2">"registered_at"</span><span class="p">],</span> <span class="s2">"| resultados en"</span><span class="p">,</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">RAW</span><span class="p">])</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">folders</span><span class="o">=</span><span class="n">V2</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">folders</span><span class="o">=</span><span class="n">RAW</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"P2_probe_"</span><span class="p">):</span>                                 <span class="c1"># versión final: el control de P2 es la sonda de P1 (misma receta)</span>
         <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"P2_probe_"</span><span class="p">,</span> <span class="s2">"P1_original_"</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">folders</span><span class="p">:</span>
@@ -7887,7 +7887,7 @@ intervalos de confianza y aplica las reglas escritas <strong>antes</strong> de c
     <span class="k">return</span> <span class="kc">None</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">group</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">folders</span><span class="o">=</span><span class="n">V2</span><span class="p">,</span> <span class="n">seeds</span><span class="o">=</span><span class="n">SEEDS</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">group</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">folders</span><span class="o">=</span><span class="n">RAW</span><span class="p">,</span> <span class="n">seeds</span><span class="o">=</span><span class="n">SEEDS</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""{set: [array por semilla]} para una configuración."""</span>
     <span class="n">res</span> <span class="o">=</span> <span class="p">[</span><span class="n">load</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">_s</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">folders</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">seeds</span><span class="p">]</span>
     <span class="n">res</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">res</span> <span class="k">if</span> <span class="n">r</span><span class="p">]</span>
@@ -7904,7 +7904,7 @@ intervalos de confianza y aplica las reglas escritas <strong>antes</strong> de c
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>hipótesis registradas: 2026-11-02 01:54:25 -0500 | resultados v2 en ['/home/gonzalo/Escritorio/Proyectos PUCP/DinoV3-AI4Mars/results/v2_full/raw/a', '/home/gonzalo/Escritorio/Proyectos PUCP/DinoV3-AI4Mars/results/v2_full/raw/b', '/home/gonzalo/Escritorio/Proyectos PUCP/DinoV3-AI4Mars/results/v2_full/raw/d']
+<pre>hipótesis registradas: 2026-11-02 01:54:25 -0500 | resultados en ['/home/gonzalo/Escritorio/Proyectos PUCP/DinoV3-AI4Mars/results/estudio_principal/raw/a', '/home/gonzalo/Escritorio/Proyectos PUCP/DinoV3-AI4Mars/results/estudio_principal/raw/b', '/home/gonzalo/Escritorio/Proyectos PUCP/DinoV3-AI4Mars/results/estudio_principal/raw/d']
 </pre>
 </div>
 </div>
@@ -7919,7 +7919,7 @@ intervalos de confianza y aplica las reglas escritas <strong>antes</strong> de c
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=02ea1e0c">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c9323657">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7936,7 +7936,7 @@ Si no es ninguna de las dos, <strong>inconcluso</strong>. Con varias comparacion
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=be205370">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=98e6012c">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7989,7 +7989,7 @@ Si no es ninguna de las dos, <strong>inconcluso</strong>. Con varias comparacion
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=46500e9f">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=304efe2a">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7999,7 +7999,7 @@ Si no es ninguna de las dos, <strong>inconcluso</strong>. Con varias comparacion
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=f9501a41">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=4b780db9">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8044,7 +8044,7 @@ standardize         3 0.675 ± 0.001 0.724 ± 0.001 0.887 ± 0.037 +0.001 [-0.00
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=8ec17254">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=9090a40e">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8075,7 +8075,7 @@ standardize         3 0.675 ± 0.001 0.724 ± 0.001 0.887 ± 0.037 +0.001 [-0.00
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=a6551bac">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=99c93566">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8083,7 +8083,7 @@ standardize         3 0.675 ± 0.001 0.724 ± 0.001 0.887 ± 0.037 +0.001 [-0.00
 <div class="jp-InputPrompt jp-InputArea-prompt">In [5]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># %% 2c. veredictos HP1 y HP1b (reglas de hypotheses_v2.json)</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># %% 2c. veredictos HP1 y HP1b (reglas de hipotesis_registradas.json)</span>
 <span class="k">if</span> <span class="n">cmp1</span><span class="p">:</span>
     <span class="n">photo</span> <span class="o">=</span> <span class="p">[</span><span class="n">cmp1</span><span class="p">[(</span><span class="n">t</span><span class="p">,</span> <span class="n">k</span><span class="p">)]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"hist_eq"</span><span class="p">,</span> <span class="s2">"clahe"</span><span class="p">,</span> <span class="s2">"standardize"</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"M1"</span><span class="p">,</span> <span class="s2">"M2"</span><span class="p">)]</span>
     <span class="n">holm</span><span class="p">(</span><span class="n">photo</span><span class="p">)</span>
@@ -8102,7 +8102,7 @@ standardize         3 0.675 ± 0.001 0.724 ± 0.001 0.887 ± 0.037 +0.001 [-0.00
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=98378e01">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=6ee763ff">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8129,7 +8129,7 @@ standardize         3 0.675 ± 0.001 0.724 ± 0.001 0.887 ± 0.037 +0.001 [-0.00
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=d9b41423">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=4e96485f">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8139,7 +8139,7 @@ standardize         3 0.675 ± 0.001 0.724 ± 0.001 0.887 ± 0.037 +0.001 [-0.00
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=abcbbca7">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=f6f84407">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8211,7 +8211,7 @@ mid - early en M2: -0.002 [-0.011, +0.029] inconcluso (p Holm 1.000)
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=4f5e44a1">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=d360bb55">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8227,7 +8227,7 @@ alto acuerdo; los que solo están en M1 son de bajo acuerdo.</li>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=3661d791">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=5a4c2c1d">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8264,7 +8264,7 @@ IoU por clase (alto / bajo): {'soil': (np.float64(0.984), np.float64(0.776)), 'b
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=4da742ea">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=a33c51ae">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8296,7 +8296,7 @@ M2 {0: np.float64(0.723), 4: np.float64(0.732), 8: np.float64(0.739), 16: np.flo
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=b6b57afb">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=5d705017">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8345,17 +8345,17 @@ M2 {0: np.float64(0.723), 4: np.float64(0.732), 8: np.float64(0.739), 16: np.flo
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=ef05ce51">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=a4f4ebb2">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="5.-Teardown-(preliminar)">5. Teardown (preliminar)<a class="anchor-link" href="#5.-Teardown-(preliminar)">¶</a></h2>
+<h2 id="5.-Teardown">5. Teardown<a class="anchor-link" href="#5.-Teardown">¶</a></h2>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=49fcec8e">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=8d22c609">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8364,7 +8364,7 @@ M2 {0: np.float64(0.723), 4: np.float64(0.732), 8: np.float64(0.739), 16: np.flo
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># %% 5. tabla del teardown</span>
-<span class="n">tp</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">f</span> <span class="o">/</span> <span class="s2">"teardown.json"</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">V2</span> <span class="k">if</span> <span class="p">(</span><span class="n">f</span> <span class="o">/</span> <span class="s2">"teardown.json"</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()),</span> <span class="kc">None</span><span class="p">)</span>
+<span class="n">tp</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">f</span> <span class="o">/</span> <span class="s2">"teardown.json"</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">RAW</span> <span class="k">if</span> <span class="p">(</span><span class="n">f</span> <span class="o">/</span> <span class="s2">"teardown.json"</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()),</span> <span class="kc">None</span><span class="p">)</span>
 <span class="k">if</span> <span class="n">tp</span><span class="p">:</span>
     <span class="n">T</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">tp</span><span class="p">))</span>
     <span class="n">td</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"parámetros (M)"</span><span class="p">:</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="o">/</span> <span class="mf">1e6</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">T</span><span class="p">[</span><span class="s2">"params"</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()},</span> <span class="s2">"GFLOPs (1 imagen 512 px)"</span><span class="p">:</span> <span class="n">T</span><span class="p">[</span><span class="s2">"gflops"</span><span class="p">]})</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
@@ -8407,7 +8407,7 @@ features de Marte por bloque: [(1, 16.6, 0.751), (2, 14.4, 0.75), (3, 24.1, 0.76
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=25239fe1">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=8315dc4c">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8418,7 +8418,7 @@ registrados de H1–H6; muestra cuánto cambian los intervalos al tener en cuent
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=ea241f04">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=5cdd05be">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8427,23 +8427,23 @@ registrados de H1–H6; muestra cuánto cambian los intervalos al tener en cuent
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># %% 6. comparaciones clave de la corrida final</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">v1</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">prior</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
     <span class="n">out</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"M1"</span><span class="p">,</span> <span class="s2">"M2"</span><span class="p">)}</span>
     <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="n">V1</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">.npz"</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">PRIOR</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">.npz"</span>
         <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
             <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">out</span><span class="p">:</span>
                 <span class="n">out</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">z</span><span class="p">[</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">__</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">"</span><span class="p">][:,</span> <span class="mi">0</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">out</span>
 
-<span class="k">if</span> <span class="n">V1</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-    <span class="n">A</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">l</span><span class="p">:</span> <span class="n">v1</span><span class="p">([</span><span class="sa">f</span><span class="s2">"A_layers_s</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">SEEDS</span><span class="p">],</span> <span class="n">l</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">PRIOR</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">l</span><span class="p">:</span> <span class="n">prior</span><span class="p">([</span><span class="sa">f</span><span class="s2">"A_layers_s</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">SEEDS</span><span class="p">],</span> <span class="n">l</span><span class="p">)</span>
     <span class="n">checks</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"H1: bloque 10 - última capa"</span><span class="p">:</span> <span class="p">(</span><span class="n">A</span><span class="p">(</span><span class="s2">"10"</span><span class="p">),</span> <span class="n">A</span><span class="p">(</span><span class="s2">"last_norm"</span><span class="p">)),</span>
               <span class="s2">"H1: bloque 12 - última capa"</span><span class="p">:</span> <span class="p">(</span><span class="n">A</span><span class="p">(</span><span class="s2">"12"</span><span class="p">),</span> <span class="n">A</span><span class="p">(</span><span class="s2">"last_norm"</span><span class="p">)),</span>
-              <span class="s2">"H3: DINOv3 - DINOv2"</span><span class="p">:</span> <span class="p">(</span><span class="n">v1</span><span class="p">([</span><span class="sa">f</span><span class="s2">"D_dinov3_b16_lvd_s</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">SEEDS</span><span class="p">],</span> <span class="s2">"probe"</span><span class="p">),</span> <span class="n">v1</span><span class="p">([</span><span class="sa">f</span><span class="s2">"D_dinov2_b14_s</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">SEEDS</span><span class="p">],</span> <span class="s2">"probe"</span><span class="p">)),</span>
-              <span class="s2">"H4: decoder - sonda"</span><span class="p">:</span> <span class="p">(</span><span class="n">v1</span><span class="p">([</span><span class="sa">f</span><span class="s2">"B_decoder512_s</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">SEEDS</span><span class="p">],</span> <span class="s2">"decoder"</span><span class="p">),</span> <span class="n">A</span><span class="p">(</span><span class="s2">"last_norm"</span><span class="p">)),</span>
-              <span class="s2">"FT4 - sonda (N=4000)"</span><span class="p">:</span> <span class="p">(</span><span class="n">v1</span><span class="p">([</span><span class="sa">f</span><span class="s2">"C_FT4_n4000_s</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">SEEDS</span><span class="p">],</span> <span class="s2">"probe"</span><span class="p">),</span> <span class="n">v1</span><span class="p">([</span><span class="sa">f</span><span class="s2">"C_LP_n4000_s</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">SEEDS</span><span class="p">],</span> <span class="s2">"probe"</span><span class="p">))}</span>
+              <span class="s2">"H3: DINOv3 - DINOv2"</span><span class="p">:</span> <span class="p">(</span><span class="n">prior</span><span class="p">([</span><span class="sa">f</span><span class="s2">"D_dinov3_b16_lvd_s</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">SEEDS</span><span class="p">],</span> <span class="s2">"probe"</span><span class="p">),</span> <span class="n">prior</span><span class="p">([</span><span class="sa">f</span><span class="s2">"D_dinov2_b14_s</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">SEEDS</span><span class="p">],</span> <span class="s2">"probe"</span><span class="p">)),</span>
+              <span class="s2">"H4: decoder - sonda"</span><span class="p">:</span> <span class="p">(</span><span class="n">prior</span><span class="p">([</span><span class="sa">f</span><span class="s2">"B_decoder512_s</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">SEEDS</span><span class="p">],</span> <span class="s2">"decoder"</span><span class="p">),</span> <span class="n">A</span><span class="p">(</span><span class="s2">"last_norm"</span><span class="p">)),</span>
+              <span class="s2">"FT4 - sonda (N=4000)"</span><span class="p">:</span> <span class="p">(</span><span class="n">prior</span><span class="p">([</span><span class="sa">f</span><span class="s2">"C_FT4_n4000_s</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">SEEDS</span><span class="p">],</span> <span class="s2">"probe"</span><span class="p">),</span> <span class="n">prior</span><span class="p">([</span><span class="sa">f</span><span class="s2">"C_LP_n4000_s</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">SEEDS</span><span class="p">],</span> <span class="s2">"probe"</span><span class="p">))}</span>
     <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="ow">in</span> <span class="n">checks</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"M1"</span><span class="p">,</span> <span class="s2">"M2"</span><span class="p">):</span>
@@ -8480,7 +8480,7 @@ H1: bloque 12 - última capa  M2  +0.001 [-0.004, +0.018] inconcluso     0.022
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=9b0d2cf5">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=da720cad">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8490,7 +8490,7 @@ H1: bloque 12 - última capa  M2  +0.001 [-0.004, +0.018] inconcluso     0.022
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=98e8a343">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=99f17ad9">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8538,7 +8538,7 @@ DeepLabV3 R50 (sin preentrenar), 15,564 img         1         0.628         0.68
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=e1b7a4b2">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=426730cf">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8548,7 +8548,7 @@ DeepLabV3 R50 (sin preentrenar), 15,564 img         1         0.628         0.68
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=9590707d">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=8e478b71">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8557,7 +8557,7 @@ DeepLabV3 R50 (sin preentrenar), 15,564 img         1         0.628         0.68
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># %% 7. veredictos</span>
-<span class="n">V</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">VERDICTS</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"hipótesis"</span><span class="p">,</span> <span class="s2">"veredicto"</span><span class="p">,</span> <span class="s2">"evidencia"</span><span class="p">]);</span> <span class="n">V</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">OUT</span> <span class="o">/</span> <span class="s2">"verdicts_v2.csv"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">V</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">VERDICTS</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"hipótesis"</span><span class="p">,</span> <span class="s2">"veredicto"</span><span class="p">,</span> <span class="s2">"evidencia"</span><span class="p">]);</span> <span class="n">V</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">OUT</span> <span class="o">/</span> <span class="s2">"veredictos.csv"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">V</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">r</span><span class="p">[</span><span class="s1">'hipótesis'</span><span class="p">]</span><span class="si">:</span><span class="s2">5s</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">r</span><span class="p">[</span><span class="s1">'veredicto'</span><span class="p">]</span><span class="si">:</span><span class="s2">11s</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">r</span><span class="p">[</span><span class="s1">'evidencia'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>

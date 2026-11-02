@@ -1,5 +1,5 @@
 # %% [markdown]
-# # AI4Mars × DINOv3 — v2 · Cuaderno B: el modelo
+# # AI4Mars × DINOv3 — Cuaderno B: el modelo
 #
 # **P2 — ¿dónde conviene adaptar DINOv3 para Marte?**
 #
@@ -13,7 +13,7 @@
 # | final | 11–12 | la brecha es semántica (cómo se agrupan los conceptos) |
 #
 # Control: la misma sonda lineal sin adaptar nada, entrenada con la misma receta.
-# El resto del modelo queda congelado. Hipótesis HP2 en `hypotheses_v2.json` (escrita antes de correr).
+# El resto del modelo queda congelado. Hipótesis HP2 en `hipotesis_registradas.json` (escrita antes de correr).
 #
 # ## Cómo se corre (dos modos)
 # | modo | cómo se activa | entrenamiento |
@@ -48,7 +48,7 @@ if QUICK:
     CFG.update(n_pool=64, seeds=(0, 1), epochs=1, lora_lrs=(2e-4,))
 setup_dirs()
 DEVS = devices()
-shutil.copy(Path(a4m_lib.__file__).with_name("hypotheses_v2.json"), OUT / "hypotheses_v2.json")
+shutil.copy(Path(a4m_lib.__file__).with_name("hipotesis_registradas.json"), OUT / "hipotesis_registradas.json")
 print("GPUs:", DEVS)
 
 # %% [markdown]

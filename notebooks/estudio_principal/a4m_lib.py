@@ -1,4 +1,4 @@
-"""a4m_lib — plumbing shared by the v2 notebooks (data, token caches, training loop, metrics, result store).
+"""a4m_lib — plumbing shared by the notebooks of the main study (data, token caches, training loop, metrics, result store).
 
 The notebooks keep the parts worth explaining (image transforms, LoRA, the experiment loops, the analysis);
 everything here is bookkeeping. Conventions are the same as the final run (notebooks/ai4mars_dinov3_final.py):

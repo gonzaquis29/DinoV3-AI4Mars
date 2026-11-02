@@ -1,11 +1,11 @@
-"""Validation mIoU per epoch for every v2 run (P1 probes, P2 LoRA zones, DeepLabV3 baseline), read from results/v2_full/raw.
+"""Validation mIoU per epoch for every main run (P1 probes, P2 LoRA zones, DeepLabV3 baseline), read from results/estudio_principal/raw.
 Only validation mIoU is logged per epoch (no training loss). Usage: python src/make_training_curves.py"""
 import json, glob, os
 from pathlib import Path
 import matplotlib; matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-RAW = Path(__file__).resolve().parent.parent / "results" / "v2_full"
+RAW = Path(__file__).resolve().parent.parent / "results" / "estudio_principal"
 load = lambda pat: [json.load(open(f)) for f in sorted(glob.glob(str(RAW / "raw" / pat)))]
 fig, axs = plt.subplots(1, 3, figsize=(11, 3.2), sharey=False)
 

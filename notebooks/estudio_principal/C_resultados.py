@@ -1,8 +1,8 @@
 # %% [markdown]
-# # AI4Mars × DINOv3 — v2 · Cuaderno C: resultados y veredictos
+# # AI4Mars × DINOv3 — Cuaderno C: resultados y veredictos
 #
 # Solo lee resultados (corre en CPU, sin dataset ni GPU). `A4M_RUN=full` (por defecto) o `A4M_RUN=pilot`. Junta las salidas de los cuadernos A y B, calcula
-# intervalos de confianza y aplica las reglas escritas **antes** de correr (`hypotheses_v2.json`).
+# intervalos de confianza y aplica las reglas escritas **antes** de correr (`hipotesis_registradas.json`).
 #
 # | Sección | Pregunta |
 # |---|---|
@@ -10,7 +10,7 @@
 # | 2 | **P1 — datos:** ¿la brecha Web→Marte es de apariencia? |
 # | 3 | **P2 — modelo:** ¿dónde conviene adaptar? |
 # | 4 | **P3 — errores:** ¿cuánto es ambigüedad de etiquetas y sabe el modelo cuándo falla? |
-# | 5 | Teardown (preliminar) |
+# | 5 | Teardown |
 # | 6 | Relectura post-hoc de la corrida final con la estadística nueva |
 # | 6b | Baseline supervisado (DeepLabV3 ResNet-50) frente a la sonda lineal |
 
@@ -22,23 +22,23 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-HERE = Path(globals().get("__file__", Path.cwd() / "x" if (Path.cwd() / "hypotheses_v2.json").exists() else "notebooks/v2/C_resultados.py")).resolve().parent
+HERE = Path(globals().get("__file__", Path.cwd() / "x" if (Path.cwd() / "hipotesis_registradas.json").exists() else "notebooks/estudio_principal/C_resultados.py")).resolve().parent
 sys.path.insert(0, str(HERE))
 from a4m_lib import miou_np, iou_np, ece, CLASS_NAMES
 
 # Qué corrida se analiza: A4M_RUN=full (por defecto, las 15,564 imágenes) o A4M_RUN=pilot (2,000 imágenes).
-# Lee los resultados crudos de results/v2_<run>/raw/{a,b,d} y escribe tablas y figuras en results/v2_<run>/.
+# Lee los resultados crudos de results/<estudio>/raw/{a,b,d} y escribe tablas y figuras en results/<estudio>/.
 RUN = os.environ.get("A4M_RUN", "full")
-BASE = HERE.parents[1] / f"results/v2_{RUN}"
-V2 = [Path(p) for p in os.environ.get("A4M_V2", ":".join(str(BASE / "raw" / d) for d in ("a", "b", "d"))).split(":")]
-V1 = Path(os.environ.get("A4M_V1", HERE.parents[1] / "results/final_run/results"))
+BASE = HERE.parents[1] / "results" / ("estudio_principal" if RUN == "full" else "estudio_principal_piloto")
+RAW = [Path(p) for p in os.environ.get("A4M_RAW", ":".join(str(BASE / "raw" / d) for d in ("a", "b", "d"))).split(":")]
+PRIOR = Path(os.environ.get("A4M_PRIOR", HERE.parents[1] / "results/final_run/results"))
 OUT = Path(os.environ.get("A4M_OUT_C", BASE)); (OUT / "figures").mkdir(parents=True, exist_ok=True)
-H = json.load(open(HERE / "hypotheses_v2.json"))
+H = json.load(open(HERE / "hipotesis_registradas.json"))
 TOL, NB, BLOCK, SEEDS = H["common"]["tol"], H["common"]["n_boot"], 10, (0, 1, 2)
-print("hipótesis registradas:", H["registered_at"], "| resultados v2 en", [str(p) for p in V2])
+print("hipótesis registradas:", H["registered_at"], "| resultados en", [str(p) for p in RAW])
 
 
-def load(name, folders=V2):
+def load(name, folders=RAW):
     if name.startswith("P2_probe_"):                                 # versión final: el control de P2 es la sonda de P1 (misma receta)
         name = name.replace("P2_probe_", "P1_original_")
     for f in folders:
@@ -48,7 +48,7 @@ def load(name, folders=V2):
     return None
 
 
-def group(prefix, key, folders=V2, seeds=SEEDS):
+def group(prefix, key, folders=RAW, seeds=SEEDS):
     """{set: [array por semilla]} para una configuración."""
     res = [load(f"{prefix}_s{s}", folders) for s in seeds]
     res = [r for r in res if r]
@@ -127,7 +127,7 @@ if P1["blur"]["M1"]:
     drop = per_class(P1["original"]) - per_class(P1["blur"])
     print("caída de IoU por clase con desenfoque (M1+M2):", dict(zip(CLASS_NAMES, np.round(drop, 3))))
 
-# %% 2c. veredictos HP1 y HP1b (reglas de hypotheses_v2.json)
+# %% 2c. veredictos HP1 y HP1b (reglas de hipotesis_registradas.json)
 if cmp1:
     photo = [cmp1[(t, k)] for t in ("hist_eq", "clahe", "standardize") for k in ("M1", "M2")]
     holm(photo)
@@ -238,10 +238,10 @@ if cal["M1"]:
     fig.tight_layout(); fig.savefig(OUT / "figures/P3_calibracion.png", dpi=200)
 
 # %% [markdown]
-# ## 5. Teardown (preliminar)
+# ## 5. Teardown
 
 # %% 5. tabla del teardown
-tp = next((f / "teardown.json" for f in V2 if (f / "teardown.json").exists()), None)
+tp = next((f / "teardown.json" for f in RAW if (f / "teardown.json").exists()), None)
 if tp:
     T = json.load(open(tp))
     td = pd.DataFrame({"parámetros (M)": {k: v / 1e6 for k, v in T["params"].items()}, "GFLOPs (1 imagen 512 px)": T["gflops"]}).round(2)
@@ -255,23 +255,23 @@ if tp:
 # registrados de H1–H6; muestra cuánto cambian los intervalos al tener en cuenta que las imágenes vecinas se parecen.
 
 # %% 6. comparaciones clave de la corrida final
-def v1(names, key):
+def prior(names, key):
     out = {k: [] for k in ("M1", "M2")}
     for n in names:
-        p = V1 / f"{n}.npz"
+        p = PRIOR / f"{n}.npz"
         if p.exists():
             z = np.load(p)
             for k in out:
                 out[k].append(z[f"{k}__{key}"][:, 0])
     return out
 
-if V1.exists():
-    A = lambda l: v1([f"A_layers_s{s}" for s in SEEDS], l)
+if PRIOR.exists():
+    A = lambda l: prior([f"A_layers_s{s}" for s in SEEDS], l)
     checks = {"H1: bloque 10 - última capa": (A("10"), A("last_norm")),
               "H1: bloque 12 - última capa": (A("12"), A("last_norm")),
-              "H3: DINOv3 - DINOv2": (v1([f"D_dinov3_b16_lvd_s{s}" for s in SEEDS], "probe"), v1([f"D_dinov2_b14_s{s}" for s in SEEDS], "probe")),
-              "H4: decoder - sonda": (v1([f"B_decoder512_s{s}" for s in SEEDS], "decoder"), A("last_norm")),
-              "FT4 - sonda (N=4000)": (v1([f"C_FT4_n4000_s{s}" for s in SEEDS], "probe"), v1([f"C_LP_n4000_s{s}" for s in SEEDS], "probe"))}
+              "H3: DINOv3 - DINOv2": (prior([f"D_dinov3_b16_lvd_s{s}" for s in SEEDS], "probe"), prior([f"D_dinov2_b14_s{s}" for s in SEEDS], "probe")),
+              "H4: decoder - sonda": (prior([f"B_decoder512_s{s}" for s in SEEDS], "decoder"), A("last_norm")),
+              "FT4 - sonda (N=4000)": (prior([f"C_FT4_n4000_s{s}" for s in SEEDS], "probe"), prior([f"C_LP_n4000_s{s}" for s in SEEDS], "probe"))}
     rows = []
     for name, (a, b) in checks.items():
         for k in ("M1", "M2"):
@@ -306,6 +306,6 @@ if len(rows) > 1:
 # ## Veredictos
 
 # %% 7. veredictos
-V = pd.DataFrame(VERDICTS, columns=["hipótesis", "veredicto", "evidencia"]); V.to_csv(OUT / "verdicts_v2.csv", index=False)
+V = pd.DataFrame(VERDICTS, columns=["hipótesis", "veredicto", "evidencia"]); V.to_csv(OUT / "veredictos.csv", index=False)
 for _, r in V.iterrows():
     print(f"{r['hipótesis']:5s} {r['veredicto']:11s} {r['evidencia']}")

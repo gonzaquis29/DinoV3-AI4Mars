@@ -1,8 +1,8 @@
-"""Builds the Kaggle folders for the v2 run (nothing is pushed here).
+"""Builds the Kaggle folders for the main run (nothing is pushed here).
 
-    python notebooks/v2/build_kaggle.py            # -> kaggle_run/v2/{lib, a-quick, b-quick, a, b}
+    python notebooks/estudio_principal/build_kaggle.py            # -> kaggle_run/v2/{lib, a-quick, b-quick, a, b}
 
-lib      : private dataset <your-kaggle-user>/a4m-v2-lib with a4m_lib.py and hypotheses_v2.json
+lib      : private dataset <your-kaggle-user>/a4m-v2-lib with a4m_lib.py and hipotesis_registradas.json
 a / b    : notebook kernels (the .ipynb generated from A_datos_y_errores.py / B_modelo.py)
 *-quick  : the same notebooks with one extra first cell that sets A4M_QUICK=1 (64 images, 1 epoch)
 
@@ -18,7 +18,7 @@ out = here.parents[1] / "kaggle_run" / "v2"
 DATA = ["darshannnnnn/ai4mars-raw", f"{USER}/dinov3-vitb16-lvd1689m", f"{USER}/a4m-v2-lib"]
 
 lib = out / "lib"; lib.mkdir(parents=True, exist_ok=True)
-for f in ("a4m_lib.py", "hypotheses_v2.json"):
+for f in ("a4m_lib.py", "hipotesis_registradas.json"):
     shutil.copy(here / f, lib / f)
 json.dump({"title": "a4m-v2-lib", "id": f"{USER}/a4m-v2-lib", "licenses": [{"name": "other"}]}, open(lib / "dataset-metadata.json", "w"), indent=1)
 
