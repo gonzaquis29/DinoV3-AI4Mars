@@ -85,12 +85,12 @@ DeepLabV3-R50, no pretrain. & 39.6\,M & 0.628 & 0.681\\\bottomrule
 
 The gap is not a matter of how the images look. CLAHE and standardisation are equivalent to the original images on M1 ($+0.001$, intervals inside $\pm0.01$), histogram equalisation is slightly lower ($-0.006$), and blurring away fine texture does not sink the probe ($-0.002$; Fig.~\ref{fig:p1}). On M2 the intervals are wider than $\pm0.01$, so those comparisons cannot be decided, and the data therefore do not formally confirm that every transform is neutral; still, none of them produces a gain. The texture prediction also failed: the class that loses most under blur is soil, not sand. The features appear to depend more on shape and context than on photometric statistics or on fine texture.
 \begin{figure}[t]\centering
-\includegraphics[width=\linewidth]{../results/v2_full/figures/P1_apariencia.png}
+\includegraphics[width=\linewidth]{../../../results/v2_full/figures/P1_apariencia.png}
 \caption{P1: change in probe mIoU under each appearance transform, with 95\,\% intervals; the grey band is the equivalence zone $\pm0.01$.}\label{fig:p1}\end{figure}
 
 Adapting the backbone adds little, wherever the adaptation goes. Rank-8 LoRA gains 0.005--0.007 mIoU over the probe on M1 in every zone (Table~\ref{tab:p2}; early $+0.007$ [$+0.001,+0.015$], middle $+0.005$ [$-0.003,+0.022$], late $+0.007$ [$+0.002,+0.023$]), below our 0.01 threshold, and the zones do not differ from one another (late$-$early: $-0.000$ on M1, $[-0.006,+0.015]$; $+0.001$ on M2). Neither the expected advantage of the late blocks nor the opposite order that a low-level gap would predict emerges from the data. An earlier layer-wise run on the same images points the same way: a 3.5\,M-parameter decoder and fine-tuning of the last four blocks (28\,M) added at most 0.012 on M1 and M2. Together with the appearance results, this suggests that the ceiling is not set by the representation. One caution: on the validation images the zones do separate (middle and late 0.69--0.72, early 0.62--0.64; Fig.~\ref{fig:curves}), so validation and test disagree on this point, and we do not explain it.
 \begin{figure}[t]\centering
-\includegraphics[width=\linewidth]{../results/v2_full/figures/training_curves.png}
+\includegraphics[width=\linewidth]{../../../results/v2_full/figures/training_curves.png}
 \caption{Validation mIoU per epoch (only this was logged): P1 probes, P2 LoRA zones and the DeepLabV3 baseline.}\label{fig:curves}\end{figure}
 \begin{table}[t]\centering\small
 \caption{P2: rank-8 LoRA (221\,k parameters) by zone, 2 seeds, vs.\ the probe trained with the same recipe.}\label{tab:p2}
@@ -104,7 +104,7 @@ Late (11--12) & 0.681 & 0.731\\\bottomrule
 
 Where the score does move is with the labels. On the M1 images, mIoU is 0.862 on high-agreement pixels and 0.546 on low-agreement ones, a difference of $+0.315$ [$+0.180,+0.413$], so a large share of the remaining error sits exactly where the experts themselves disagree. Calibration tells a more worrying story about one class. The probe is well calibrated overall (ECE 0.029), but on the pixels it predicts as \bigrock\ its confidence exceeds its accuracy by $+0.674$ [$+0.435,+0.762$], and 45\,\% of the true \bigrock\ pixels are missed (Fig.~\ref{fig:p3}). A single global calibration figure would hide this, and it matters for safety, because a confident ``not a rock'' is the dangerous error. The evaluation has a further blind spot: only 5 of the 322 M3 images contain \bigrock, so M3 cannot rank models on that class, and its gap between heads (0.83 against 0.93) comes from false positives.
 \begin{figure}[t]\centering
-\includegraphics[width=\linewidth]{../results/v2_full/figures/P3_calibracion.png}
+\includegraphics[width=\linewidth]{../../../results/v2_full/figures/P3_calibracion.png}
 \caption{P3: reliability of the probe on all labelled pixels and on pixels predicted \bigrock.}\label{fig:p3}\end{figure}
 
 Read together, the evidence is consistent: the frozen features already work on Mars, neither preprocessing nor adaptation at any depth moves the score by more than about 0.01, and the remaining error concentrates where the labels are ambiguous and on one rare class. Two of the three hypotheses (H1 and H2) could not be decided at this sample size, which means the data neither confirm nor rule out an effect, not that the effect is zero. The teardown adds that all 12 blocks cost the same, so choosing to adapt early or late is a matter of where, not of price. In practice, effort is better spent on labels and on \bigrock\ than on a heavier model.

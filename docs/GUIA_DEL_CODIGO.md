@@ -25,7 +25,7 @@ Esta guía sirve para entender el estudio v2 en 30 minutos y para defenderlo. To
           estadística → tablas, figuras y veredictos
                              │
                              ▼
-     results/v2_full/*.csv, figures/ → paper/main.tex, póster, README
+     results/v2_full/*.csv, figures/ → entregables/ (artículo, póster), README
 ```
 
 **La idea de fondo:** los cuadernos de GPU (A, B, D) solo **producen archivos crudos**; el cuaderno C **no entrena nada**, solo lee esos archivos y calcula las tablas. Por eso cualquier número del artículo se puede rastrear hasta un archivo crudo.

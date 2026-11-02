@@ -10,3 +10,8 @@ __pycache__/
 .env
 
 *.log
+
+# LaTeX build files
+*.aux
+*.out
+*.toc

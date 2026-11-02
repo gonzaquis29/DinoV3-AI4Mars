@@ -24,16 +24,16 @@ adapting early, middle or late blocks moves the score by more than about 0.01 mI
 
 | What the course asks for | Where it is |
 |---|---|
-| Research question and contribution | [Paper](paper/main.pdf), Introduction; summary at the top of this README |
+| Research question and contribution | [Paper](entregables/E3_trabajo_y_articulo/articulo/main.pdf), Introduction; summary at the top of this README |
 | Phase A, architecture teardown | [`teardown_table.csv`](results/v2_full/teardown_table.csv), [`raw/a/teardown.json`](results/v2_full/raw/a/teardown.json); code in `notebooks/v2/A_datos_y_errores` |
 | Phase B, controlled interventions with prior hypotheses | P1 (appearance) and P2 (LoRA by depth): [`P1_table.csv`](results/v2_full/P1_table.csv), [`P2_table.csv`](results/v2_full/P2_table.csv); rules in [`hypotheses_v2_full.json`](notebooks/v2/hypotheses_v2_full.json), registered before the runs |
-| Phase C, stress and honesty | P3 (labels and calibration), the baseline comparison and the limitations: [Main findings](#main-findings-v2-study), [Limitations](#limitations), [paper](paper/main.pdf) |
-| Baseline and state of the art | [`baseline_table.csv`](results/v2_full/baseline_table.csv); Related work in the [paper](paper/main.pdf); earlier layer-wise study with published numbers [below](#earlier-study-layer-wise-probes-decoder-and-fine-tuning) |
+| Phase C, stress and honesty | P3 (labels and calibration), the baseline comparison and the limitations: [Main findings](#main-findings-v2-study), [Limitations](#limitations), [paper](entregables/E3_trabajo_y_articulo/articulo/main.pdf) |
+| Baseline and state of the art | [`baseline_table.csv`](results/v2_full/baseline_table.csv); Related work in the [paper](entregables/E3_trabajo_y_articulo/articulo/main.pdf); earlier layer-wise study with published numbers [below](#earlier-study-layer-wise-probes-decoder-and-fine-tuning) |
 | Several seeds and uncertainty | 3 seeds for probes, 2 for LoRA, paired block-bootstrap intervals in every table; raw per-run files in `results/v2_full/raw/` |
 | Design log, with where AI was used | [`DESIGN_LOG.md`](DESIGN_LOG.md) |
-| Limitations, bias and ethics | [Limitations](#limitations) here and the corresponding section of the [paper](paper/main.pdf) |
+| Limitations, bias and ethics | [Limitations](#limitations) here and the corresponding section of the [paper](entregables/E3_trabajo_y_articulo/articulo/main.pdf) |
 | Reproducibility | [Reproduce](#reproduce), `requirements.txt`, fixed seeds, per-run raw results |
-| Article, poster, abstract | [`paper/`](paper/), [`docs/`](docs/) |
+| E1, E2, E3 (proposal, poster and abstract, paper) | [`entregables/`](entregables/) |
 
 **Not done yet.** The teardown has no receptive-field map or intermediate-feature visualisations. There is no hyperparameter sweep beyond choosing the LoRA learning rate on one seed in the pilot. The author and affiliation block of the paper is still a placeholder, and the design log's verification column has to be filled in by each team member.
 
@@ -111,9 +111,10 @@ This run had its own hypotheses, written before it and kept in [`results/final_r
 
 ## Paper, poster and abstract
 
-- Article (IEEE conference format, 4 pages; LaTeX source and PDF): [`paper/main.pdf`](paper/main.pdf), [`paper/main.tex`](paper/main.tex).
-- Poster: [PDF](docs/Poster_FrozenDINOv3MartianTerrain.pdf), [PPTX](docs/Poster_FrozenDINOv3MartianTerrain.pptx). Abstract (2 pages, WAIMLAp template): [PDF](docs/Abstract_FrozenDINOv3MartianTerrain.pdf), [DOCX](docs/Abstract_FrozenDINOv3MartianTerrain.docx).
-  Both present the v2 study. The versions that describe the earlier layer-wise study are in [`docs/earlier_study/`](docs/earlier_study/).
+- All versions of the course deliverables E1, E2 and E3 are in [`entregables/`](entregables/) (index with dates and contents).
+- Article (IEEE conference format, 5 pages; LaTeX source and PDF): [`main.pdf`](entregables/E3_trabajo_y_articulo/articulo/main.pdf), [`main.tex`](entregables/E3_trabajo_y_articulo/articulo/main.tex).
+- Poster and 2-page abstract, final version (v2 study): [`entregables/E2_poster_waimlap/v2_estudio_final/`](entregables/E2_poster_waimlap/v2_estudio_final/); first version (layer-wise study): [`v1_registro_octubre/`](entregables/E2_poster_waimlap/v1_registro_octubre/).
+- Executed analysis notebook as a web page: [`docs/Resultados_ejecutado.html`](docs/Resultados_ejecutado.html) (download and open in a browser).
 - Code guide (how to read and explain the v2 code, in Spanish): [`docs/GUIA_DEL_CODIGO.md`](docs/GUIA_DEL_CODIGO.md).
 - Design log (each decision, why, and where AI assistance was used): [`DESIGN_LOG.md`](DESIGN_LOG.md).
 
@@ -148,8 +149,8 @@ results/
   v2_pilot/                    same study with 2,000 images (independent replicate)
   final_run/                   output of the earlier study (see results/README.md)
   figures/                     figures built by src/make_figures.py
-paper/                         article (LaTeX source and PDF)
-docs/                          WAIMLAp poster and abstract (v2); docs/earlier_study/ has the first version
+entregables/                   course deliverables: E1 proposal and teardown, E2 poster and abstract (v1, v2), E3 article
+docs/                          code guide and the executed analysis notebook as HTML
 DESIGN_LOG.md                  design log
 ```
 
