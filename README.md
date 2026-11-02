@@ -16,9 +16,26 @@ adapting early, middle or late blocks moves the score by more than about 0.01 mI
 > ponen la ambigüedad de las etiquetas y la clase `big_rock`, donde el modelo está muy seguro y se equivoca. Todo es reproducible desde los
 > resultados incluidos.
 
-**Contents:** [Main findings](#main-findings-v2-study) · [Earlier layer-wise study](#earlier-study-layer-wise-probes-decoder-and-fine-tuning) ·
+**Contents:** [Deliverables](#where-to-find-each-deliverable) · [Main findings](#main-findings-v2-study) · [Earlier layer-wise study](#earlier-study-layer-wise-probes-decoder-and-fine-tuning) ·
 [Paper, poster and abstract](#paper-poster-and-abstract) · [Repository layout](#repository-layout) · [Reproduce](#reproduce) ·
 [Protocol](#protocol) · [Limitations](#limitations) · [Data, weights and licences](#data-weights-and-licences) · [References](#references)
+
+## Where to find each deliverable
+
+| What the course asks for | Where it is |
+|---|---|
+| Research question and contribution | [Paper](paper/main.pdf), Introduction; summary at the top of this README |
+| Phase A, architecture teardown | [`teardown_table.csv`](results/v2_full/teardown_table.csv), [`raw/a/teardown.json`](results/v2_full/raw/a/teardown.json); code in `notebooks/v2/A_datos_y_errores` |
+| Phase B, controlled interventions with prior hypotheses | P1 (appearance) and P2 (LoRA by depth): [`P1_table.csv`](results/v2_full/P1_table.csv), [`P2_table.csv`](results/v2_full/P2_table.csv); rules in [`hypotheses_v2_full.json`](notebooks/v2/hypotheses_v2_full.json), registered before the runs |
+| Phase C, stress and honesty | P3 (labels and calibration), the baseline comparison and the limitations: [Main findings](#main-findings-v2-study), [Limitations](#limitations), [paper](paper/main.pdf) |
+| Baseline and state of the art | [`baseline_table.csv`](results/v2_full/baseline_table.csv); Related work in the [paper](paper/main.pdf); earlier layer-wise study with published numbers [below](#earlier-study-layer-wise-probes-decoder-and-fine-tuning) |
+| Several seeds and uncertainty | 3 seeds for probes, 2 for LoRA, paired block-bootstrap intervals in every table; raw per-run files in `results/v2_full/raw/` |
+| Design log, with where AI was used | [`DESIGN_LOG.md`](DESIGN_LOG.md) |
+| Limitations, bias and ethics | [Limitations](#limitations) here and the corresponding section of the [paper](paper/main.pdf) |
+| Reproducibility | [Reproduce](#reproduce), `requirements.txt`, fixed seeds, per-run raw results |
+| Article, poster, abstract | [`paper/`](paper/), [`docs/`](docs/) |
+
+**Not done yet.** The teardown has no receptive-field map or intermediate-feature visualisations. The paper is written in a two-column article layout and still has to be moved to the WAIMLAp (IEEE/LNCS) template. The poster and abstract describe the earlier layer-wise study and have not been updated to the v2 questions.
 
 ## Main findings (v2 study)
 
@@ -48,7 +65,7 @@ that loses most is soil, not sand as we predicted. The gap does not look photome
 label ambiguity. Calibration is good overall (ECE 0.029), but on pixels predicted `big_rock` confidence exceeds accuracy by +0.674 [+0.435, +0.762], and 45 % of
 the `big_rock` pixels are missed.
 
-**Teardown.** Parameters, FLOPs, latency, memory and feature statistics per block: [`teardown_table.csv`](results/v2_full/teardown_table.csv). All 12 blocks cost the same.
+**Teardown.** Parameters and FLOPs per block in [`teardown_table.csv`](results/v2_full/teardown_table.csv); latency, peak memory and feature statistics in [`raw/a/teardown.json`](results/v2_full/raw/a/teardown.json). All 12 blocks cost the same.
 
 The study tests three hypotheses, one per question. H1 (the gap is not photometric; registered parts HP1, HP1b) and H2 (late blocks help most; HP2) are inconclusive at this sample size, and H3 (the ceiling is set by the labels and the model is overconfident on `big_rock`; HP3a, HP3b) is supported. Per-part evidence is in
 [`verdicts_v2.csv`](results/v2_full/verdicts_v2.csv). A difference is **real** when its paired block-bootstrap 95 % interval (blocks of 10 consecutive images) excludes 0 and
