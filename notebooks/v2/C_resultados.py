@@ -22,7 +22,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-HERE = Path(globals().get("__file__", "notebooks/v2/C_resultados.py")).resolve().parent
+HERE = Path(globals().get("__file__", Path.cwd() / "x" if (Path.cwd() / "hypotheses_v2.json").exists() else "notebooks/v2/C_resultados.py")).resolve().parent
 sys.path.insert(0, str(HERE))
 from a4m_lib import miou_np, iou_np, ece, CLASS_NAMES
 

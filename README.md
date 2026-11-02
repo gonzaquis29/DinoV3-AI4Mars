@@ -17,7 +17,7 @@ adapting early, middle or late blocks moves the score by more than about 0.01 mI
 > resultados incluidos.
 
 **Contents:** [Deliverables](#where-to-find-each-deliverable) · [Main findings](#main-findings-v2-study) · [Earlier layer-wise study](#earlier-study-layer-wise-probes-decoder-and-fine-tuning) ·
-[Paper, poster and abstract](#paper-poster-and-abstract) · [Repository layout](#repository-layout) · [Reproduce](#reproduce) ·
+[Paper, poster and abstract](#paper-poster-and-abstract) · [How results were produced](#how-the-results-were-produced) · [Repository layout](#repository-layout) · [Reproduce](#reproduce) ·
 [Protocol](#protocol) · [Limitations](#limitations) · [Data, weights and licences](#data-weights-and-licences) · [References](#references)
 
 ## Where to find each deliverable
@@ -116,6 +116,17 @@ This run had its own hypotheses, written before it and kept in [`results/final_r
   Both present the v2 study. The versions that describe the earlier layer-wise study are in [`docs/earlier_study/`](docs/earlier_study/).
 - Design log (each decision, why, and where AI assistance was used): [`DESIGN_LOG.md`](DESIGN_LOG.md).
 
+## How the results were produced
+
+The long runs (A, B and D) were launched as asynchronous Kaggle kernels on 2 × T4 GPUs and executed from start to finish there, so the `.ipynb` files in this repository are the
+**sources, saved without outputs**. What was produced is kept as evidence:
+
+- the console log of each full-data run, in [`results/v2_full/logs/`](results/v2_full/logs/): teardown and P1 (A), LoRA middle and late (B), LoRA early (B), baseline (D);
+- one JSON per run with its configuration, seed, best epoch and per-epoch validation mIoU, and one `.npz` with per-image confusion matrices, in [`results/v2_full/raw/`](results/v2_full/raw/);
+- [`notebooks/v2/C_resultados.ipynb`](notebooks/v2/C_resultados.ipynb), which **was executed** and is stored with its outputs: it needs no GPU and rebuilds every table, figure and verdict from the raw files in a few seconds.
+
+So any number in the paper can be traced to a raw file and re-derived without re-training. Re-training itself takes about 2 h 25 min (A), 1 h 45 min (B) and 80 min (D) on 2 × T4.
+
 ## Repository layout
 
 ```
@@ -154,7 +165,7 @@ pip install -r requirements.txt
 A4M_RUN=full  python notebooks/v2/C_resultados.py      # or A4M_RUN=pilot
 ```
 
-**2. v2 re-run on Kaggle.** Notebooks A, B and D import `a4m_lib.py` (attach `notebooks/v2/` as a dataset). Environment variables select the mode:
+**2. v2 re-run on Kaggle.** Notebooks A, B and D (sources without outputs; see above) import `a4m_lib.py` (attach `notebooks/v2/` as a dataset). Environment variables select the mode:
 `A4M_FULL=1` (all 15,564 images; token caches go to disk), `A4M_ZONES=early,mid,late` (B), `A4M_SMOKE=1` (tiny offline self-test). Without `A4M_FULL`
 they run the 2,000-image pilot. Measured on 2 × T4 including data loading: A ≈ 2 h 25 min, B ≈ 1 h 45 min, D ≈ 80 min (training budget set by `BUDGET_MIN`).
 
