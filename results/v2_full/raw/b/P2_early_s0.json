@@ -1,0 +1,26 @@
+{
+ "part": "P2",
+ "zone": "early",
+ "seed": 0,
+ "lora_lr": 0.0002,
+ "rank": 8,
+ "n": 15564,
+ "epochs": 2,
+ "val_miou": 0.6300394635693922,
+ "best_epoch": 1,
+ "val_hist": [
+  0.6234562272066505,
+  0.6300394635693922
+ ],
+ "trainable_lora": 221184,
+ "trainable_head": 4612,
+ "minutes": 35.4,
+ "name": "P2_early_s0",
+ "radii": [
+  0,
+  4,
+  8,
+  16
+ ],
+ "saved_at": "2026-11-02 15:56:46"
+}

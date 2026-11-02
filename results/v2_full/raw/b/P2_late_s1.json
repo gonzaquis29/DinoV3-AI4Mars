@@ -1,0 +1,26 @@
+{
+ "part": "P2",
+ "zone": "late",
+ "seed": 1,
+ "lora_lr": 0.001,
+ "rank": 8,
+ "n": 15564,
+ "epochs": 2,
+ "val_miou": 0.6864199588063749,
+ "best_epoch": 1,
+ "val_hist": [
+  0.6811814083845139,
+  0.6864199588063749
+ ],
+ "trainable_lora": 221184,
+ "trainable_head": 4612,
+ "minutes": 12.1,
+ "name": "P2_late_s1",
+ "radii": [
+  0,
+  4,
+  8,
+  16
+ ],
+ "saved_at": "2026-11-02 16:51:41"
+}

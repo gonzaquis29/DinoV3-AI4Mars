@@ -1,0 +1,4 @@
+modelo,semillas,M1,M2,M3,Δ vs sonda M1,Δ vs sonda M2,épocas,pasos
+sonda lineal DINOv3 congelado (4.6 k),3,0.674 ± 0.001,0.723 ± 0.001,0.862 ± 0.032,,,,
+"DeepLabV3 R50 (ImageNet), 15,564 img",1,0.667,0.713,0.815,"-0.007 [-0.025, +0.008] inconcluso","-0.010 [-0.039, +0.007] inconcluso",3.0,2916.0
+"DeepLabV3 R50 (sin preentrenar), 15,564 img",1,0.628,0.681,0.812,"-0.046 [-0.081, -0.016] real","-0.043 [-0.092, -0.004] real",3.0,2916.0

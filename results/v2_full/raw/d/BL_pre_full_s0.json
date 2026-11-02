@@ -1,0 +1,29 @@
+{
+ "part": "BL",
+ "pretrained": true,
+ "n": 15564,
+ "seed": 0,
+ "epochs_planned": 3,
+ "epochs_run": 3,
+ "steps": 2916,
+ "patience": 3,
+ "batch": 16,
+ "lr": 0.001,
+ "val_miou": 0.6624760315603505,
+ "best_epoch": 1,
+ "val_hist": [
+  0.6142903553851129,
+  0.6624760315603505,
+  0.66110022784983
+ ],
+ "params_M": 39.6,
+ "minutes": 65.4,
+ "name": "BL_pre_full_s0",
+ "radii": [
+  0,
+  4,
+  8,
+  16
+ ],
+ "saved_at": "2026-11-02 14:58:37"
+}

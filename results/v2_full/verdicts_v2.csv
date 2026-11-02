@@ -1,0 +1,6 @@
+hipótesis,veredicto,evidencia
+HP1,inconclusa,"hist_eq M1: -0.006 [-0.019, -0.001] inconcluso; hist_eq M2: -0.008 [-0.041, -0.001] inconcluso; clahe M1: +0.001 [-0.009, +0.008] equivalente; clahe M2: +0.001 [-0.017, +0.007] inconcluso; standardize M1: +0.001 [-0.007, +0.005] equivalente; standardize M2: +0.000 [-0.016, +0.007] inconcluso"
+HP1b,inconclusa,"M1 -0.002 [-0.014, +0.009] inconcluso; M2 +0.002 [-0.013, +0.023] inconcluso; mayor caída: soil"
+HP2,inconclusa,"late-early M1: -0.000 [-0.006, +0.015] inconcluso; late-early M2: +0.001 [-0.007, +0.036] inconcluso; late-mid M1: +0.002 [-0.007, +0.013] inconcluso; late-mid M2: +0.003 [-0.011, +0.026] inconcluso; mid-early M1: -0.003 [-0.009, +0.013] inconcluso; mid-early M2: -0.002 [-0.011, +0.029] inconcluso"
+HP3a,apoyada,"+0.315 [+0.180, +0.413] real"
+HP3b,apoyada,"ECE 0.029; brecha roca grande +0.674 [+0.435, +0.762]"

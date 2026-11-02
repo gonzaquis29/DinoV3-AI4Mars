@@ -1,0 +1,11 @@
+comparación,set,Δ [IC bloques],ancho IC
+H1: bloque 10 - última capa,M1,"-0.010 [-0.018, +0.003] inconcluso",0.022
+H1: bloque 10 - última capa,M2,"-0.006 [-0.016, +0.023] inconcluso",0.039
+H1: bloque 12 - última capa,M1,"+0.000 [-0.003, +0.008] equivalente",0.01
+H1: bloque 12 - última capa,M2,"+0.001 [-0.004, +0.018] inconcluso",0.022
+H3: DINOv3 - DINOv2,M1,"+0.013 [+0.005, +0.027] real",0.023
+H3: DINOv3 - DINOv2,M2,"+0.011 [+0.000, +0.036] real",0.035
+H4: decoder - sonda,M1,"+0.007 [+0.000, +0.030] inconcluso",0.03
+H4: decoder - sonda,M2,"+0.010 [+0.002, +0.060] real",0.058
+FT4 - sonda (N=4000),M1,"+0.012 [+0.005, +0.031] real",0.026
+FT4 - sonda (N=4000),M2,"+0.014 [+0.007, +0.053] real",0.046

@@ -1,0 +1,45 @@
+{
+ "registered_at": "2026-11-02 01:54:25 -0500",
+ "note": "v2 run. Written before any v2 experiment was launched. Central question: how do frozen DINOv3 features extend to the Mars domain (AI4Mars)? P1 = data, P2 = model, P3 = errors.",
+ "common": {
+  "tol": 0.01,
+  "n_boot": 2000,
+  "bootstrap": "paired, over blocks of 10 consecutive test images (file order = spacecraft clock), same resample for every seed",
+  "real": "95% CI of the difference excludes 0 and |delta| >= tol",
+  "equivalent": "95% CI of the difference lies entirely inside (-tol, +tol)",
+  "multiple_comparisons": "Holm over the comparisons listed inside each hypothesis, alpha 0.05",
+  "setup": "frozen DINOv3 ViT-B/16 (LVD-1689M), 512 px, N = 2,000 training images (same pool as stage D of the final run), 3 seeds (0,1,2), layer/epoch chosen on validation, never on test"
+ },
+ "hypotheses": {
+  "HP1": {
+   "question": "P1 (data): is the Web->Mars gap a matter of image appearance?",
+   "claim": "Normalising image appearance (global histogram equalisation, CLAHE, per-image standardisation) does not change the frozen probe's mIoU: the gap is not photometric.",
+   "expect": "All three photometric transforms equivalent to the original images on M1 and M2.",
+   "rule": "For each transform, delta = transform - original on M1 and M2. Supported if every transform is equivalent (or a real drop) on both sets. Refuted if any transform gives a real gain on both sets. Otherwise inconclusive."
+  },
+  "HP1b": {
+   "question": "P1 (data): does the probe rely on fine texture?",
+   "claim": "Removing fine texture (Gaussian blur, sigma 2 px at 512 px) lowers mIoU, and sand (told apart from soil by texture) drops the most.",
+   "expect": "Real drop on M1 and M2; sand has the largest per-class IoU drop on M1+M2.",
+   "rule": "Supported if the drop is real on M1 and M2 and sand has the largest IoU drop of the four classes. Refuted if blur is equivalent to the original on both sets. Otherwise inconclusive."
+  },
+  "HP2": {
+   "question": "P2 (model): where in the network should DINOv3 be adapted?",
+   "claim": "With the same adaptation budget (LoRA rank 8 on all linear layers of 2 consecutive blocks), adapting the last blocks (11-12) helps more than adapting the middle (6-7) or the first blocks (1-2).",
+   "expect": "late > mid > early; a low-level (appearance) gap would predict the opposite order, so either order is informative.",
+   "rule": "Comparisons late-early, late-mid, mid-early on M1 and M2 (Holm). Supported if late-early is real (in favour of late) on both sets. Refuted if early-late is real (in favour of early) on both sets. Otherwise inconclusive. Each zone is also compared with the probe trained with the same recipe (reported, not part of the rule)."
+  },
+  "HP3a": {
+   "question": "P3 (errors): how much of the error is label ambiguity?",
+   "claim": "The frozen probe is markedly better on high-agreement pixels (labelled in M3, i.e. by 3 experts) than on low-agreement pixels (labelled in M1 only).",
+   "expect": "mIoU(high) - mIoU(low) >= 0.05 on the M1 images.",
+   "rule": "Supported if the difference is >= 0.05 and its 95% CI excludes 0. Refuted if the CI lies inside (-0.05, +0.05) and excludes 0.05. Otherwise inconclusive."
+  },
+  "HP3b": {
+   "question": "P3 (errors): does the model know when it fails?",
+   "claim": "The probe is reasonably calibrated overall but overconfident where it predicts big_rock.",
+   "expect": "Overall ECE <= 0.05 and, on pixels predicted big_rock, mean confidence - accuracy >= 0.10 (M1 + M2, seed mean).",
+   "rule": "Supported if both hold, with the big_rock gap's 95% CI above 0. Refuted if the big_rock gap's CI lies below 0.10. Otherwise inconclusive."
+  }
+ }
+}

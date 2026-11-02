@@ -1,0 +1,28 @@
+{
+ "part": "P1",
+ "transform": "standardize",
+ "seed": 1,
+ "n": 15564,
+ "epochs_max": 10,
+ "epochs_run": 5,
+ "patience": 2,
+ "val_miou": 0.6383846814717811,
+ "best_epoch": 2,
+ "val_hist": [
+  0.6112963630583952,
+  0.6278922372767873,
+  0.6383846814717811,
+  0.6276262828708511,
+  0.6346971343686397
+ ],
+ "trainable": 4612,
+ "minutes": 15.4,
+ "name": "P1_standardize_s1",
+ "radii": [
+  0,
+  4,
+  8,
+  16
+ ],
+ "saved_at": "2026-11-02 16:39:49"
+}

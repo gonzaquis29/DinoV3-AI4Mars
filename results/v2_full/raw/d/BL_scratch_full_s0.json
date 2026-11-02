@@ -1,0 +1,29 @@
+{
+ "part": "BL",
+ "pretrained": false,
+ "n": 15564,
+ "seed": 0,
+ "epochs_planned": 3,
+ "epochs_run": 3,
+ "steps": 2916,
+ "patience": 3,
+ "batch": 16,
+ "lr": 0.001,
+ "val_miou": 0.5109988056763097,
+ "best_epoch": 2,
+ "val_hist": [
+  0.38316745007495445,
+  0.4120022302095998,
+  0.5109988056763097
+ ],
+ "params_M": 39.6,
+ "minutes": 67.0,
+ "name": "BL_scratch_full_s0",
+ "radii": [
+  0,
+  4,
+  8,
+  16
+ ],
+ "saved_at": "2026-11-02 15:00:16"
+}

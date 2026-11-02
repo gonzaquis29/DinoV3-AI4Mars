@@ -8,6 +8,58 @@ controls (random-init ViT, DINOv2, fewer labels, label borders) and published en
 > publicados entrenados de punta a punta en AI4Mars (M1/M2); un decoder o el ajuste fino de los últimos bloques añaden como mucho 0,012.
 > El conjunto M3 no sirve para comparar modelos en `big_rock` (solo 5 imágenes). De las seis hipótesis registradas antes de la corrida
 > final, una (H4: el decoder no supera a la sonda) se apoya y cinco quedan inconclusas con este tamaño de muestra. Todo es reproducible desde los resultados incluidos.
+>
+> **Estudio v2 (15,564 imágenes).** La sonda lineal iguala, dentro del margen estadístico, a un DeepLabV3 entrenado de punta a punta con ~8,600 veces más parámetros. El techo no depende de la apariencia de la imagen ni de qué bloques se adaptan, sino de la ambigüedad de las etiquetas y de la clase `big_rock`. Ver la sección «What we found».
+
+## What we found (v2 study, all 15,564 training images)
+
+**Question.** How do the features of a DINOv3 pretrained on web images extend to the Martian domain (AI4Mars)?
+The v2 study (notebooks in [`notebooks/v2/`](notebooks/v2/), results in [`results/v2_full/`](results/v2_full/)) asks it from three angles:
+**P1 data** (is the gap about image appearance?), **P2 model** (where is it worth adapting?), **P3 errors** (where does it fail, and does it know?).
+
+**Answer in short.** The frozen features already work on Mars with almost no adaptation. A 4.6 k-parameter linear probe matches, within the
+statistical margin, a DeepLabV3 trained end to end with ~8,600 times more parameters. What caps the score is not how the image looks nor which
+blocks are adapted, but label ambiguity and the `big_rock` class.
+
+| Model (test mIoU, mean of seeds) | Trainable params | M1 | M2 | vs. probe |
+|---|---|---|---|---|
+| Linear probe on frozen DINOv3 (3 seeds) | 4.6 k | 0.674 | 0.723 | n/a |
+| DeepLabV3 ResNet-50, ImageNet-pretrained, end to end (1 seed) | 39.6 M | 0.667 | 0.713 | −0.007 [−0.025, +0.008], inconclusive |
+| DeepLabV3 ResNet-50, no pretraining (1 seed) | 39.6 M | 0.628 | 0.681 | −0.046 [−0.081, −0.016], real |
+
+Same 15,564 images, same split and test sets (M1/M2/M3, 322 images each). **The baseline is under-trained** (3 epochs, 2,916 steps, 70 min budget per
+model; the ImageNet one had plateaued, the one without pretraining was still improving) and is a single seed, so read the comparison as
+"the probe matches it", not "the probe beats it". The gain is in cost, not in accuracy.
+
+1. **P1, appearance.** Histogram equalisation, CLAHE and per-image standardisation do not change the probe's mIoU (CLAHE and standardisation are
+   equivalent to the original on M1, ±0.01; global equalisation is slightly lower, −0.006). Blurring away fine texture does not sink it either
+   (−0.002 on M1). The gap is not photometric. M2 intervals are wider than ±0.01, so several comparisons stay inconclusive.
+2. **P2, where to adapt.** LoRA (rank 8, 221 k parameters) on blocks 1–2, 6–7 or 11–12 gives +0.005 to +0.007 over the probe on M1 and no
+   difference between zones (late − early: −0.000 on M1, [−0.006, +0.015]). Adaptation adds little, wherever it goes.
+3. **P3, errors.** Where the experts agree, mIoU is 0.862; where only one labelled the pixel, 0.546 (difference +0.315 [+0.180, +0.413]), so part of
+   the ceiling is label ambiguity. Calibration overall is good (ECE 0.029) but on pixels predicted `big_rock` confidence exceeds accuracy by
+   +0.674 [+0.435, +0.762], and 45 % of `big_rock` pixels are missed.
+4. **Teardown.** Parameters, FLOPs, latency, memory and feature statistics per block: [`results/v2_full/teardown_table.csv`](results/v2_full/teardown_table.csv).
+
+Full tables: [`P1_table.csv`](results/v2_full/P1_table.csv), [`P2_table.csv`](results/v2_full/P2_table.csv), [`baseline_table.csv`](results/v2_full/baseline_table.csv),
+figures in [`results/v2_full/figures/`](results/v2_full/figures/). The decision rules were written down before running
+([`hypotheses_v2.json`](notebooks/v2/hypotheses_v2.json), 02/11/2026 01:54; re-registered for the final data in
+[`hypotheses_v2_full.json`](notebooks/v2/hypotheses_v2_full.json) after the pilot was known and before any full result was seen).
+Verdicts per hypothesis: [`verdicts_v2.csv`](results/v2_full/verdicts_v2.csv) (HP1, HP1b, HP2 inconclusive; HP3a, HP3b supported).
+A **real** difference needs a paired block-bootstrap 95 % CI (blocks of 10 consecutive images) that excludes 0 and |Δ| ≥ 0.01; **equivalent** means the CI lies
+inside ±0.01; otherwise inconclusive. Several comparisons use Holm's correction.
+
+**Pilot replicate.** The same study first ran with 2,000 training images ([`results/v2_pilot/`](results/v2_pilot/)) and gives the same verdicts, which
+supports the findings. It is kept as an independent replicate, not as the main result.
+
+**Limitations of the v2 run** (details in [`DESIGN_LOG.md`](DESIGN_LOG.md)):
+- P1 probes used early stopping (patience 2) that cut most of them at epoch 5, before the learning rate had decayed; they land at 0.674 against 0.677 in the
+  final run, and one CLAHE seed stopped earlier than the other two. The three seeds share batch order, so seed variance is understated.
+- P2 uses 2 seeds, 2 epochs per run (~1,900 steps), and a learning rate fixed from the pilot validation, because of the time available.
+- The baseline is 1 seed and under-trained (see above). Confidence intervals are limited by the 322-image test sets, so they are no narrower than in the pilot.
+- M3 contains `big_rock` in only 5 of 322 images, so its mIoU cannot rank models on that class (a model-ranking caveat for AI4Mars users, see the final-run section).
+
+## Final run (stages A–E): layer-wise probes, decoder, fine-tuning and controls
 
 ## Main results
 
@@ -72,14 +124,24 @@ WAIMLAp 2026: [poster (PDF)](docs/Poster_FrozenDINOv3MartianTerrain.pdf) and [ab
 
 ```
 notebooks/
-  ai4mars_dinov3_final.ipynb   the experiment: stages A-E, resumable, 2 GPUs
-  ai4mars_dinov3_final.py      same code as a plain script (source of the notebook)
-  py_to_ipynb.py               regenerates the .ipynb: python notebooks/py_to_ipynb.py notebooks/ai4mars_dinov3_final.py
+  ai4mars_dinov3_final.ipynb   final run: stages A-E, resumable, 2 GPUs (source: .py)
+  py_to_ipynb.py               regenerates any .ipynb from its .py: python notebooks/py_to_ipynb.py <file.py>
+  v2/                          v2 study (each notebook has a .py source and its .ipynb)
+    A_datos_y_errores          teardown, P1 (image appearance), data for P3
+    B_modelo                   P2 (LoRA by depth)
+    C_resultados               analysis on CPU: tables, figures, verdicts (A4M_RUN=full | pilot)
+    D_baseline                 DeepLabV3 ResNet-50 baseline trained end to end
+    a4m_lib.py                 shared plumbing (data, token caches, training loop, metrics, result store)
+    hypotheses_v2*.json        decision rules, written before running
 src/
-  make_figures.py              figures and key numbers from the saved results
+  make_figures.py              figures for the final run
 results/
   final_run/                   output of the final run (see results/README.md)
+  v2_full/                     v2 study with 15,564 images: tables, figures, raw/{a,b,d}
+  v2_pilot/                    same study with 2,000 images (independent replicate)
   figures/                     figures built by src/make_figures.py
+docs/                          WAIMLAp poster and abstract
+DESIGN_LOG.md                  design log: each decision, why, and where AI assistance was used
 ```
 
 Stages in the notebook: **A** one linear probe per layer · **B** decoder head · **C** label efficiency and partial fine-tuning ·
@@ -108,6 +170,17 @@ Create a Kaggle notebook from `notebooks/ai4mars_dinov3_final.ipynb`, set the ac
 Results are cached per unit of work, so an interrupted run resumes where it stopped (attach the earlier output as an input).
 `A4M_SMOKE=1` runs a tiny offline self-test. To run only one stage on selected backbones, set e.g. `A4M_STAGES=D A4M_BACKBONES=dinov2_b14_448`
 (this is how the H3b extra run was launched: about 25 min on one T4). Seeds are fixed (0, 1, 2) and each stage records its configuration next to its results.
+
+**3. v2 analysis (CPU).** Regenerates `results/v2_full/` (or `results/v2_pilot/`) from the raw per-run files in `raw/`:
+
+```bash
+pip install -r requirements.txt
+A4M_RUN=full  python notebooks/v2/C_resultados.py      # or A4M_RUN=pilot
+```
+
+**4. v2 re-run on Kaggle.** Notebooks A, B and D import `a4m_lib.py` (attach `notebooks/v2/` as a dataset). Environment variables select the mode:
+`A4M_FULL=1` (all 15,564 images; token caches go to disk), `A4M_ZONES=early,mid,late` (B), `A4M_SMOKE=1` (tiny offline self-test). Without `A4M_FULL`
+they run the 2,000-image pilot. Measured on 2 × T4 (including data loading): A ≈ 2 h 25 min, B ≈ 1 h 45 min, D ≈ 80 min (training budget set by `BUDGET_MIN`).
 
 ## Protocol notes
 

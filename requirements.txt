@@ -8,7 +8,9 @@ pillow>=10.2      # tested 10.2.0
 tqdm>=4.70        # tested 4.70.1
 torch>=2.14       # tested 2.14.1 (CPU build: pip install torch --index-url https://download.pytorch.org/whl/cpu)
 
-# Only needed to train (stages A-D). Kaggle images already include them.
+# Only needed to train (final run stages A-D, notebooks/v2 A, B, D). Kaggle images already include them.
 # transformers
 # huggingface_hub
+# torchvision                 (notebooks/v2/D_baseline: DeepLabV3 ResNet-50)
+# opencv-python-headless      (notebooks/v2/A: histogram equalisation, CLAHE, blur)
 # The Kaggle run that produced the released results used torch 2.11.0+cu128 on 2 x Tesla T4.

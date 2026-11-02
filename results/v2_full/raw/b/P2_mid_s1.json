@@ -1,0 +1,26 @@
+{
+ "part": "P2",
+ "zone": "mid",
+ "seed": 1,
+ "lora_lr": 0.001,
+ "rank": 8,
+ "n": 15564,
+ "epochs": 2,
+ "val_miou": 0.6941860031423199,
+ "best_epoch": 1,
+ "val_hist": [
+  0.6926217387797313,
+  0.6941860031423199
+ ],
+ "trainable_lora": 221184,
+ "trainable_head": 4612,
+ "minutes": 24.1,
+ "name": "P2_mid_s1",
+ "radii": [
+  0,
+  4,
+  8,
+  16
+ ],
+ "saved_at": "2026-11-02 16:31:11"
+}

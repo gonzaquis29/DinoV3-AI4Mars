@@ -35,3 +35,20 @@ recomputed from these arrays.
 
 `fig1_layers` … `fig7_m3_bigrock` (PNG and PDF) and `numbers.json`, the values quoted in the README. Regenerate with
 `python src/make_figures.py`.
+
+## `v2_full/` and `v2_pilot/` (v2 study)
+
+Written by `notebooks/v2/C_resultados.py` (`A4M_RUN=full` or `pilot`) from the raw per-run files in `raw/`.
+
+| File | What it is |
+|---|---|
+| `raw/{a,b,d}/` | One `.json` + `.npz` pair per unit of work (per-image confusion matrices; calibration and agreement statistics). `a` = P1 and teardown, `b` = P2, `d` = baseline (full run only) |
+| `P1_table.csv` | P1: each image transform against the original, with block-bootstrap CIs |
+| `P2_table.csv` | P2: each LoRA zone against the probe, with CIs |
+| `baseline_table.csv` | DeepLabV3 ResNet-50 against the linear probe (full run only) |
+| `teardown_table.csv` | Parameters and FLOPs per block |
+| `posthoc_final_run.csv` | Post-hoc re-reading of the final run with the v2 statistics (marked as post-hoc) |
+| `verdicts_v2.csv` | Verdict for each hypothesis (HP1, HP1b, HP2, HP3a, HP3b) and the numbers behind it |
+| `figures/` | P1 and P3 figures |
+
+`v2_full` uses all 15,564 training images; `v2_pilot` used 2,000. In the full run the P2 control ("no adaptation") is the P1 `original` probe.
