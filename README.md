@@ -23,7 +23,7 @@ adapting early, middle or late blocks moves the score by more than about 0.01 mI
 ## Main findings (v2 study)
 
 The study uses all 15,564 training images, the same split and the same expert test sets (M1, M2, M3; 322 images each) throughout. Notebooks are in
-[`notebooks/v2/`](notebooks/v2/) and results in [`results/v2_full/`](results/v2_full/). Decision rules for each claim were written down before running
+[`notebooks/v2/`](notebooks/v2/) and results in [`results/v2_full/`](results/v2_full/). Decision rules for each hypothesis were written down before running
 ([`hypotheses_v2.json`](notebooks/v2/hypotheses_v2.json), 02/11/2026 01:54) and saved again for the full data, after a 2,000-image pilot was known and before any
 full result was seen ([`hypotheses_v2_full.json`](notebooks/v2/hypotheses_v2_full.json)).
 
@@ -50,9 +50,9 @@ the `big_rock` pixels are missed.
 
 **Teardown.** Parameters, FLOPs, latency, memory and feature statistics per block: [`teardown_table.csv`](results/v2_full/teardown_table.csv). All 12 blocks cost the same.
 
-Three of the five claims (HP1, HP1b, HP2) are inconclusive at this sample size, and two (HP3a, HP3b) are supported; per-claim evidence is in
+The study tests three hypotheses, one per question. H1 (the gap is not photometric; registered parts HP1, HP1b) and H2 (late blocks help most; HP2) are inconclusive at this sample size, and H3 (the ceiling is set by the labels and the model is overconfident on `big_rock`; HP3a, HP3b) is supported. Per-part evidence is in
 [`verdicts_v2.csv`](results/v2_full/verdicts_v2.csv). A difference is **real** when its paired block-bootstrap 95 % interval (blocks of 10 consecutive images) excludes 0 and
-|Δ| ≥ 0.01, **equivalent** when the interval lies inside ±0.01, and inconclusive otherwise; Holm's correction is applied within each claim.
+|Δ| ≥ 0.01, **equivalent** when the interval lies inside ±0.01, and inconclusive otherwise; Holm's correction is applied within each hypothesis.
 Tables: [`P1_table.csv`](results/v2_full/P1_table.csv), [`P2_table.csv`](results/v2_full/P2_table.csv), [`baseline_table.csv`](results/v2_full/baseline_table.csv); figures in [`results/v2_full/figures/`](results/v2_full/figures/).
 
 The same study first ran with 2,000 training images ([`results/v2_pilot/`](results/v2_pilot/)) and led to the same conclusions. It is kept as an independent replicate.
@@ -86,21 +86,7 @@ like-for-like. Full table with 95 % intervals per class: [`results/final_run/tab
   (probe ~109 k px, decoder ~16 k px), which alone drives the M3 gap (0.83 against 0.93). Without `big_rock`, all models score 0.96–0.97 on M3.
 - **Label borders.** Excluding a band of 8 px around label edges raises every head by about 0.025 mIoU on M1 (probe 0.677 → 0.702), consistent with, but not proof of, label noise at borders.
 
-Hypotheses and rules for this run were written before it ([`hypotheses_preregistered.json`](results/final_run/hypotheses_preregistered.json); an internal record, with H4–H6 formulated after a pilot).
-H3b was added afterwards and registered before its own run ([`hypotheses_extra.json`](results/final_run/hypotheses_extra.json)). Here a difference counts as real when its paired
-interval over images excludes 0 and |Δ| ≥ 0.01.
-
-| | Hypothesis | Outcome |
-|---|---|---|
-| H1 | Intermediate layers beat the last layer | inconclusive |
-| H2 | The fine-tuning gain over the probe grows with the number of labels | inconclusive |
-| H3 | DINOv3 beats DINOv2, and both beat random init by a lot | inconclusive |
-| H3b | DINOv3's edge over DINOv2 survives matching the token grid | inconclusive (real on M1, not on M2) |
-| H4 | A 3.5 M decoder does not beat the probe on M1/M2 | supported (the interval includes 0; gains up to ~0.02 are not ruled out) |
-| H5 | Part of the M1/M2 ceiling is label noise at region borders | inconclusive |
-| H6 | `big_rock` failures are size-driven | inconclusive |
-
-Evidence per outcome: [`hypothesis_verdicts.csv`](results/final_run/hypothesis_verdicts.csv). Undecided means the data neither support nor refute the hypothesis at this sample size, not that the effect is absent.
+This run had its own hypotheses, written before it and kept in [`results/final_run/`](results/final_run/) ([`hypotheses_preregistered.json`](results/final_run/hypotheses_preregistered.json), [`hypothesis_verdicts.csv`](results/final_run/hypothesis_verdicts.csv)); they are superseded by the three of the v2 study above, which is the one the paper reports.
 
 ## Paper, poster and abstract
 

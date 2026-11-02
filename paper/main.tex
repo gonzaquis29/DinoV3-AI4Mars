@@ -36,14 +36,14 @@ This paper addresses that problem. Our central question is \emph{how do the feat
 \textbf{Gap.} Within the 11 Mars papers we reviewed and the targeted searches above, none (i) evaluates DINOv3 on AI4Mars with four-class mIoU on M1--M3, (ii) tests whether the gap to Mars is photometric, (iii) compares adapting early, middle or late blocks under the same budget, or (iv) reports calibration on \bigrock. This is a limited search, not an exhaustive one, and we do not claim novelty for frozen backbones or adapters in general.
 
 \section{Methodology}\label{sec:method}
-We turned each objective into one or two testable claims and fixed the decision rule of every claim before running anything. The experiments change a single factor at a time, so that a difference in score can be attributed to it (Table~\ref{tab:design}). The claims (HP1, HP1b, HP2, HP3a, HP3b) were saved in a timestamped file on 02/11/2026 at 01:54, an internal record rather than an external registry. A pilot with 2{,}000 training images then showed us a first answer, so we saved the same rules again before launching the full-data runs, and we kept the pilot as an independent replicate: it led to the same conclusions.
+We turned each objective into one hypothesis, H1 to H3, each with one or two registered parts, and fixed the decision rule of every part before running anything. The experiments change a single factor at a time, so that a difference in score can be attributed to it (Table~\ref{tab:design}). The hypotheses (parts HP1, HP1b, HP2, HP3a, HP3b) were saved in a timestamped file on 02/11/2026 at 01:54, an internal record rather than an external registry. A pilot with 2{,}000 training images then showed us a first answer, so we saved the same rules again before launching the full-data runs, and we kept the pilot as an independent replicate: it led to the same conclusions.
 \begin{table}[t]\centering\footnotesize
 \caption{From objective to experiment.}\label{tab:design}
 \begin{tabular}{@{}p{0.07\linewidth}p{0.30\linewidth}p{0.27\linewidth}p{0.22\linewidth}@{}}\toprule
-Obj. & Factor changed & Measured & Claims\\\midrule
-P1 & image appearance & probe mIoU & HP1, HP1b\\
-P2 & depth of LoRA (early, mid, late) & mIoU vs.\ probe & HP2\\
-P3 & expert agreement; confidence & mIoU by agreement, ECE & HP3a, HP3b\\\bottomrule
+Obj. & Factor changed & Measured & Hypothesis\\\midrule
+P1 & image appearance & probe mIoU & H1\\
+P2 & depth of LoRA (early, mid, late) & mIoU vs.\ probe & H2\\
+P3 & expert agreement; confidence & mIoU by agreement, ECE & H3\\\bottomrule
 \end{tabular}\end{table}
 
 All experiments use the MSL NavCam subset of AI4Mars, whose greyscale images carry four classes. We trained on 15{,}564 images, none of which appears in a test set, and held out 500 more, chosen by acquisition time, for validation. We evaluated on the three expert-labelled sets M1, M2 and M3 of 322 images each, in which a pixel is labelled when at least 1, 2 or 3 experts agree (we read them as Swan's min1--min3 sets, an equivalence inferred from the text). Unlabelled pixels are ignored, images are resized to 512\,px, and predictions are scored at label resolution, averaging the classes present in the union. We chose the epoch and every learning rate on validation, never on test.
@@ -61,14 +61,17 @@ To place the probe against a trained network, we also trained DeepLabV3-R50 end 
 All differences are paired, computed on the same test images. We resampled blocks of 10 consecutive test images 2{,}000 times, because neighbouring frames are alike, using the same resample for every seed, and built 95\,\% intervals from them. We call a difference \emph{real} when its interval excludes 0 and $|\Delta|\ge 0.01$ mIoU, \emph{equivalent} when the interval lies inside $(-0.01,+0.01)$, and \emph{inconclusive} otherwise; Holm's correction is applied within each claim. Table~\ref{tab:hyp} states each rule and the outcome.
 
 \begin{table}[t]\centering\footnotesize
-\caption{Claims, decision rules and verdicts (full data).}\label{tab:hyp}
-\begin{tabular}{@{}p{0.34\linewidth}p{0.36\linewidth}p{0.18\linewidth}@{}}\toprule
-Claim & Holds if\ldots & Outcome\\\midrule
-HP1 appearance transforms do not change the probe & every transform equivalent or lower on M1 and M2 & inconclusive\\
-HP1b blur hurts, sand most & real drop on M1 and M2, largest on sand & inconclusive\\
-HP2 late blocks help more than middle or early & late$-$early real on M1 and M2 & inconclusive\\
-HP3a high agreement $\ge$ low by 0.05 mIoU & difference $\ge0.05$, CI excludes 0 & \textbf{supported}\\
-HP3b calibrated overall, overconfident on \bigrock & ECE $\le0.05$ and gap $\ge0.10$, CI above 0 & \textbf{supported}\\\bottomrule
+\caption{Hypotheses, decision rules and verdicts (full data).}\label{tab:hyp}
+\begin{tabular}{@{}p{0.40\linewidth}p{0.34\linewidth}p{0.14\linewidth}@{}}\toprule
+Hypothesis and parts & Supported if\ldots & Verdict\\\midrule
+\textbf{H1} the gap is not photometric & & inconclusive\\
+\quad HP1 transforms leave the probe unchanged & every transform equivalent or lower on M1 and M2 & inconclusive\\
+\quad HP1b blur hurts, sand most & real drop on M1 and M2, largest on sand & inconclusive\\
+\textbf{H2} late blocks help most & & inconclusive\\
+\quad HP2 late $>$ middle, early & late$-$early real on M1 and M2 & inconclusive\\
+\textbf{H3} ceiling set by labels, overconfident on \bigrock & & \textbf{supported}\\
+\quad HP3a high agreement $\ge$ low by 0.05 & difference $\ge0.05$, CI excludes 0 & \textbf{supported}\\
+\quad HP3b ECE $\le0.05$, \bigrock\ gap $\ge0.10$ & both, with CI above 0 & \textbf{supported}\\\bottomrule
 \end{tabular}\end{table}
 
 \section{Results and Discussion}\label{sec:results}
@@ -103,7 +106,7 @@ Where the score does move is with the labels. On the M1 images, mIoU is 0.862 on
 \includegraphics[width=\linewidth]{../results/v2_full/figures/P3_calibracion.png}
 \caption{P3: reliability of the probe on all labelled pixels and on pixels predicted \bigrock.}\label{fig:p3}\end{figure}
 
-Read together, the evidence is consistent: the frozen features already work on Mars, neither preprocessing nor adaptation at any depth moves the score by more than about 0.01, and the remaining error concentrates where the labels are ambiguous and on one rare class. Three of the five claims could not be decided at this sample size, which means the data neither confirm nor rule out an effect, not that the effect is zero. The teardown adds that all 12 blocks cost the same, so choosing to adapt early or late is a matter of where, not of price. In practice, effort is better spent on labels and on \bigrock\ than on a heavier model.
+Read together, the evidence is consistent: the frozen features already work on Mars, neither preprocessing nor adaptation at any depth moves the score by more than about 0.01, and the remaining error concentrates where the labels are ambiguous and on one rare class. Two of the three hypotheses (H1 and H2) could not be decided at this sample size, which means the data neither confirm nor rule out an effect, not that the effect is zero. The teardown adds that all 12 blocks cost the same, so choosing to adapt early or late is a matter of where, not of price. In practice, effort is better spent on labels and on \bigrock\ than on a heavier model.
 
 \section{Limitations, Bias and Ethics}\label{sec:limits}
 \textbf{Scope.} One dataset and one backbone (DINOv3 ViT-B/16); conclusions do not extend to other rovers or models. With 322 test images and effects near 0.01 mIoU, most hypotheses cannot be decided, and M2 intervals are wider than $\pm0.01$.\\
