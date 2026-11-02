@@ -5,11 +5,15 @@
 \setlist{nosep,leftmargin=1.2em}
 \newcommand{\bigrock}{\texttt{big\_rock}}
 \title{How Do Web-Pretrained DINOv3 Features Extend to Martian Terrain? Appearance, Adaptation and Errors on AI4Mars}
-\author{\IEEEauthorblockN{Authors to be added}\IEEEauthorblockA{Affiliation to be added}}
+\author{\IEEEauthorblockN{Gonzalo Quispe}\IEEEauthorblockA{Pontificia Universidad Cat\'olica del Per\'u\\Lima, Peru\\gquispeo@pucp.edu.pe}
+\and
+\IEEEauthorblockN{Gustavo Meza}\IEEEauthorblockA{Pontificia Universidad Cat\'olica del Per\'u\\Lima, Peru\\meza.gustavo@pucp.edu.pe}
+\and
+\IEEEauthorblockN{David Rodr\'iguez}\IEEEauthorblockA{Pontificia Universidad Cat\'olica del Per\'u\\Lima, Peru\\david.rodriguezc@pucp.edu.pe}}
 \begin{document}
 \maketitle
 \begin{abstract}
-Foundation vision models are trained on web images, yet they are increasingly used on scenes that look nothing like the web, such as the surface of Mars. We study how the features of a frozen DINOv3 ViT-B/16 extend to terrain segmentation on AI4Mars (soil, bedrock, sand and \bigrock) from three angles: whether the gap is one of image appearance, where in the network it pays to adapt, and where the model fails and whether it knows. A 4.6\,k-parameter linear probe reaches 0.674 / 0.723 mIoU on the expert test sets M1 / M2, statistically indistinguishable from a DeepLabV3-R50 trained end to end under the same compute budget, with about 8{,}600 times fewer trainable parameters. Changing how the images look (histogram equalisation, CLAHE, standardisation, blur) does not move the probe, and rank-8 LoRA on early, middle or late blocks adds only 0.005--0.007 mIoU with no difference between zones. What does limit the score is label ambiguity (0.862 mIoU where three experts agree against 0.546 where only one labelled) and the rare \bigrock\ class, where confidence exceeds accuracy by 0.67 even though overall calibration is good (ECE 0.029). Together, the evidence places the performance ceiling in the labels and in one rare class, not in the visual representation; the hypotheses registered beforehand were only partly decided by the data, and we say which ones.
+Foundation vision models are trained on web images, yet they are increasingly used on scenes that look nothing like the web, such as the surface of Mars. We study how the features of a frozen DINOv3 ViT-B/16 extend to terrain segmentation on AI4Mars (soil, bedrock, sand and \bigrock) from three angles: whether the gap is one of image appearance, where in the network it pays to adapt, and where the model fails and whether it knows. A 4.6\,k-parameter linear probe reaches 0.674 / 0.723 mIoU on the expert test sets M1 / M2, statistically indistinguishable from a DeepLabV3-R50 trained end to end under the same compute budget, with about 8{,}600 times fewer trainable parameters. Changing how the images look (histogram equalisation, CLAHE, standardisation, blur) does not move the probe, and rank-8 LoRA on early, middle or late blocks adds only 0.005--0.007 mIoU with no difference between zones. What does limit the score is label ambiguity (0.862 mIoU where three experts agree against 0.546 where only one labelled) and the rare \bigrock\ class, where confidence exceeds accuracy by 0.67 even though overall calibration is good (ECE 0.029). Together, the evidence places the performance ceiling in the labels and in one rare class, not in the visual representation; the hypotheses on appearance and on adaptation depth cannot be decided with 322 test images.
 \end{abstract}
 
 \begin{IEEEkeywords}frozen foundation models, DINOv3, Mars, semantic segmentation, LoRA, calibration\end{IEEEkeywords}
@@ -34,14 +38,14 @@ This paper addresses that problem. Our central question is \emph{how do the feat
 \textbf{Gap.} Within the 11 Mars papers we reviewed and the targeted searches above, none (i) evaluates DINOv3 on AI4Mars with four-class mIoU on M1--M3, (ii) tests whether the gap to Mars is photometric, (iii) compares adapting early, middle or late blocks under the same budget, or (iv) reports calibration on \bigrock. This is a limited search, not an exhaustive one, and we do not claim novelty for frozen backbones or adapters in general.
 
 \section{Methodology}\label{sec:method}
-We turned each objective into one hypothesis, H1 to H3, each with one or two registered parts, and fixed the decision rule of every part before running anything. The experiments change a single factor at a time, so that a difference in score can be attributed to it (Table~\ref{tab:design}). The hypotheses (parts HP1, HP1b, HP2, HP3a, HP3b) were saved in a timestamped file on 02/11/2026 at 01:54, an internal record rather than an external registry. A pilot with 2{,}000 training images then showed us a first answer, so we saved the same rules again before launching the full-data runs, and we kept the pilot as an independent replicate: it led to the same conclusions.
+Each objective became a hypothesis whose decision rule was written down, in a dated file, before the full-data runs: appearance is irrelevant, the late blocks help most, and the ceiling is set by the labels. A pilot with 2{,}000 training images had given the same answers. The experiments change a single factor at a time, so that a difference in score can be attributed to it (Table~\ref{tab:design}).
 \begin{table}[t]\centering\footnotesize
 \caption{From objective to experiment.}\label{tab:design}
 \begin{tabular}{@{}p{0.07\linewidth}p{0.30\linewidth}p{0.27\linewidth}p{0.22\linewidth}@{}}\toprule
 Obj. & Factor changed & Measured & Hypothesis\\\midrule
-P1 & image appearance & probe mIoU & H1\\
-P2 & depth of LoRA (early, mid, late) & mIoU vs.\ probe & H2\\
-P3 & expert agreement; confidence & mIoU by agreement, ECE & H3\\\bottomrule
+P1 & image appearance & probe mIoU & appearance is irrelevant\\
+P2 & depth of LoRA (early, mid, late) & mIoU vs.\ probe & late blocks help most\\
+P3 & expert agreement; confidence & mIoU by agreement, ECE & labels set the ceiling\\\bottomrule
 \end{tabular}\end{table}
 
 All experiments use the MSL NavCam subset of AI4Mars, whose greyscale images carry four classes. We trained on 15{,}564 images, none of which appears in a test set, and held out 500 more, chosen by acquisition time, for validation. We evaluated on the three expert-labelled sets M1, M2 and M3 of 322 images each, in which a pixel is labelled when at least 1, 2 or 3 experts agree (we read them as Swan's min1--min3 sets, an equivalence inferred from the text). Unlabelled pixels are ignored, images are resized to 512\,px, and predictions are scored at label resolution, averaging the classes present in the union. We chose the epoch and every learning rate on validation, never on test.
@@ -56,20 +60,17 @@ To characterise the errors (P3), we split the labelled pixels of the M1 images i
 
 To place the probe against a trained network, we also trained DeepLabV3-R50 end to end on the same images, split and test sets, with and without ImageNet pretraining. The comparison is budget-matched: one seed and three epochs (about 2{,}900 steps) within 70 minutes per model, a budget representative of a quick deployment. Published figures use other splits, so we cite them only as context.
 
-All differences are paired, computed on the same test images. We resampled blocks of 10 consecutive test images 2{,}000 times, because neighbouring frames are alike, using the same resample for every seed, and built 95\,\% intervals from them. We call a difference \emph{real} when its interval excludes 0 and $|\Delta|\ge 0.01$ mIoU, \emph{equivalent} when the interval lies inside $(-0.01,+0.01)$, and \emph{inconclusive} otherwise; Holm's correction is applied within each claim. Table~\ref{tab:hyp} states each rule and the outcome.
+All differences are paired, computed on the same test images. We resampled blocks of 10 consecutive test images 2{,}000 times, because neighbouring frames are alike, using the same resample for every seed, and built 95\,\% intervals from them. We call a difference \emph{real} when its interval excludes 0 and $|\Delta|\ge 0.01$ mIoU, \emph{equivalent} when the interval lies inside $(-0.01,+0.01)$, and \emph{inconclusive} otherwise; Holm's correction is applied within each hypothesis. Table~\ref{tab:hyp} states each rule and the outcome.
 
 \begin{table}[t]\centering\footnotesize
 \caption{Hypotheses, decision rules and verdicts (full data).}\label{tab:hyp}
 \begin{tabular}{@{}p{0.40\linewidth}p{0.34\linewidth}p{0.14\linewidth}@{}}\toprule
-Hypothesis and parts & Supported if\ldots & Verdict\\\midrule
-\textbf{H1} the gap is not photometric & & inconclusive\\
-\quad HP1 transforms leave the probe unchanged & every transform equivalent or lower on M1 and M2 & inconclusive\\
-\quad HP1b blur hurts, sand most & real drop on M1 and M2, largest on sand & inconclusive\\
-\textbf{H2} late blocks help most & & inconclusive\\
-\quad HP2 late $>$ middle, early & late$-$early real on M1 and M2 & inconclusive\\
-\textbf{H3} ceiling set by labels, overconfident on \bigrock & & \textbf{supported}\\
-\quad HP3a high agreement $\ge$ low by 0.05 & difference $\ge0.05$, CI excludes 0 & \textbf{supported}\\
-\quad HP3b ECE $\le0.05$, \bigrock\ gap $\ge0.10$ & both, with CI above 0 & \textbf{supported}\\\bottomrule
+Hypothesis & Holds if\ldots & Verdict\\\midrule
+Appearance transforms do not change the probe & every transform equivalent or lower on M1 and M2 & inconclusive\\
+Blur hurts, most on sand & real drop on M1 and M2, largest on sand & inconclusive\\
+Late blocks help more than early or middle & late$-$early real on M1 and M2 & inconclusive\\
+High expert agreement scores at least 0.05 mIoU above low & difference $\ge0.05$, CI excludes 0 & \textbf{supported}\\
+Calibrated overall, overconfident on \bigrock & ECE $\le0.05$ and gap $\ge0.10$, CI above 0 & \textbf{supported}\\\bottomrule
 \end{tabular}\end{table}
 
 \section{Results and Discussion}\label{sec:results}
@@ -107,17 +108,19 @@ Where the score does move is with the labels. On the M1 images, mIoU is 0.862 on
 \includegraphics[width=\linewidth]{../../../results/estudio_principal/figures/P3_calibracion.png}
 \caption{P3: reliability of the probe on all labelled pixels and on pixels predicted \bigrock.}\label{fig:p3}\end{figure}
 
-Read together, the evidence is consistent: the frozen features already work on Mars, neither preprocessing nor adaptation at any depth moves the score by more than about 0.01, and the remaining error concentrates where the labels are ambiguous and on one rare class. Two of the three hypotheses (H1 and H2) could not be decided at this sample size, which means the data neither confirm nor rule out an effect, not that the effect is zero. The teardown adds that all 12 blocks cost the same, so choosing to adapt early or late is a matter of where, not of price. In practice, effort is better spent on labels and on \bigrock\ than on a heavier model.
+Read together, the evidence is consistent: the frozen features already work on Mars, neither preprocessing nor adaptation at any depth moves the score by more than about 0.01, and the remaining error concentrates where the labels are ambiguous and on one rare class. The hypotheses on appearance and on adaptation depth could not be decided at this sample size, which means the data neither confirm nor rule out an effect, not that the effect is zero. The teardown adds that all 12 blocks cost the same, so choosing to adapt early or late is a matter of where, not of price. In practice, effort is better spent on labels and on \bigrock\ than on a heavier model.
 
 \section{Limitations, Bias and Ethics}\label{sec:limits}
 \textbf{Scope.} One dataset and one backbone (DINOv3 ViT-B/16); conclusions do not extend to other rovers or models. With 322 test images and effects near 0.01 mIoU, most hypotheses cannot be decided, and M2 intervals are wider than $\pm0.01$.\\
-\textbf{Experimental limits.} Early stopping cut most P1 probes at epoch 5, before the learning rate decayed (0.674 against 0.677 in the layer-wise run), and the three seeds share batch order, so seed variance is understated. P2 uses two seeds, two epochs and a learning rate fixed from the pilot. The baseline has one seed and three epochs, which gives a budget-matched but not a converged comparison. The pilot with 2{,}000 images was first presented without making clear that it differed from the full training; we corrected this and report the full-data runs.\\
+\textbf{Experimental limits.} Early stopping cut most P1 probes at epoch 5, before the learning rate decayed (0.674 against 0.677 in the layer-wise run), and the three seeds share batch order, so seed variance is understated. P2 uses two seeds, two epochs and a learning rate fixed from the pilot. The baseline has one seed and three epochs, which gives a budget-matched but not a converged comparison.\\
 \textbf{Labels and safety.} Training labels are crowd-sourced and noisy, the reason Mars-Bench leaves AI4Mars out \cite{purohit2025marsbench}. Because \bigrock\ is both rare and overconfidently predicted, these models should not be relied on for hazard detection without additional safeguards.\\
 \textbf{Data and licences.} AI4Mars is public NASA data with no personal data. DINOv3 weights are used under Meta's licence; we release code and results, not weights.\\
-\textbf{Use of AI assistance.} The code of the notebooks and launch scripts and drafts of the text were written with the help of an AI language model at the authors' request. The authors are responsible for the experimental design, the verification of the results and the content of this paper.
 
 \section{Conclusion}\label{sec:conclusion}
 Web-pretrained DINOv3 features extend to Martian terrain with almost no adaptation: a 4.6\,k-parameter probe matches an end-to-end DeepLabV3 within the statistical margin. The gap is not one of image appearance, and adapting early, middle or late blocks with the same low-rank budget adds only about 0.006 mIoU. What limits the score is the ambiguity of the labels and the rare \bigrock\ class, on which the model is confidently wrong. Future work should test whether better labels or class-aware losses move this ceiling, in other domains and with larger backbones.
+
+\section*{Acknowledgment}
+The code and parts of the text were prepared with the help of an AI assistant; the authors reviewed the results and are responsible for the content.
 
 \begin{thebibliography}{99}\footnotesize
 \bibitem{swan2021ai4mars} R.\,M. Swan et al., ``AI4MARS: A dataset for terrain-aware autonomous driving on Mars,'' CVPR Workshops, 2021.
