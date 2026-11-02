@@ -12,4 +12,4 @@ Versiones de cada entregable, ordenadas por entrega. Las fechas son las del enun
 (`results/final_run/`). Luego la pregunta se reformuló en tres preguntas, P1 datos, P2 modelo y P3 errores (estudio principal, `results/estudio_principal/`), y el póster, el resumen y el artículo
 se actualizaron a esa versión. Las versiones anteriores se conservan para mostrar la evolución del trabajo.
 
-El código, los resultados y la guía para leerlo están fuera de esta carpeta: ver el [README principal](../README.md).
+El código y los resultados están fuera de esta carpeta: ver el [README principal](../README.md).

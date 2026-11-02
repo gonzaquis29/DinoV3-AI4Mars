@@ -35,8 +35,6 @@ adapting early, middle or late blocks moves the score by more than about 0.01 mI
 | Reproducibility | [Reproduce](#reproduce), `requirements.txt`, fixed seeds, per-run raw results |
 | E1, E2, E3 (proposal, poster and abstract, paper) | [`entregables/`](entregables/) |
 
-**Not done yet.** The teardown has no receptive-field map or intermediate-feature visualisations. There is no hyperparameter sweep beyond choosing the LoRA learning rate on one seed in the pilot. The author and affiliation block of the paper is still a placeholder, and the design log's verification column has to be filled in by each team member.
-
 ## Main findings (main study)
 
 The study uses all 15,564 training images, the same split and the same expert test sets (M1, M2, M3; 322 images each) throughout. Notebooks are in
@@ -115,7 +113,6 @@ This run had its own hypotheses, written before it and kept in [`results/final_r
 - Article (IEEE conference format, 5 pages; LaTeX source and PDF): [`main.pdf`](entregables/E3_trabajo_y_articulo/articulo/main.pdf), [`main.tex`](entregables/E3_trabajo_y_articulo/articulo/main.tex).
 - Poster and 2-page abstract, final version (main study): [`entregables/E2_poster_waimlap/version_final/`](entregables/E2_poster_waimlap/version_final/); first version (layer-wise study): [`version_octubre/`](entregables/E2_poster_waimlap/version_octubre/).
 - Executed analysis notebook as a web page: [`docs/Resultados_ejecutado.html`](docs/Resultados_ejecutado.html) (download and open in a browser).
-- Code guide (how to read and explain the main-study code, in Spanish): [`docs/GUIA_DEL_CODIGO.md`](docs/GUIA_DEL_CODIGO.md).
 - Design log (each decision, why, and where AI assistance was used): [`DESIGN_LOG.md`](DESIGN_LOG.md).
 
 ## How the results were produced

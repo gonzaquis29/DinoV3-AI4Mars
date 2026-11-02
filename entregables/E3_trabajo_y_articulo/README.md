@@ -15,4 +15,3 @@ La entrega de trabajo es este repositorio:
 | Cuaderno de análisis ejecutado | `notebooks/estudio_principal/C_resultados.ipynb` y `docs/Resultados_ejecutado.html` |
 | Cuaderno de decisiones (con uso de IA) | `DESIGN_LOG.md` |
 | Instrucciones, entorno y semillas | `README.md`, `requirements.txt` |
-| Guía para leer y explicar el código | `docs/GUIA_DEL_CODIGO.md` |
