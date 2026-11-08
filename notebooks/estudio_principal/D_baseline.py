@@ -37,6 +37,8 @@ setup_dirs(); DEVS = devices(); print("GPUs:", DEVS, "| presupuesto por entrenam
 # %% 1. datos (todas las imágenes en RAM como uint8)
 ROOT = make_fake_dataset(OUT / "fake_data") if SMOKE else find_root()
 SPLITS = build_splits(ROOT, n_val=CFG["n_val"])
+SPLITS, AUDIT = audit_splits(SPLITS, dedup=int(os.environ.get("A4M_DEDUP", 8 if N_BIG else 0)))     # leakage audit: asserts no file overlap / >= 24 h from val and T
+json.dump(AUDIT, open(OUT / "auditoria_datos.json", "w"), indent=1)
 if QUICK:
     SPLITS["train"] = SPLITS["train"][:64]
 pool2000 = np.random.default_rng(0).permutation(len(SPLITS["train"]))[:2000]          # mismo subconjunto que los cuadernos A y B

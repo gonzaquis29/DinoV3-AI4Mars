@@ -41,7 +41,9 @@ CFG = dict(size=512, n_pool=2000, n_val=500, seeds=(0, 1, 2), epochs=10, bs=16, 
 FIXED_LR = {"early": 2e-4, "mid": 1e-3, "late": 1e-3}            # versión final: los LR que ganaron en validación en el piloto (N=2,000); no se vuelven a barrer
 ZONES_TO_RUN = [z for z in os.environ.get("A4M_ZONES", "early,mid,late").split(",") if z]
 if FULL:                                                        # versión final: todas las imágenes de entrenamiento
-    CFG.update(epochs=2, patience=None, seeds=(0, 1))           # 2 épocas (~1,900 pasos) por corrida: es lo que cabe en el tiempo; mejor época por validación
+    CFG.update(epochs=int(os.environ.get("A4M_EPOCHS", 2)), patience=None,   # ronda 1: 2 épocas (~1,900 pasos) por corrida, lo que cabía en el tiempo; ronda 2 (P2b): A4M_EPOCHS=6; mejor época por validación
+               seeds=tuple(int(s) for s in os.environ.get("A4M_SEEDS", "0,1").split(",")))
+P2 = os.environ.get("A4M_P2_TAG", "P2")                           # prefijo de los resultados: "P2" (ronda 1) o "P2L" (P2b, más épocas), para no pisar la ronda 1
 if SMOKE:
     CFG.update(size=64, n_pool=24, n_val=6, seeds=(0, 1), epochs=2, bs=4)
 if QUICK:
@@ -81,6 +83,8 @@ def add_lora(block, r):
 # %% 2. imágenes y tokens
 ROOT = make_fake_dataset(OUT / "fake_data") if SMOKE else find_root()
 SPLITS = build_splits(ROOT, n_val=CFG["n_val"])
+SPLITS, AUDIT = audit_splits(SPLITS, dedup=int(os.environ.get("A4M_DEDUP", 8 if N_BIG else 0)))     # leakage audit: asserts no file overlap / >= 24 h from val and T
+json.dump(AUDIT, open(OUT / "auditoria_datos.json", "w"), indent=1)
 if FULL:
     TMP, CFG["n_pool"] = pick_tmp(len(SPLITS["train"]))
     print("n de entrenamiento:", CFG["n_pool"], "| zonas:", ZONES_TO_RUN, "| caché en", TMP)
@@ -187,8 +191,8 @@ def run_zone_full(zone):
             t.join()
         return out
     lr = FIXED_LR[zone]
-    json.dump({"zone": zone, "chosen": lr, "note": "LR fijado con la validación del piloto (N=2,000); no se barrió de nuevo"}, open(RES_DIR / f"P2_{zone}_lr_choice.json", "w"), indent=1)
-    par([(zone, s, lr, f"P2_{zone}_s{s}") for s in CFG["seeds"]])
+    json.dump({"zone": zone, "chosen": lr, "note": "LR fijado con la validación del piloto (N=2,000); no se barrió de nuevo"}, open(RES_DIR / f"{P2}_{zone}_lr_choice.json", "w"), indent=1)
+    par([(zone, s, lr, f"{P2}_{zone}_s{s}") for s in CFG["seeds"]])
     ZC[zone]["train"][0].close(); ZC.pop(zone); gc.collect()
     print(f"[{zone}] zona terminada en {(time.time() - t0) / 60:.1f} min")
 errors = []
@@ -217,7 +221,7 @@ print(f"P2 terminado en {(time.time() - t0) / 60:.1f} min | errores: {errors or 
 
 # %% 7. tabla rápida (intervalos de confianza y veredicto en el cuaderno C)
 for z in ["probe", "early", "mid", "late"]:
-    res = [load_result(f"P2_{z}_s{s}") for s in CFG["seeds"]]
+    res = [load_result(f"{P2}_{z}_s{s}") for s in CFG["seeds"]]
     res = [r for r in res if r]
     if res:
         m = {k: np.mean([miou_np(r[1][f"{k}__conf"][:, 0].sum(0)) for r in res]) for k in ("val", "M1", "M2", "M3")}

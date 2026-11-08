@@ -1,0 +1,7 @@
+conjunto,nuestra,publicado,cifra,estado
+M1,"0.682 [0.640, 0.743]",SegFormer-B3@1024,0.69,empata
+M1,"0.682 [0.640, 0.743]",UPerNet-Swin-S@1024,0.7,empata
+M2,"0.732 [0.693, 0.824]",SegFormer-B3@1024,0.74,empata
+M2,"0.732 [0.693, 0.824]",UPerNet-Swin-S@1024,0.74,empata
+M3,"0.867 [0.739, 0.957]",SegFormer-B3@1024,0.93,empata
+M3,"0.867 [0.739, 0.957]",UPerNet-Swin-S@1024,0.94,empata

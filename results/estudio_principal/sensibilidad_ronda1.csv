@@ -1,0 +1,15 @@
+hip,comparación,conjunto,Δ,IC95,tol 0.01,tol 0.02 (post hoc),cota |efecto| ≤,mitad del IC
+HP1,hist_eq − original,M1,-0.0063,"[-0.019, -0.001]",inconcluso,equivalente,0.019,0.009
+HP1,hist_eq − original,M2,-0.0084,"[-0.041, -0.001]",inconcluso,inconcluso,0.041,0.02
+HP1,clahe − original,M1,0.0011,"[-0.009, +0.008]",equivalente,equivalente,0.009,0.009
+HP1,clahe − original,M2,0.0009,"[-0.017, +0.007]",inconcluso,equivalente,0.017,0.012
+HP1,standardize − original,M1,0.0008,"[-0.007, +0.005]",equivalente,equivalente,0.007,0.006
+HP1,standardize − original,M2,0.0004,"[-0.016, +0.007]",inconcluso,equivalente,0.016,0.012
+HP1b,blur − original,M1,-0.0023,"[-0.014, +0.009]",inconcluso,equivalente,0.014,0.011
+HP1b,blur − original,M2,0.0024,"[-0.013, +0.023]",inconcluso,inconcluso,0.023,0.018
+HP2,late − early,M1,-0.0004,"[-0.006, +0.015]",inconcluso,equivalente,0.015,0.011
+HP2,late − early,M2,0.0009,"[-0.007, +0.036]",inconcluso,inconcluso,0.036,0.021
+HP2,late − mid,M1,0.0023,"[-0.007, +0.013]",inconcluso,equivalente,0.013,0.01
+HP2,late − mid,M2,0.0028,"[-0.011, +0.026]",inconcluso,inconcluso,0.026,0.019
+HP2,mid − early,M1,-0.0027,"[-0.009, +0.013]",inconcluso,equivalente,0.013,0.011
+HP2,mid − early,M2,-0.0018,"[-0.011, +0.029]",inconcluso,inconcluso,0.029,0.02

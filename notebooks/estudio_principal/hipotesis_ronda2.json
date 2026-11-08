@@ -1,0 +1,77 @@
+{
+ "registered_at": "2026-11-06 12:19:38 -0500",
+ "note": "Round 2 (supersedes the draft registered at 00:31 the same day, which had no round-2 results either). Written BEFORE any round-2 training run exists. Round 1 (HP1, HP1b, HP2, HP3a, HP3b; hipotesis_datos_completos.json) is NOT modified and its verdicts stand. Already known when this was written: all round-1 tables (so the expectations below are informed by them, and say so), the round-1 M3 figures (decoder 0.931, LoRA-late 0.934), and that round-1 validation separated the LoRA zones while test did not. Prompted by examiner feedback: H1 and H2 were inconclusive and the published SegFormer-B3 / UPerNet reach 0.93 / 0.94 mIoU. Diagnosis (data, not opinion): the round-1 verdicts were undecided because 322 test images give a paired CI half-width of ~0.011 mIoU (M1) to ~0.02 (M2); seeds contribute ~0.001. The fix is statistical power, not a looser rule.",
+ "design": {
+  "decision_set": "T. A held-out set of 2,000 training-pool images (labels are the crowd-sourced training labels, NOT the expert gold labels): the pool is sorted by TRUE spacecraft clock (not by file name, which starts with the camera: a first version of the split did that and the audit caught it), cut into blocks of 100 consecutive images, and val (5 blocks) and T (20 blocks) are random blocks spread over the whole mission, like the expert sets. Every training image within 24 h of any val/T image is dropped (the expert sets are >= 17.7 h from every training image, measured). Every hypothesis below is decided on T, where a paired comparison has ~2.5x narrower intervals than on M1/M2.",
+  "benchmark_sets": "M1, M2, M3 (expert-labelled, 322 images each, same frames with different label agreement). Used only to compare with published numbers (HR3) and reported for every comparison, never to select anything.",
+  "selection": "Epoch, layer and every other choice are made on val only. T and M1-M3 are never used for selection.",
+  "leakage_controls": "a4m_lib.audit_splits runs at the start of every run and ASSERTS (i) zero file overlap between train / val / T / M1-M3 and (ii) that val and T are at least 24 h from every training image; it also logs the spacecraft-clock distance and the 256-bit dHash near-duplicate count between each evaluation set and the training set (auditoria_datos.json), and REMOVES from the training set every image within 8 bits of any evaluation image (the number removed is stored in every result). Evaluation images are never modified or removed. No test-time augmentation.",
+  "caveat_T": "T labels are single-annotator crowd labels (noisier than M1-M3). That affects absolute mIoU, not paired differences between models; T is a power device for comparisons, not a benchmark."
+ },
+ "common": {
+  "tol": 0.01,
+  "tol_big_rock_iou": 0.02,
+  "n_boot": 2000,
+  "bootstrap": "paired, over blocks of 10 consecutive images (file order = spacecraft clock), same resample for every seed and variant",
+  "real": "95% CI of the difference excludes 0 and |delta| >= tol",
+  "equivalent": "95% CI of the difference lies entirely inside (-tol, +tol)",
+  "three_outcomes": "Every hypothesis below is a three-way question with a rule that returns a definite answer when the CI is narrow enough: 'A better' (real, in favour of A), 'no difference' (equivalent), or 'B better' (real, in favour of B). 'Inconclusive' is returned only when the CI straddles a margin; the power analysis (half-width of the CI on T) is reported next to every verdict so that an inconclusive result is a statement about the data, not about the rule.",
+  "multiple_comparisons": "Holm over the comparisons listed inside each hypothesis, alpha 0.05",
+  "setup_E": "frozen DINOv3 ViT-B/16 (LVD-1689M), 512 px, training pool minus val minus T minus gaps, 3 seeds (0,1,2), OneCycle schedule, best epoch by validation mIoU, augmentation = random crop 50-100% (p=0.5) + horizontal flip (p=0.5). Four variants share the same frozen trunk and the same batches: dec_ce, dec_lov, lora_ce, lora_lov. Decoder on hidden states 3, 6, 9, 12; LoRA rank 8 on blocks 11-12; Lovasz-softmax weight 1.0 added to cross-entropy, computed on the decoder's output grid (128x128, labels sub-sampled by 4) instead of on the full 512x512 map, because sorting 4 M pixels per step was the training bottleneck. Learning rates are NOT tuned (decoder 5e-4 as in the final run, LoRA 3e-4). The number of epochs is a budget decision (>= 16), recorded in every result file.",
+  "setup_A_T": "Round-1 notebook A (P1), same recipe, with the T split: frozen linear probe, 5 image versions, 3 seeds.",
+  "setup_B_T": "Round-1 notebook B (P2), same recipe except the number of epochs (>= 6 instead of 2): LoRA rank 8 on 2 consecutive blocks, zones early (1-2), mid (6-7), late (11-12), 2 seeds, linear-probe head.",
+  "setup_D_T": "Round-1 notebook D baseline with a larger time budget (DeepLabV3 ResNet-50, ImageNet-pretrained and from scratch, trained until validation stops improving or the budget ends), 1 seed.",
+  "published": {"note": "Mohammad, Li & Gao (iSpaRo 2025), Table I; single runs, other split and own mIoU convention: indicative only.",
+               "SegFormer-B3@1024": {"M1": 0.69, "M2": 0.74, "M3": 0.93}, "UPerNet-Swin-S@1024": {"M1": 0.70, "M2": 0.74, "M3": 0.94}}
+ },
+ "hypotheses": {
+  "HRA": {
+   "question": "Is the Web->Mars gap a matter of image appearance? (replaces HP1, now decidable)",
+   "claim": "Normalising image appearance (global histogram equalisation, CLAHE, per-image standardisation) does not change the frozen probe's mIoU.",
+   "expect": "Informed by round 1 (CLAHE +0.001, standardisation +0.001, equalisation -0.006): CLAHE and standardisation 'no difference'; equalisation 'no difference' or a small real drop.",
+   "rule": "Per transform, delta = transform - original on T (one contrast each, Holm over the 3). Supported ('appearance does not explain the gap') if every transform is 'no difference' or a real drop. Refuted if any transform is a real GAIN. Otherwise inconclusive."
+  },
+  "HRAb": {
+   "question": "Does the probe rely on fine texture? (replaces HP1b; the round-1 expectation that sand would drop most was wrong, so this is re-stated with what round 1 showed)",
+   "claim": "Gaussian blur (sigma 2 px at 512 px) does not change the probe's mIoU, and the class that loses most IoU is soil, not sand.",
+   "expect": "'no difference' on T (round 1: -0.002); largest per-class IoU drop = soil.",
+   "rule": "blur - original on T. Supported if 'no difference' and soil has the largest IoU drop. Refuted if the drop is real (the probe does rely on texture). Otherwise inconclusive."
+  },
+  "HRW": {
+   "question": "Where in the network should DINOv3 be adapted? (replaces HP2, now with 3x or more training and a test set that can resolve it)",
+   "claim": "With the same adaptation budget (LoRA rank 8 on two consecutive blocks), the zone matters.",
+   "expect": "Honest prior: small differences. Round 1 on M1/M2 found none (late-early -0.000); validation and M3 favoured late; early-zone runs were undertrained. Expected: late >= mid >= early, with late-early between 0 and +0.01.",
+   "rule": "Contrasts late-early, late-mid, mid-early on T (Holm over the 3). Definite outcomes: 'late better' if late-early is real in favour of late; 'zone does not matter' if all three are 'no difference'; 'early better' if early-late is real. Otherwise inconclusive. M1 and M2 are reported next to it."
+  },
+  "HR1": {
+   "question": "Does a loss aimed at the rare class (Lovasz-softmax added to cross-entropy) fix the big_rock errors?",
+   "claim": "Adding Lovasz-softmax raises the big_rock IoU without lowering overall mIoU.",
+   "expect": "big_rock IoU +0.02 or more on T and fewer big_rock false-positive pixels on M3 (round 1: probe ~109k px, decoder ~16k px); overall mIoU within +-0.01. Reason: Lovasz optimises IoU directly, so it penalises false positives of a rare class that cross-entropy averages away.",
+   "rule": "Loss effect = mean(dec_lov - dec_ce, lora_lov - lora_ce) on T, metric = big_rock IoU, tolerance 0.02. 'Lovasz better' if real in favour and overall mIoU is not a real drop; 'no difference' if equivalent; 'Lovasz worse' if real against. Otherwise inconclusive. big_rock false positives on M3 and everything on M1/M2 are reported, not part of the rule."
+  },
+  "HR2": {
+   "question": "Does adapting the last blocks help once the decoder already reads several layers?",
+   "claim": "LoRA on blocks 11-12 adds little on top of the multilayer decoder.",
+   "expect": "lora - dec mIoU within +-0.01 on T (round 1: LoRA-late over the probe +0.007, decoder over the probe +0.010).",
+   "rule": "LoRA effect = mean(lora_ce - dec_ce, lora_lov - dec_lov) on T, mIoU, tol 0.01. 'LoRA better' if real in favour; 'no difference' if equivalent; 'LoRA worse' if real against. Otherwise inconclusive."
+  },
+  "HRB": {
+   "question": "Does a 4.6k-parameter linear probe really match a fully trained supervised CNN? (round 1: -0.007 [-0.025, +0.008], inconclusive, with a baseline that was still improving)",
+   "claim": "The probe matches DeepLabV3 ResNet-50 (ImageNet) trained end to end until validation stops improving.",
+   "expect": "'no difference' or a small advantage for DeepLabV3 now that it is trained longer (round 1 stopped it at 3 epochs).",
+   "rule": "probe - deeplab on T, mIoU, tol 0.01. 'probe better', 'no difference' or 'DeepLabV3 better' as above; otherwise inconclusive. Reported with the number of epochs actually trained."
+  },
+  "HR3": {
+   "question": "Does the best recipe reach the published baselines on the expert-labelled test sets?",
+   "claim": "The best of the four variants (chosen by mean validation mIoU, never by test) reaches or exceeds SegFormer-B3 on M1, M2 and M3 (0.69, 0.74, 0.93).",
+   "expect": "M3 >= 0.93 (round 1 already 0.931-0.934); M1 and M2 close to the published figures (round 1: 0.684-0.687 and 0.735-0.737) and statistically indistinguishable from them. Exceeding UPerNet's 0.70 on M1 is possible but not expected: round 1 showed the ceiling is label noise (0.862 where experts agree; +0.025 without border pixels).",
+   "rule": "Per test set, the best variant's mIoU with its block-bootstrap 95% CI against each published figure: 'exceeds' if the CI lower bound >= the figure; 'matches' if the CI contains it; 'below' if the CI upper bound < it. Supported if M1, M2 and M3 are each 'exceeds' or 'matches' SegFormer-B3. 'Exceeds on all three' is reported as a separate, stronger result. Refuted if any is 'below'. The comparison is indicative (other split, other mIoU convention, single published runs) and is stated as such."
+  }
+ },
+ "post_hoc_analyses_of_round_1": {
+  "note": "NOT hypotheses. They re-read round-1 data (no new training) and are reported next to, never instead of, the registered verdicts of round 1.",
+  "sensitivity_tol": "Recompute the HP1, HP1b and HP2 comparisons with tol = 0.02 to show how many 'inconclusive' verdicts depend on the margin.",
+  "bounds": "For every round-1 comparison report the 95% half-width and the largest effect compatible with the data, max(|lo|,|hi|): 'the effect is at most X'.",
+  "minimum_detectable_effect": "Half-width of the paired block-bootstrap CI for a typical model pair on M1 and M2 (what 322 test images can resolve), compared with the same quantity on T."
+ }
+}

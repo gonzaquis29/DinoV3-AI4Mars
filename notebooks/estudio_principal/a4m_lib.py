@@ -2,7 +2,7 @@
 
 The notebooks keep the parts worth explaining (image transforms, LoRA, the experiment loops, the analysis);
 everything here is bookkeeping. Conventions are the same as the final run (notebooks/ai4mars_dinov3_final.py):
-M1/M2/M3 never merged, validation = last 500 training images by spacecraft clock, train images that appear in a
+M1/M2/M3 never merged, validation = last 500 training images by spacecraft clock (round 2, A4M_NBIG>0: [train|gap|val|gap|T], see below), train images that appear in a
 test set are dropped, images bilinear / labels nearest, label 255 never counted, mIoU over classes with non-empty union.
 """
 import os, json, time, random, copy, shutil
@@ -28,7 +28,17 @@ NUM_CLASSES, IGNORE = 4, 255
 MEAN, STD = (0.485, 0.456, 0.406), (0.229, 0.224, 0.225)
 RADII = (0, 4, 8, 16)                               # boundary band (px at native label size) excluded from scoring
 N_BINS = 15                                         # confidence bins for calibration
-EVAL_SETS = ("val", "M1", "M2", "M3")
+# Held-out set "T" (round 2). 0 = off, which reproduces the round-1 split exactly. With N_BIG > 0 the pool is sorted by TRUE spacecraft clock (file names start with the
+# camera, so sorting by name is not sorting by time) and cut into blocks of SEG consecutive images; val and T are random blocks spread over the whole mission (like the
+# expert test sets, which are interleaved in time), and every training image closer than GAP_S seconds to any val/T image is dropped. The expert sets M1-M3 sit
+# >= 17 h from every training image (measured by the audit), so GAP_S defaults to 24 h. T is large (2,000 images) so that paired comparisons between models are
+# decidable; it is NOT the benchmark (M1/M2/M3 are), it is where the hypotheses are tested.
+N_BIG = int(os.environ.get("A4M_NBIG", 0))
+GAP_S = int(os.environ.get("A4M_GAP_S", 86400))
+SEG = int(os.environ.get("A4M_SEG", 100))
+if SMOKE and N_BIG:
+    N_BIG, GAP_S, SEG = 6, 0, 2
+EVAL_SETS = ("val", "M1", "M2", "M3") + (("T",) if N_BIG else ())
 _LUT = np.full(256, IGNORE, np.uint8); _LUT[:NUM_CLASSES] = np.arange(NUM_CLASSES)
 IMG_EXT = (".jpg", ".jpeg", ".png")
 
@@ -109,8 +119,20 @@ def build_splits(root, n_val=500):
     allp = _pairs(img_dir, nc / "labels" / "train")
     test_stems = {Path(i).stem.lower() for ps in tests.values() for i, _ in ps}
     allp = [p for p in allp if Path(p[0]).stem.lower() not in test_stems]
-    allp.sort(key=lambda p: Path(p[1]).stem)                     # file names start with the spacecraft clock
-    splits = {"train": allp[:-n_val], "val": allp[-n_val:], **tests}
+    if N_BIG:                                                    # round 2: val and T = random blocks over the whole mission, train kept GAP_S away from both
+        allp.sort(key=lambda p: (clock_of(p[0]) or 0, Path(p[1]).stem))
+        n_seg = len(allp) // SEG; perm = np.random.default_rng(12345).permutation(n_seg)
+        k_val, k_T = -(-n_val // SEG), -(-N_BIG // SEG)
+        block = lambda ids: [p for s in sorted(ids) for p in allp[s * SEG:(s + 1) * SEG]]
+        val, big = block(perm[:k_val])[:n_val], block(perm[k_val:k_val + k_T])[:N_BIG]
+        ev = np.sort(np.array([clock_of(p[0]) or 0 for p in val + big], np.int64))
+        ck = np.array([clock_of(p[0]) or 0 for p in allp], np.int64); i = np.searchsorted(ev, ck)
+        near = np.minimum(np.abs(ck - ev[np.clip(i - 1, 0, len(ev) - 1)]), np.abs(ev[np.clip(i, 0, len(ev) - 1)] - ck))
+        taken = {p[0] for p in val + big}
+        splits = {"train": [p for p, d in zip(allp, near) if d > GAP_S and p[0] not in taken], "val": val, "T": big, **tests}
+    else:                                                        # round 1: [ train | val ], sorted by file name (as in the first run)
+        allp.sort(key=lambda p: Path(p[1]).stem)
+        splits = {"train": allp[:-n_val], "val": allp[-n_val:], **tests}
     m3 = {Path(i).stem.lower(): l for i, l in tests["M3"]}
     splits["M1_m3label"] = [m3.get(Path(i).stem.lower()) for i, _ in tests["M1"]]
     print(" | ".join(f"{k} {len(v)}" for k, v in splits.items() if k != "M1_m3label"),
@@ -165,6 +187,8 @@ def load_images(pairs, size, native_labels, workers=8):
     """Decodes images once (multiprocessing); returns list of uint8 images and list of uint8 labels."""
     import multiprocessing as mp
     args = [(ip, lp, size, native_labels) for ip, lp in pairs]
+    if "fork" not in mp.get_all_start_methods():                 # Windows: no fork, decode in-process (smoke tests on a laptop)
+        workers = 1
     if workers <= 1:
         res = [_read_one(a) for a in tqdm(args, desc="decode", leave=False)]
     else:
@@ -176,6 +200,76 @@ def load_images(pairs, size, native_labels, workers=8):
 def load_m3_labels(paths, like):
     """M3 labels aligned with M1 (all-ignore where an image has no M3 label)."""
     return [read_label(p) if p else np.full_like(l, IGNORE) for p, l in zip(paths, like)]
+
+
+# ---------------------------------------------------------------- leakage audit
+_POP = np.array([bin(i).count("1") for i in range(256)], np.uint8)
+
+
+def clock_of(path):
+    """Spacecraft clock (seconds) from a file name like NLA_397681338EDR_F0010008AUT_04096M1; None if the name does not follow the pattern."""
+    import re
+    m = re.search(r"_(\d{8,10})[A-Z]{2,4}_", Path(path).stem)
+    return int(m.group(1)) if m else None
+
+
+def _dhash(path):
+    """256-bit difference hash of a 17x16 grayscale thumbnail (uint8[32]): near-duplicate frames differ in only a few bits. (A 64-bit hash flags too many
+    look-alike frames, because many NavCam images are almost featureless.)"""
+    im = Image.open(path); im.draft("L", (256, 256))
+    g = np.asarray(im.convert("L").resize((17, 16), Image.BILINEAR), np.int16)
+    return np.packbits((g[:, 1:] > g[:, :-1]).flatten())
+
+
+def audit_splits(splits, dedup=8):
+    """Checks that the reported numbers cannot come from leakage, and measures how close the evaluation sets are to the training set.
+    1) file-name overlap between train / val / T / M1-M3 is ASSERTED to be zero (M1, M2, M3 are the same frames with different label agreement, by design);
+    2) spacecraft-clock distance from each evaluation image to its nearest training image;
+    3) near-duplicates: 256-bit dHash Hamming distance to the nearest training image (0 = identical thumbnail; <= 8 bits = near duplicate).
+    With A4M_NBIG > 0 it also ASSERTS that val and T are at least GAP_S seconds from every training image.
+    dedup > 0 additionally removes from the training set every image within that many bits of any evaluation image. Returns (splits, report)."""
+    keys = [k for k in ("train", "val", "T", "M1", "M2", "M3") if k in splits]
+    paths = {k: [p[0] for p in splits[k]] for k in keys}
+    stems = {k: {Path(p).stem.lower() for p in v} for k, v in paths.items()}
+    rep = {"n": {k: len(v) for k, v in paths.items()}, "stem_overlap": {}, "clock": {}, "near_duplicates": {}, "dedup": dedup}
+    pairs = [("train", "val"), ("train", "T"), ("val", "T")] + [(a, m) for a in ("train", "val", "T") for m in ("M1", "M2", "M3")]
+    for a, b in pairs:
+        if a in stems and b in stems:
+            ov = len(stems[a] & stems[b]); rep["stem_overlap"][f"{a}&{b}"] = ov
+            assert ov == 0, f"LEAKAGE: {ov} images are in both {a} and {b}"
+    tr = np.sort(np.array([c for c in map(clock_of, paths["train"]) if c is not None], np.int64))
+    for k in keys:
+        cl = np.array([c for c in map(clock_of, paths[k]) if c is not None], np.int64)
+        if k == "train" or len(tr) == 0 or len(cl) == 0:
+            continue
+        i = np.searchsorted(tr, cl); d = np.minimum(np.abs(cl - tr[np.clip(i - 1, 0, len(tr) - 1)]), np.abs(tr[np.clip(i, 0, len(tr) - 1)] - cl))
+        rep["clock"][k] = {"min_s": int(d.min()), "median_s": int(np.median(d)), "frac_within_1h": round(float((d <= 3600).mean()), 3),
+                           "frac_within_1day": round(float((d <= 86400).mean()), 3)}
+    if N_BIG:
+        for k in ("val", "T"):
+            assert rep["clock"][k]["min_s"] >= GAP_S, f"LEAKAGE: a {k} image is only {rep['clock'][k]['min_s']} s from a training image (< {GAP_S} s)"
+    th = np.array([_dhash(p) for p in tqdm(paths["train"], desc="hash train", leave=False)], np.uint8)
+    drop = np.zeros(len(th), bool)
+    for k in keys:
+        if k == "train":
+            continue
+        mins = []
+        for p in paths[k]:
+            d = _POP[th ^ _dhash(p)].sum(1); mins.append(int(d.min()))
+            if dedup:
+                drop |= d <= dedup
+        m = np.array(mins)
+        rep["near_duplicates"][k] = {"n": len(m), "identical": int((m == 0).sum()), "le8": int((m <= 8).sum()), "le16": int((m <= 16).sum()), "median_min_dist": float(np.median(m))}
+    if dedup:
+        splits = {**splits, "train": [p for p, x in zip(splits["train"], drop) if not x]}; rep["dedup_removed"] = int(drop.sum())
+    print("AUDITORÍA DE DATOS — solapes de archivos (todos deben ser 0):", rep["stem_overlap"])
+    for k in rep["clock"]:
+        print(f"  {k:3s} distancia de reloj al entrenamiento más cercano: mediana {rep['clock'][k]['median_s']} s, mínima {rep['clock'][k]['min_s']} s, "
+              f"dentro de 1 h {rep['clock'][k]['frac_within_1h']:.0%}, dentro de 1 día {rep['clock'][k]['frac_within_1day']:.0%} | casi-duplicados (≤8 de 256 bits): "
+              f"{rep['near_duplicates'][k]['le8']}/{rep['near_duplicates'][k]['n']}, idénticos: {rep['near_duplicates'][k]['identical']}")
+    if dedup:
+        print(f"  dedup ≤ {dedup} bits: se quitaron {rep['dedup_removed']} imágenes del entrenamiento")
+    return splits, rep
 
 
 # ---------------------------------------------------------------- backbone

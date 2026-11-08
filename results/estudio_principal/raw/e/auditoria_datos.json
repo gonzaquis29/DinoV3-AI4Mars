@@ -1,0 +1,95 @@
+{
+ "n": {
+  "train": 12997,
+  "val": 500,
+  "T": 2000,
+  "M1": 322,
+  "M2": 322,
+  "M3": 322
+ },
+ "stem_overlap": {
+  "train&val": 0,
+  "train&T": 0,
+  "val&T": 0,
+  "train&M1": 0,
+  "train&M2": 0,
+  "train&M3": 0,
+  "val&M1": 0,
+  "val&M2": 0,
+  "val&M3": 0,
+  "T&M1": 0,
+  "T&M2": 0,
+  "T&M3": 0
+ },
+ "clock": {
+  "val": {
+   "min_s": 86450,
+   "median_s": 275278,
+   "frac_within_1h": 0.0,
+   "frac_within_1day": 0.0
+  },
+  "T": {
+   "min_s": 86449,
+   "median_s": 354908,
+   "frac_within_1h": 0.0,
+   "frac_within_1day": 0.0
+  },
+  "M1": {
+   "min_s": 67736,
+   "median_s": 88074,
+   "frac_within_1h": 0.0,
+   "frac_within_1day": 0.435
+  },
+  "M2": {
+   "min_s": 67736,
+   "median_s": 88074,
+   "frac_within_1h": 0.0,
+   "frac_within_1day": 0.435
+  },
+  "M3": {
+   "min_s": 67736,
+   "median_s": 88074,
+   "frac_within_1h": 0.0,
+   "frac_within_1day": 0.435
+  }
+ },
+ "near_duplicates": {
+  "val": {
+   "n": 500,
+   "identical": 0,
+   "le8": 0,
+   "le16": 0,
+   "median_min_dist": 65.0
+  },
+  "T": {
+   "n": 2000,
+   "identical": 0,
+   "le8": 0,
+   "le16": 6,
+   "median_min_dist": 64.0
+  },
+  "M1": {
+   "n": 322,
+   "identical": 0,
+   "le8": 0,
+   "le16": 1,
+   "median_min_dist": 59.0
+  },
+  "M2": {
+   "n": 322,
+   "identical": 0,
+   "le8": 0,
+   "le16": 1,
+   "median_min_dist": 59.0
+  },
+  "M3": {
+   "n": 322,
+   "identical": 0,
+   "le8": 0,
+   "le16": 1,
+   "median_min_dist": 59.0
+  }
+ },
+ "dedup": 8,
+ "dedup_removed": 0
+}

@@ -33,7 +33,7 @@ import a4m_lib
 
 CFG = dict(size=512, n_pool=2000, n_val=500, seeds=(0, 1, 2), epochs=20, bs=16, head_lr=1e-3, patience=None)
 if FULL:                                                          # versión final: todas las imágenes de entrenamiento, parada temprana
-    CFG.update(epochs=10, patience=2)
+    CFG.update(epochs=int(os.environ.get("A4M_EPOCHS", 10)), patience=int(os.environ.get("A4M_PATIENCE", 2)) or None)   # ronda 2: A4M_EPOCHS=15, A4M_PATIENCE=0 (calendario completo, mejor época por validación)
 if SMOKE:
     CFG.update(size=64, n_pool=24, n_val=6, seeds=(0, 1), epochs=2, bs=4)
 if QUICK:
@@ -53,6 +53,8 @@ print("device:", DEV, "| hipótesis registradas el", json.load(open(hyp))["regis
 # %% 1. cargar imágenes una sola vez (en RAM, a 512 px, un canal)
 ROOT = make_fake_dataset(OUT / "fake_data") if SMOKE else find_root()
 SPLITS = build_splits(ROOT, n_val=CFG["n_val"])
+SPLITS, AUDIT = audit_splits(SPLITS, dedup=int(os.environ.get("A4M_DEDUP", 8 if N_BIG else 0)))     # leakage audit: asserts no file overlap / >= 24 h from val and T
+json.dump(AUDIT, open(OUT / "auditoria_datos.json", "w"), indent=1)
 if FULL:
     TMP, CFG["n_pool"] = pick_tmp(len(SPLITS["train"]))
     print("n de entrenamiento:", CFG["n_pool"], "| caché en", TMP)
