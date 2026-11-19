@@ -8,3 +8,5 @@
 Cada carpeta tiene el resumen extendido (2 páginas, plantilla de WAIMLAp) en `.docx` y `.pdf`, y el póster A0 en `.pptx` y `.pdf`.
 `version_final/` incluye además `Presentacion_Avance` (`.pptx` y `.pdf`), una presentación de 16 láminas más un anexo, que cubre el estudio por capas y el estudio principal.
 Los números de la versión final salen de `results/estudio_principal/`.
+
+**Póster v4 (WAIMLAp, 19/11/2026).** `version_final/Poster_FrozenDINOv3MartianTerrain_v4.pdf` y `.pptx` es el póster impreso: añade la ronda 2 (conjunto T, `results/estudio_principal/`). El resumen extendido de `version_final/` es anterior a la ronda 2 y no la incluye.

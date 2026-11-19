@@ -5,9 +5,14 @@ How do the features of a DINOv3 pretrained on web images extend to the Martian d
 **appearance** (P1), where in the network it pays to **adapt** (P2), and where the model makes **errors** and whether it knows (P3).
 An earlier layer-wise study of the same backbone (probe, decoder, partial fine-tuning, controls) provides the context.
 
+> **Poster v4 (WAIMLAp, 19 Nov 2026) adds a second round** with an internal set **T** (2,000 crowd-labelled images held out from training, with a 24 h gap to every
+> training image and an automatic leakage audit). The expert sets M1–M3 remain the primary endpoint; **results on T are exploratory** (T has crowd labels and was
+> added after round 1 was inconclusive for lack of power). Round-2 rules: [`hipotesis_ronda2.json`](notebooks/estudio_principal/hipotesis_ronda2.json) (written 6 Nov 2026 12:19, before any round-2 run;
+> the date is inside the file, git only has it from the 8 Nov commit). Verdicts: [`veredictos_ronda2.csv`](results/estudio_principal/veredictos_ronda2.csv). Poster: [`entregables/E2_poster_waimlap/version_final/`](entregables/E2_poster_waimlap/version_final/).
+
 **In short.** A linear probe with 4.6 k trainable parameters on the frozen backbone matches, within the statistical margin, a DeepLabV3
 trained end to end under the same compute budget, with about 8,600 times fewer trainable parameters. Neither changing how the images look nor
-adapting early, middle or late blocks moves the score by more than about 0.01 mIoU. What limits it is the ambiguity of the labels and the rare
+adapting early, middle or late blocks moves the score on the expert sets by more than about 0.01 mIoU (on T, deeper adaptation does help; see round 2). What limits it is the ambiguity of the labels and the rare
 `big_rock` class, on which the model is confidently wrong.
 
 > **Resumen (ES).** Una sonda lineal de 4,6 k parámetros sobre DINOv3 congelado iguala, dentro del margen estadístico, a un DeepLabV3
@@ -76,6 +81,26 @@ Tables: [`P1_table.csv`](results/estudio_principal/P1_table.csv), [`P2_table.csv
 
 The same study first ran with 2,000 training images ([`results/estudio_principal_piloto/`](results/estudio_principal_piloto/)) and led to the same conclusions. It is kept as an independent replicate.
 
+## Round 2 (poster v4): internal set T
+
+Round 1 (above) left H1 and H2 undecided: 322 test images give a paired CI half-width of ±0.011 (M1) to ±0.02 (M2), wider than the 0.01–0.03 effects of interest. Round 2 adds
+**T**, 2,000 images from the training pool held out as blocks of 100 consecutive frames spread over the mission. Every training image within 24 h of T or validation is removed, and near-duplicates (perceptual hash) are dropped from training.
+T has **crowd** labels, so it is used only for paired comparisons between our own models and is exploratory; the expert sets M1–M3 stay the primary endpoint.
+Code: `E_ronda2.py`, `F_ronda2_resultados.py`, `a4m_stats.py` in [`notebooks/estudio_principal/`](notebooks/estudio_principal/); raw runs in `results/estudio_principal/raw/{a_T,b_T,d_T,e}/`; figures in [`figures_ronda2/`](results/estudio_principal/figures_ronda2/).
+
+| Hypothesis (rule fixed before the runs) | Verdict | Evidence (paired difference, 95 % CI) |
+|---|---|---|
+| H1 appearance (HRA, HRAb) | No alteration helps | CLAHE −0.010 [−0.018, −0.004] on T, **real drop**; standardisation −0.001 and blur +0.000, equivalent; on M1 all equivalent (CLAHE −0.002) |
+| H2 where to adapt (HRW) | Late > early on T; **not confirmed on the expert sets** | T: late − early +0.033 [+0.023, +0.044], mid − early +0.030, late − mid +0.004 (inconclusive). M1: late − early +0.009 [0.000, +0.032], inconclusive. The early zone had a lower learning rate, so part of the gap may be that setting |
+| C1 rare-class loss (HR1, Lovász) | Raises big-rock IoU, more false positives | big-rock IoU on T +0.024 [+0.010, +0.039]; global mIoU on T +0.006 (equivalent); big-rock false positives on M3 52 k → 91 k px |
+| C2 LoRA over the decoder (HR2) | Inconclusive | T +0.006 [−0.002, +0.014]; M1 −0.002; M2 −0.006 |
+| C3 probe vs DeepLabV3 (HRB) | Inconclusive | T −0.005 [−0.019, +0.010] |
+| C4 vs published (HR3) | Tie, not a win | best variant (decoder + Lovász: 0.682 / 0.732 / 0.867 on M1 / M2 / M3) ties SegFormer-B3 and UPerNet-Swin-S within wide intervals; indicative only (other split, convention and resolution) |
+
+Reading: appearance changes still do not help. Round 2 changes the wording on H2 (a real gain on T only, so exploratory) and on CLAHE (a small real drop on T; on M1 it stays equivalent).
+Round-1 verdicts stand for the expert sets. Tables: [`R2_table.csv`](results/estudio_principal/R2_table.csv), [`R2_vs_publicado.csv`](results/estudio_principal/R2_vs_publicado.csv), [`sensibilidad_ronda1.csv`](results/estudio_principal/sensibilidad_ronda1.csv).
+The **0.674** big-rock overconfidence gap and the **ECE 0.029** come from the linear probe on the expert test (round 1, P3); the poster's calibration figure (Fig. 4) shows other heads on T, with smaller gaps.
+
 ## Earlier study: layer-wise probes, decoder and fine-tuning
 
 The first run (stages A–E in `notebooks/ai4mars_dinov3_final.ipynb`) probed the backbone layer by layer, then added a decoder and partial fine-tuning, and compared against
@@ -111,7 +136,7 @@ This run had its own hypotheses, written before it and kept in [`results/final_r
 
 - All versions of the course deliverables E1, E2 and E3 are in [`entregables/`](entregables/) (index with dates and contents).
 - Article (IEEE conference format, 5 pages; LaTeX source and PDF): [`main.pdf`](entregables/E3_trabajo_y_articulo/articulo/main.pdf), [`main.tex`](entregables/E3_trabajo_y_articulo/articulo/main.tex).
-- Poster and 2-page abstract, final version (combining the layer-wise and the main study): [`entregables/E2_poster_waimlap/version_final/`](entregables/E2_poster_waimlap/version_final/); first version (layer-wise study): [`version_octubre/`](entregables/E2_poster_waimlap/version_octubre/).
+- Poster **v4**, the one presented at WAIMLAp (includes round 2): [`Poster_FrozenDINOv3MartianTerrain_v4.pdf`](entregables/E2_poster_waimlap/version_final/Poster_FrozenDINOv3MartianTerrain_v4.pdf) (+ `.pptx`). Earlier poster and 2-page abstract (layer-wise and round 1; the abstract predates round 2): [`entregables/E2_poster_waimlap/version_final/`](entregables/E2_poster_waimlap/version_final/); first version (layer-wise study): [`version_octubre/`](entregables/E2_poster_waimlap/version_octubre/).
 - Executed analysis notebook as a web page: [`docs/Resultados_ejecutado.html`](docs/Resultados_ejecutado.html) (download and open in a browser).
 - Design log (each decision, why, and where AI assistance was used): [`DESIGN_LOG.md`](DESIGN_LOG.md).
 
@@ -138,11 +163,13 @@ notebooks/
     C_resultados               analysis on CPU: tables, figures, verdicts (A4M_RUN=full | pilot)
     D_baseline                 DeepLabV3 ResNet-50 baseline trained end to end
     a4m_lib.py                 shared plumbing (data, token caches, training loop, metrics, result store)
-    hipotesis_*.json        decision rules, written before running
+    E_ronda2, F_ronda2_resultados  round 2 (set T): decoder/LoRA x CE/Lovasz runs and their analysis
+    a4m_stats.py               paired block bootstrap, decision rules, Holm
+    hipotesis_*.json           decision rules, written before running (hipotesis_ronda2.json for round 2)
 src/
   make_figures.py              figures for the earlier study
 results/
-  estudio_principal/           main study with 15,564 images: tables, figures, raw/{a,b,d}
+  estudio_principal/           main study: round 1 (15,564 images, raw/{a,b,d}) and round 2 (set T, raw/{a_T,b_T,d_T,e}, figures_ronda2/)
   estudio_principal_piloto/    same study with 2,000 images (independent replicate)
   final_run/                   output of the earlier study (see results/README.md)
   figures/                     figures built by src/make_figures.py
@@ -204,6 +231,7 @@ Seeds are fixed (0, 1, 2) and each stage records its configuration next to its r
   seed variance is understated. P2 uses 2 seeds, 2 epochs per run and a learning rate fixed from the pilot. The baseline has 1 seed and 3 epochs. Intervals are limited by the test-set size, so they are no narrower than in the pilot.
 - **Comparisons.** Published numbers were not re-run under our protocol, and there is no end-to-end from-scratch control for the ViT. The H3b extra run was launched in a separate session with the same code and recipe as stage D.
 - **Labels.** AI4Mars training labels are crowd-sourced and noisy. M3 holds `big_rock` in only 5 of 322 images, so it cannot rank models on that class.
+- **Round 2.** T has crowd labels and was added after a round 1 without a verdict, so its results are exploratory; H2 is real on T only. Seeds share batch order. M3 fell from 0.93 (round-1 decoder) to 0.87 between rounds; we have not isolated the cause, and since M3 holds `big_rock` in 5 images, its false-positive count alone moves its mIoU.
 - **Process.** The first pilot used 2,000 training images and was not flagged at once as different from the full training; this was corrected and the full-data runs are the ones reported (see the design log).
 
 ## Data, weights and licences
