@@ -12,6 +12,19 @@ The poster (WAIMLAp, 19 Nov 2026) is printed and cannot change, so corrections l
 - Note that the new title names layer-wise probing, which is the earlier study; the poster body reports the main study and round 2.
 - Three titles exist in the project. The October abstract (`version_octubre/`, the registration version) has the *"Frozen DINOv3 Features … Layer-wise Linear Probing"* title; the sent poster and the final abstract and article have the *"How Do Web-Pretrained DINOv3 Features Extend…"* family. The poster body corresponds to the second family. If the organisers' programme lists the registered title, the programme and the poster body describe different stages of the same project (layer-wise study, then main study and round 2). The abstract and the article carry no round 2 yet.
 
+## 0b. Minor text corrections applied to the final poster files (19 Nov 2026)
+
+`Poster_..._v4.pdf` / `.pptx` in `version_final/` include these text-only fixes relative to the sent PDF (`_enviado.pdf`); figures are unchanged:
+
+- Citations added in the text for references [1], [2], [4] and [6] (they were listed but never cited).
+- "1.689 billion Earth images" → "web images".
+- Background: "have only been tried with DINOv2" → "On AI4Mars, frozen foundation models are untested: DINOv2 was tried only on other data and a simpler task [5]; Mars-Bench left AI4Mars out…".
+- "where only one labelled" → "on pixels labelled in M1 but not in M3".
+- Fig. 3 caption: "Row C1 is big-rock IoU" (the axis label in the image says mIoU). Fig. 5 caption: IoU cannot exceed 1; the axis above 1.0 is plot padding (the image itself is unchanged).
+- Limits: M3 "without a verified explanation" → "so it is noisy … cause not isolated".
+
+**Not changed** (see section A): the Fig. 3 H2 colour and wording, the 0.674 / ECE 0.029 attribution to Fig. 4, "thousands of times larger" and "pre-registered", and the Fig. 2 mix of rounds. These are corrected only in this errata.
+
 ## A. What the poster says vs. what the repository shows
 
 | # | Poster statement | Clarification |
