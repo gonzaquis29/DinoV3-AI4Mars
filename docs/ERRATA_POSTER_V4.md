@@ -33,6 +33,7 @@ The final files also correct, in the text and captions (figures are unchanged), 
 - "Thousands of times larger" is replaced by the size of the published models (47–81 M parameters); "pre-registered rules" by "decision rules written before the runs"; "does not know when it is wrong" by "is overconfident when it predicts [big rock]".
 - Fig. 2 caption states that the probe is round 1 and the decoder and DeepLabV3 are round 2. DeepLabV3 is "not clearly different from the probe".
 - Methodology: the 24 h gap and leakage audit are labelled round 2.
+- Results 2 and 3 headings and bullet labels reworded from "H1 and H2" / "H3 labels and confidence" to descriptive titles (image appearance and where to adapt; label ambiguity and overconfidence); the hypotheses keep their H1–H3 names in Objectives.
 
 Items in section A that remain true of the **sent** PDF are kept below for the record.
 
