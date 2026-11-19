@@ -8,7 +8,7 @@ An earlier layer-wise study of the same backbone (probe, decoder, partial fine-t
 > **Poster v4 (WAIMLAp, 19 Nov 2026) adds a second round** with an internal set **T** (2,000 crowd-labelled images held out from training, with a 24 h gap to every
 > training image and an automatic leakage audit). The expert sets M1–M3 remain the primary endpoint; **results on T are exploratory** (T has crowd labels and was
 > added after round 1 was inconclusive for lack of power). Round-2 rules: [`hipotesis_ronda2.json`](notebooks/estudio_principal/hipotesis_ronda2.json) (written 6 Nov 2026 12:19, before any round-2 run;
-> the date is inside the file, git only has it from the 8 Nov commit). Verdicts: [`veredictos_ronda2.csv`](results/estudio_principal/veredictos_ronda2.csv). Poster: [`entregables/E2_poster_waimlap/version_final/`](entregables/E2_poster_waimlap/version_final/).
+> the date is inside the file, git only has it from the 8 Nov commit). Verdicts: [`veredictos_ronda2.csv`](results/estudio_principal/veredictos_ronda2.csv). **Clarifications and errata of the printed poster: [`docs/ERRATA_POSTER_V4.md`](docs/ERRATA_POSTER_V4.md)** (e.g. H2 is exploratory, the 0.674 / ECE 0.029 come from the probe on the expert test and not from Fig. 4, Fig. 2 mixes round-1 and round-2 models). Poster: [`entregables/E2_poster_waimlap/version_final/`](entregables/E2_poster_waimlap/version_final/).
 
 **In short.** A linear probe with 4.6 k trainable parameters on the frozen backbone matches, within the statistical margin, a DeepLabV3
 trained end to end under the same compute budget, with about 8,600 times fewer trainable parameters. Neither changing how the images look nor
@@ -53,7 +53,7 @@ full result was seen ([`hipotesis_datos_completos.json`](notebooks/estudio_princ
 | DeepLabV3 ResNet-50, ImageNet-pretrained, end to end (1 seed) | 39.6 M | 0.667 | 0.713 | −0.007 [−0.025, +0.008], inconclusive |
 | DeepLabV3 ResNet-50, no pretraining (1 seed) | 39.6 M | 0.628 | 0.681 | −0.046 [−0.081, −0.016], real |
 
-The comparison is budget-matched: both baselines train for 3 epochs (about 2,900 steps, 70 minutes each). The ImageNet run had stopped improving by then;
+(This table is round 1. The DeepLabV3 of the poster's Fig. 2 is a longer round-2 run on 12,997 images, 0.675 / 0.727 / 0.884 on M1 / M2 / M3; see [errata](docs/ERRATA_POSTER_V4.md).) The comparison is budget-matched: both baselines train for 3 epochs (about 2,900 steps, 70 minutes each). The ImageNet run had stopped improving by then;
 the run without pretraining was still rising, so its figure understates what longer training would give. Read the table as "the probe matches it", and
 the gain as one of cost.
 
@@ -96,6 +96,8 @@ Code: `E_ronda2.py`, `F_ronda2_resultados.py`, `a4m_stats.py` in [`notebooks/est
 | C2 LoRA over the decoder (HR2) | Inconclusive | T +0.006 [−0.002, +0.014]; M1 −0.002; M2 −0.006 |
 | C3 probe vs DeepLabV3 (HRB) | Inconclusive | T −0.005 [−0.019, +0.010] |
 | C4 vs published (HR3) | Tie, not a win | best variant (decoder + Lovász: 0.682 / 0.732 / 0.867 on M1 / M2 / M3) ties SegFormer-B3 and UPerNet-Swin-S within wide intervals; indicative only (other split, convention and resolution) |
+
+Mean mIoU on T by zone (15 epochs): probe 0.841, early 0.844, middle 0.874, late 0.878. Early and late used different learning rates (2e-4 vs 1e-3, chosen on the pilot and not swept again), so zone and learning rate are confounded.
 
 Reading: appearance changes still do not help. Round 2 changes the wording on H2 (a real gain on T only, so exploratory) and on CLAHE (a small real drop on T; on M1 it stays equivalent).
 Round-1 verdicts stand for the expert sets. Tables: [`R2_table.csv`](results/estudio_principal/R2_table.csv), [`R2_vs_publicado.csv`](results/estudio_principal/R2_vs_publicado.csv), [`sensibilidad_ronda1.csv`](results/estudio_principal/sensibilidad_ronda1.csv).
