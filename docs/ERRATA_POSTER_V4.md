@@ -7,9 +7,8 @@ The poster (WAIMLAp, 19 Nov 2026) is printed and cannot change, so corrections l
 ## 0. Title: the PDF that was sent differs from the repository's current poster
 
 - The PDF **sent to the organisers** (`Poster_FrozenDINOv3MartianTerrain_v4_enviado.pdf`, exported 18 Nov 2026) is titled *"How Do Web-Pretrained DINOv3 Features Extend to Martian Terrain? A Study on AI4Mars"*.
-- On 19 Nov 2026 the title in the `.pptx` was changed to *"Frozen DINOv3 Features for Martian Terrain Segmentation: Layer-wise Linear Probing on AI4Mars"*. `Poster_FrozenDINOv3MartianTerrain_v4.pdf` and `.pptx` in this folder carry the new title.
-- The new PDF was exported from the updated `.pptx`; comparing the text of both PDFs, **the title is the only content difference** (same A0 page size). Both files are kept so the difference is visible.
-- Note that the new title names layer-wise probing, which is the earlier study; the poster body reports the main study and round 2.
+- On 19 Nov 2026 the title was changed to *"Frozen DINOv3 Features for Martian Terrain Segmentation: A Study on AI4Mars"* (it keeps the opening of the title registered in October and drops "Layer-wise Linear Probing", which the poster body does not show). `Poster_FrozenDINOv3MartianTerrain_v4.pdf` and `.pptx` in this folder carry it.
+- The new PDF was exported from the updated `.pptx` (same A0 page size). Besides the title it has the text corrections of sections 0b and 0c. Both files are kept so the difference is visible.
 - Three titles exist in the project. The October abstract (`version_octubre/`, the registration version) has the *"Frozen DINOv3 Features … Layer-wise Linear Probing"* title; the sent poster and the final abstract and article have the *"How Do Web-Pretrained DINOv3 Features Extend…"* family. The poster body corresponds to the second family. If the organisers' programme lists the registered title, the programme and the poster body describe different stages of the same project (layer-wise study, then main study and round 2). The abstract and the article carry no round 2 yet.
 
 ## 0b. Minor text corrections applied to the final poster files (19 Nov 2026)
@@ -24,6 +23,18 @@ The poster (WAIMLAp, 19 Nov 2026) is printed and cannot change, so corrections l
 - Limits: M3 "without a verified explanation" → "so it is noisy … cause not isolated".
 
 **Not changed** (see section A): the Fig. 3 H2 colour and wording, the 0.674 / ECE 0.029 attribution to Fig. 4, "thousands of times larger" and "pre-registered", and the Fig. 2 mix of rounds. These are corrected only in this errata.
+
+## 0c. Content corrections applied to the final poster files (19 Nov 2026)
+
+The final files also correct, in the text and captions (figures are unchanged), statements that section A flags in the sent PDF:
+
+- H2 is marked "exploratory" in the text and "real on T only" in the Fig. 3 caption (the figure's purple dot is unchanged).
+- The 0.674 gap and ECE 0.029 are attributed to the probe on the expert test; the text says Fig. 4 shows other heads on T.
+- "Thousands of times larger" is replaced by the size of the published models (47–81 M parameters); "pre-registered rules" by "decision rules written before the runs"; "does not know when it is wrong" by "is overconfident when it predicts [big rock]".
+- Fig. 2 caption states that the probe is round 1 and the decoder and DeepLabV3 are round 2. DeepLabV3 is "not clearly different from the probe".
+- Methodology: the 24 h gap and leakage audit are labelled round 2.
+
+Items in section A that remain true of the **sent** PDF are kept below for the record.
 
 ## A. What the poster says vs. what the repository shows
 
