@@ -34,6 +34,7 @@ The final files also correct, in the text and captions (figures are unchanged), 
 - Fig. 2 caption states that the probe is round 1 and the decoder and DeepLabV3 are round 2. DeepLabV3 is "not clearly different from the probe".
 - Methodology: the 24 h gap and leakage audit are labelled round 2.
 - Results 2 and 3 headings and bullet labels reworded from "H1 and H2" / "H3 labels and confidence" to descriptive titles (image appearance and where to adapt; label ambiguity and overconfidence); the hypotheses keep their H1–H3 names in Objectives.
+- Wording polish with no change of numbers or claims: Problem, Gap, Statistics, Reference and Discussion bullets rephrased in plainer language ("Transfer" in the conclusions became "Bottom line").
 
 Items in section A that remain true of the **sent** PDF are kept below for the record.
 
