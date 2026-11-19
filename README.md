@@ -35,6 +35,7 @@ adapting early, middle or late blocks moves the score on the expert sets by more
 | Phase C, stress and honesty | P3 (labels and calibration), the baseline comparison and the limitations: [Main findings](#main-findings-main-study), [Limitations](#limitations), [paper](entregables/E3_trabajo_y_articulo/articulo/main.pdf) |
 | Baseline and state of the art | [`baseline_table.csv`](results/estudio_principal/baseline_table.csv); Related work in the [paper](entregables/E3_trabajo_y_articulo/articulo/main.pdf); earlier layer-wise study with published numbers [below](#earlier-study-layer-wise-probes-decoder-and-fine-tuning) |
 | Several seeds and uncertainty | 3 seeds for probes, 2 for LoRA, paired block-bootstrap intervals in every table; raw per-run files in `results/estudio_principal/raw/` |
+| **Which result comes from which notebook, with the physical file** | **[`EVIDENCIA.md`](EVIDENCIA.md)** (per notebook and per poster number; what was re-checked and the known gaps) |
 | Design log, with where AI was used | [`DESIGN_LOG.md`](DESIGN_LOG.md) |
 | Limitations, bias and ethics | [Limitations](#limitations) here and the corresponding section of the [paper](entregables/E3_trabajo_y_articulo/articulo/main.pdf) |
 | Reproducibility | [Reproduce](#reproduce), `requirements.txt`, fixed seeds, per-run raw results |
@@ -176,7 +177,9 @@ results/
   final_run/                   output of the earlier study (see results/README.md)
   figures/                     figures built by src/make_figures.py
 entregables/                   course deliverables: E1 proposal and teardown, E2 poster and abstract (October and final versions), E3 article
-docs/                          code guide and the executed analysis notebook as HTML
+figuras_poster/                scripts and images of the poster figures (v4); figures 4 and 5 are computed from results/estudio_principal/raw/e
+EVIDENCIA.md                   map: notebook -> result -> evidence file
+docs/                          errata of the poster, short report, poster text, round-2 report figures (informe_figuras/), executed analysis notebook as HTML
 DESIGN_LOG.md                  design log
 ```
 

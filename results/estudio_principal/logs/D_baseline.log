@@ -1,0 +1,51 @@
+/usr/local/lib/python3.13/dist-packages/nbformat/validator.py:434: MissingIDFieldWarning: Cell is missing an id field, this will become a hard error in future nbformat versions. You may want to use `normalize()` on your notebooks before validations (available since nbformat 5.1.4). Previous versions of nbformat are fixing this issue transparently, and will stop doing so in the future.
+  _validate(nbdict, ref, version, version_minor, relax_add_props)
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+GPUs: [device(type='cuda', index=0), device(type='cuda', index=1)] | presupuesto por entrenamiento: 75.0 min
+train 15564 | val 500 | M1 322 | M2 322 | M3 322 | M1 images with an M3 label: 322
+train (15564, 512, 512) | test {'val': 500, 'M1': 322, 'M2': 322, 'M3': 322}
+Downloading: "https://download.pytorch.org/models/resnet50-11ad3fa6.pth" to /root/.cache/torch/hub/checkpoints/resnet50-11ad3fa6.pth
+  0%|          | 0.00/97.8M [00:00<?, ?B/s]
+  0%|          | 0.00/97.8M [00:00<?, ?B/s]  2%|▏         | 2.25M/97.8M [00:00<00:04, 23.6MB/s]
+  2%|▏         | 2.25M/97.8M [00:00<00:04, 23.6MB/s] 22%|██▏       | 21.5M/97.8M [00:00<00:00, 128MB/s] 
+ 22%|██▏       | 21.5M/97.8M [00:00<00:00, 128MB/s]  44%|████▍     | 43.4M/97.8M [00:00<00:00, 174MB/s]
+ 44%|████▍     | 43.4M/97.8M [00:00<00:00, 174MB/s] 64%|██████▎   | 62.2M/97.8M [00:00<00:00, 183MB/s]
+ 64%|██████▎   | 62.2M/97.8M [00:00<00:00, 183MB/s] 82%|████████▏ | 79.8M/97.8M [00:00<00:00, 183MB/s]
+ 82%|████████▏ | 79.8M/97.8M [00:00<00:00, 183MB/s]100%|██████████| 97.8M/97.8M [00:00<00:00, 185MB/s]
+100%|██████████| 97.8M/97.8M [00:00<00:00, 185MB/s]100%|██████████| 97.8M/97.8M [00:00<00:00, 170MB/s]
+100%|██████████| 97.8M/97.8M [00:00<00:00, 170MB/s]
+
+
+[BL_pre_full_s0] 1.10 s/paso -> 3 épocas de 972 pasos (2916 pasos, ~54 min)
+[BL_scratch_full_s0] 1.16 s/paso -> 3 épocas de 972 pasos (2916 pasos, ~57 min)
+/tmp/ipykernel_22/4218178008.py:26: UserWarning: Detected call of `lr_scheduler.step()` before `optimizer.step()`. In PyTorch 1.1.0 and later, you should call them in the opposite order: `optimizer.step()` before `lr_scheduler.step()`.  Failure to do this will result in PyTorch skipping the first value of the learning rate schedule. See more details at https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
+  train_step(net, opt, scaler, np.sort(order[b * bs:(b + 1) * bs]), device); sched.step()
+
+/tmp/ipykernel_22/4218178008.py:26: UserWarning: Detected call of `lr_scheduler.step()` before `optimizer.step()`. In PyTorch 1.1.0 and later, you should call them in the opposite order: `optimizer.step()` before `lr_scheduler.step()`.  Failure to do this will result in PyTorch skipping the first value of the learning rate schedule. See more details at https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
+  train_step(net, opt, scaler, np.sort(order[b * bs:(b + 1) * bs]), device); sched.step()
+[BL_pre_full_s0] época 0: val mIoU 0.6143 (21.5 min)
+[BL_scratch_full_s0] época 0: val mIoU 0.3832 (21.8 min)
+[BL_pre_full_s0] época 1: val mIoU 0.6625 (42.9 min)
+[BL_scratch_full_s0] época 1: val mIoU 0.4120 (43.8 min)
+[BL_pre_full_s0] época 2: val mIoU 0.6611 (64.3 min)
+[BL_pre_full_s0] listo: val 0.6625, M1 0.6670, 65.4 min
+[BL_scratch_full_s0] época 2: val mIoU 0.5110 (65.9 min)
+[BL_scratch_full_s0] listo: val 0.5110, M1 0.6285, 67.0 min
+errores: ninguno
+BL_pre_full_s0 {'val': 0.6625, 'M1': 0.667, 'M2': 0.7132, 'M3': 0.8147} | pasos 2916 | min 65.4
+BL_scratch_full_s0 {'val': 0.511, 'M1': 0.6285, 'M2': 0.6809, 'M3': 0.8115} | pasos 2916 | min 67.0
+/usr/local/lib/python3.13/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\|'
+  cells[i][c] = re.sub('\\\\\|', '|', cell)
+/usr/local/lib/python3.13/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\_'
+  text = re.sub(r'_', '\_', text) # Escape underscores in display text
+[NbConvertApp] Converting notebook __notebook__.ipynb to notebook
+[NbConvertApp] Writing 75827 bytes to __notebook__.ipynb
+[NbConvertApp] Converting notebook __notebook__.ipynb to html
+[NbConvertApp] Writing 384410 bytes to __results__.html

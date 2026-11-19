@@ -1,0 +1,54 @@
+/usr/local/lib/python3.13/dist-packages/nbformat/validator.py:434: MissingIDFieldWarning: Cell is missing an id field, this will become a hard error in future nbformat versions. You may want to use `normalize()` on your notebooks before validations (available since nbformat 5.1.4). Previous versions of nbformat are fixing this issue transparently, and will stop doing so in the future.
+  _validate(nbdict, ref, version, version_minor, relax_add_props)
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+GPUs: [device(type='cuda', index=0), device(type='cuda', index=1)]
+train 15564 | val 500 | M1 322 | M2 322 | M3 322 | M1 images with an M3 label: 322
+  disco libre en /kaggle/temp: 1049 GB
+  disco libre en /tmp: 1049 GB
+  disco libre en /var/tmp: 1049 GB
+  disco libre en /kaggle/working/tmp: 20 GB
+n de entrenamiento: 15564 | zonas: ['early', 'mid', 'late'] | caché en /kaggle/temp
+réplica OK (error máximo 0.0e+00)
+[early] tokens de entrada del bloque 1: 8.0 min
+[P2_early_s0]    ep 0: val mIoU 0.6235
+[P2_early_s1]    ep 0: val mIoU 0.6367
+[P2_early_s0]    ep 1: val mIoU 0.6300
+[P2_early_s0] listo: val 0.6300, 35.4 min, LoRA 221 k parámetros
+[P2_early_s1]    ep 1: val mIoU 0.6293
+[P2_early_s1] listo: val 0.6367, 37.1 min, LoRA 221 k parámetros
+[early] zona terminada en 46.3 min
+[mid] tokens de entrada del bloque 6: 7.6 min
+[P2_mid_s1]    ep 0: val mIoU 0.6926
+[P2_mid_s0]    ep 0: val mIoU 0.6439
+[P2_mid_s0]    ep 1: val mIoU 0.7198
+[P2_mid_s1]    ep 1: val mIoU 0.6942
+[P2_mid_s0] listo: val 0.7198, 24.0 min, LoRA 221 k parámetros
+[P2_mid_s1] listo: val 0.6942, 24.1 min, LoRA 221 k parámetros
+[mid] zona terminada en 32.7 min
+[late] tokens de entrada del bloque 11: 7.7 min
+[P2_late_s1]    ep 0: val mIoU 0.6812
+[P2_late_s0]    ep 0: val mIoU 0.6665
+[P2_late_s1]    ep 1: val mIoU 0.6864
+[P2_late_s0]    ep 1: val mIoU 0.6972
+[P2_late_s1] listo: val 0.6864, 12.1 min, LoRA 221 k parámetros
+[P2_late_s0] listo: val 0.6972, 12.2 min, LoRA 221 k parámetros
+[late] zona terminada en 20.5 min
+P2 terminado en 99.5 min | errores: ninguno
+early  semillas 2 | val 0.6334 M1 0.6815 M2 0.7296 M3 0.8414 | LoRA 221 k | 36 min/corrida
+mid    semillas 2 | val 0.7070 M1 0.6788 M2 0.7278 M3 0.8439 | LoRA 221 k | 24 min/corrida
+late   semillas 2 | val 0.6918 M1 0.6811 M2 0.7305 M3 0.9341 | LoRA 221 k | 12 min/corrida
+/usr/local/lib/python3.13/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\|'
+  cells[i][c] = re.sub('\\\\\|', '|', cell)
+/usr/local/lib/python3.13/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\_'
+  text = re.sub(r'_', '\_', text) # Escape underscores in display text
+[NbConvertApp] Converting notebook __notebook__.ipynb to notebook
+[NbConvertApp] Writing 291095 bytes to __notebook__.ipynb
+[NbConvertApp] Converting notebook __notebook__.ipynb to html
+[NbConvertApp] Writing 560624 bytes to __results__.html

@@ -9,4 +9,4 @@ b1=ax.bar(x-w/2,m1,w,color="#2a6fdb",label="M1"); b2=ax.bar(x+w/2,m2,w,color="#e
 for b in list(b1)+list(b2): ax.text(b.get_x()+b.get_width()/2,b.get_height()+0.003,f"{b.get_height():.3f}",ha="center",fontsize=7)
 ax.set_xticks(x,labels,fontsize=7.5); ax.set_ylim(0.55,0.78); ax.set_ylabel("test mIoU"); ax.legend(frameon=False,fontsize=8,loc="upper right")
 ax.spines[["top","right"]].set_visible(False); fig.tight_layout()
-fig.savefig("/home/gonzalo/Escritorio/Proyectos PUCP/DinoV3-AI4Mars/results/estudio_principal/figures/comparison_main.png",dpi=200)
+import pathlib; fig.savefig(pathlib.Path(__file__).resolve().parent.parent / "results" / "estudio_principal" / "figures" / "comparison_main.png", dpi=200)
