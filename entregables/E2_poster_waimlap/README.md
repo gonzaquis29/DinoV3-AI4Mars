@@ -10,3 +10,5 @@ Cada carpeta tiene el resumen extendido (2 páginas, plantilla de WAIMLAp) en `.
 Los números de la versión final salen de `results/estudio_principal/`.
 
 **Póster v4 (WAIMLAp, 19/11/2026).** `version_final/Poster_FrozenDINOv3MartianTerrain_v4.pdf` y `.pptx` es el póster impreso: añade la ronda 2 (conjunto T, `results/estudio_principal/`). El resumen extendido de `version_final/` es anterior a la ronda 2 y no la incluye.
+
+**Título (19/11/2026).** `Poster_..._v4_enviado.pdf` es el PDF que se mandó a los organizadores (título "How Do Web-Pretrained DINOv3 Features Extend to Martian Terrain?..."). `Poster_..._v4.pdf` y `.pptx` llevan el título actualizado ("Frozen DINOv3 Features for Martian Terrain Segmentation: Layer-wise Linear Probing on AI4Mars"); es la única diferencia de contenido. Ver [errata, sección 0](../../docs/ERRATA_POSTER_V4.md).

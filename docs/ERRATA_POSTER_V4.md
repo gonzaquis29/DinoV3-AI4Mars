@@ -3,6 +3,14 @@
 The poster (WAIMLAp, 19 Nov 2026) is printed and cannot change, so corrections live here. Numbers below were recomputed from the raw per-run files in
 `results/estudio_principal/raw/` (confusion matrices per image) unless marked *not re-checked*. The repository is the reference where it and the poster differ.
 
+
+## 0. Title: the PDF that was sent differs from the repository's current poster
+
+- The PDF **sent to the organisers** (`Poster_FrozenDINOv3MartianTerrain_v4_enviado.pdf`, exported 18 Nov 2026) is titled *"How Do Web-Pretrained DINOv3 Features Extend to Martian Terrain? A Study on AI4Mars"*.
+- On 19 Nov 2026 the title in the `.pptx` was changed to *"Frozen DINOv3 Features for Martian Terrain Segmentation: Layer-wise Linear Probing on AI4Mars"*. `Poster_FrozenDINOv3MartianTerrain_v4.pdf` and `.pptx` in this folder carry the new title.
+- The new PDF was exported from the updated `.pptx`; comparing the text of both PDFs, **the title is the only content difference** (same A0 page size). Both files are kept so the difference is visible.
+- Note that the new title names layer-wise probing, which is the earlier study; the poster body reports the main study and round 2.
+
 ## A. What the poster says vs. what the repository shows
 
 | # | Poster statement | Clarification |
