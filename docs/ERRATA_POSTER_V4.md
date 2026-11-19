@@ -10,6 +10,7 @@ The poster (WAIMLAp, 19 Nov 2026) is printed and cannot change, so corrections l
 - On 19 Nov 2026 the title in the `.pptx` was changed to *"Frozen DINOv3 Features for Martian Terrain Segmentation: Layer-wise Linear Probing on AI4Mars"*. `Poster_FrozenDINOv3MartianTerrain_v4.pdf` and `.pptx` in this folder carry the new title.
 - The new PDF was exported from the updated `.pptx`; comparing the text of both PDFs, **the title is the only content difference** (same A0 page size). Both files are kept so the difference is visible.
 - Note that the new title names layer-wise probing, which is the earlier study; the poster body reports the main study and round 2.
+- Three titles exist in the project. The October abstract (`version_octubre/`, the registration version) has the *"Frozen DINOv3 Features … Layer-wise Linear Probing"* title; the sent poster and the final abstract and article have the *"How Do Web-Pretrained DINOv3 Features Extend…"* family. The poster body corresponds to the second family. If the organisers' programme lists the registered title, the programme and the poster body describe different stages of the same project (layer-wise study, then main study and round 2). The abstract and the article carry no round 2 yet.
 
 ## A. What the poster says vs. what the repository shows
 
