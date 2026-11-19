@@ -13,3 +13,5 @@ Versiones de cada entregable, ordenadas por entrega. Las fechas son las del enun
 se actualizaron a esa versión. Las versiones anteriores se conservan para mostrar la evolución del trabajo.
 
 El código y los resultados están fuera de esta carpeta: ver el [README principal](../README.md).
+
+**Estado de cada entregable respecto a la ronda 2 (conjunto T):** póster v4 sí; informe corto (`docs/INFORME_CORTO.md`) y texto del póster (`docs/POSTER_TEXTO.md`) sí; resumen extendido y artículo (E3) **no todavía** (solo ronda 1). Aclaraciones del póster: [`docs/ERRATA_POSTER_V4.md`](../docs/ERRATA_POSTER_V4.md).

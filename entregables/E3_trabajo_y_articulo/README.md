@@ -15,3 +15,5 @@ La entrega de trabajo es este repositorio:
 | Cuaderno de análisis ejecutado | `notebooks/estudio_principal/C_resultados.ipynb` y `docs/Resultados_ejecutado.html` |
 | Cuaderno de decisiones (con uso de IA) | `DESIGN_LOG.md` |
 | Instrucciones, entorno y semillas | `README.md`, `requirements.txt` |
+
+> **Nota (E3).** El borrador del artículo (`main.tex`, 2 nov) cubre solo la **ronda 1** (sin el conjunto T). Su resumen dice que las hipótesis de apariencia y de profundidad "no se pueden decidir con 322 imágenes"; la ronda 2 (póster v4) las decide en T con las salvedades de [`docs/ERRATA_POSTER_V4.md`](../../docs/ERRATA_POSTER_V4.md). Pendiente antes del 30/11: incorporar la ronda 2 al artículo.
