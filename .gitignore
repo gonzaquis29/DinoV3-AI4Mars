@@ -16,3 +16,8 @@ __pycache__/
 *.aux
 *.out
 *.toc
+
+LAST-10-11/
+docs/
+Status.txt
+*.docx
